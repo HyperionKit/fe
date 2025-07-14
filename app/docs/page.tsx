@@ -1,9 +1,10 @@
 import React from 'react'
+import { DocsLayout } from "@/components/docs/docsLayout"
 
 const page = () => {
   return (
     <div>
-      docs hi 
+      <DocsLayout/>
     </div>
   )
 }
