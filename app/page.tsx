@@ -1,6 +1,6 @@
-"use client" // This component needs to be a Client Component to use Framer Motion
+"use client"
 import type React from "react"
-import { motion } from "framer-motion" // Import motion from framer-motion
+import { motion } from "framer-motion"
 import HeroSection from "@/components/HeroSection"
 import WalletDemo from "@/components/WalletDemo"
 import HyperkitRoadmap from "@/components/HyperkitRoadmap"
@@ -25,6 +25,7 @@ const HomePage: React.FC = () => {
       },
     },
   }
+
   return (
     <>
       <main className="flex flex-col items-center bg-white min-h-screen">
@@ -37,6 +38,7 @@ const HomePage: React.FC = () => {
         >
           <HeroSection />
         </motion.div>
+
         <motion.div
           variants={fadeInAnimationVariants}
           initial="initial"
@@ -48,6 +50,7 @@ const HomePage: React.FC = () => {
             <WalletDemo />
           </div>
         </motion.div>
+
         <motion.div
           variants={fadeInAnimationVariants}
           initial="initial"
@@ -57,6 +60,7 @@ const HomePage: React.FC = () => {
         >
           <HyperkitRoadmap />
         </motion.div>
+
         <motion.div
           variants={fadeInAnimationVariants}
           initial="initial"
@@ -66,6 +70,7 @@ const HomePage: React.FC = () => {
         >
           <HyperkitRewards />
         </motion.div>
+
         <motion.div
           variants={fadeInAnimationVariants}
           initial="initial"
@@ -75,6 +80,7 @@ const HomePage: React.FC = () => {
         >
           <HyperRoles />
         </motion.div>
+
         <motion.div
           variants={fadeInAnimationVariants}
           initial="initial"
@@ -83,6 +89,8 @@ const HomePage: React.FC = () => {
           className="w-full"
         >
           <HyperEarnPoints />
+        </motion.div>
+
         <motion.div
           variants={fadeInAnimationVariants}
           initial="initial"
@@ -92,7 +100,7 @@ const HomePage: React.FC = () => {
         >
           <HyperMetrics />
         </motion.div>
-        </motion.div>
+
         <motion.div
           variants={fadeInAnimationVariants}
           initial="initial"
@@ -102,6 +110,7 @@ const HomePage: React.FC = () => {
         >
           <HyperToMeta />
         </motion.div>
+
         <motion.div
           variants={fadeInAnimationVariants}
           initial="initial"
