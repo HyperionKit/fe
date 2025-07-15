@@ -2,6 +2,16 @@
 
 import { useState } from "react"
 import { Settings } from "lucide-react"
+import ConnectWalletPage from 'hyperionkit';
+import styles from 'hyperionkit/src/hyperkit.module.css';
+
+// Ensure required style keys exist for ConnectWalletPage
+const walletStyles = {
+  pageContainer: styles.pageContainer,
+  connectButton: styles.connectButton,
+  errorCard: styles.errorCard,
+  connectedButton: styles.connectedButton, // optional
+};
 
 export default function WalletDemo() {
   const [activeTab, setActiveTab] = useState("Wallet")
@@ -38,16 +48,15 @@ export default function WalletDemo() {
           </button>
         </div>
       </nav>
-
       {/* Main Content */}
       <div className="flex h-[600px]">
         {/* Left Panel - Connect Wallet Button */}
         <div className="w-1/2 flex items-center justify-center p-8">
           <div className="text-center">
             <p className="text-gray-300 mb-8 text-lg">Enable users to onboard and log into your app with a wallet.</p>
-            <button className="bg-purple-600 hover:bg-purple-500 text-white px-8 py-3 rounded-lg font-medium text-lg transition-colors">
-              Connect Wallet
-            </button>
+            <div className="w-full flex items-center justify-center">
+              <ConnectWalletPage styles={walletStyles}/>
+            </div>
           </div>
         </div>
 
@@ -163,7 +172,7 @@ export default function WalletDemo() {
                 </div>
               </div>
 
-              <div className="text-white">)</div>
+              <div className="text-white"></div>
             </div>
 
             <div className="text-white">{"}"}</div>
