@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { Copy, Terminal } from "lucide-react"
-import { Alert, AlertDescription } from "@/components/docs/customAlert" // Custom Alert
-import { Button } from "@/components/docs/customButton" // Custom Button
+import { Alert, AlertDescription } from "@/components/ui/alert" // Custom Alert
+import { Button } from "@/components/ui/button" // Custom Button
 
 export function DocsContent() {
   return (
@@ -162,7 +162,7 @@ export function DocsContent() {
         </li>
       </ul>
       <p>
-        Hyperion's vision is to create a self-governing, decentralized spatial ecosystem where users own their data and
+        Hyperion&apos;s vision is to create a self-governing, decentralized spatial ecosystem where users own their data and
         can access reliable, censorship-resistant location services.
       </p>
     </article>

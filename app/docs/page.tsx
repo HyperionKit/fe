@@ -1,5 +1,5 @@
 import React from 'react'
-import { DocsLayout } from "@/components/docs/docsLayout"
+import { DocsLayout } from "@/views/docs/docs-layout"
 
 const page = () => {
   return (

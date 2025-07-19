@@ -1,7 +1,7 @@
 "use client";
 
-import RoadmapTimeline from "@/components/RoadmapTimeline";
-import FeatureGrid from "@/components/FeatureGrid";
+import RoadmapTimeline from "@/components/roadmap-timeline";
+import FeatureGrid from "@/components/feature-grid";
 
 
 export default function HyperkitRoadmap() {

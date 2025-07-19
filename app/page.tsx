@@ -1,18 +1,18 @@
 "use client"
 import type React from "react"
-import { motion } from "framer-motion"
-import HeroSection from "@/components/HeroSection"
-import WalletDemo from "@/components/WalletDemo"
-import HyperkitRoadmap from "@/components/HyperkitRoadmap"
-import HyperkitRewards from "@/components/HyperkitRewards"
-import HyperRoles from "@/components/HyperRoles"
-import HyperEarnPoints from "@/components/HyperEarnPoints"
-import HyperToMeta from "@/components/HyperToMeta"
-import HyperMetrics from "@/components/HyperMetrics"
+import { motion, Variants } from "framer-motion"
+import HeroSection from "@/components/hero-section"
+import WalletDemo from "@/components/wallet-demo"
+import HyperkitRoadmap from "@/components/hyper-roadmap"
+import HyperkitRewards from "@/components/hyper-rewards"
+import HyperRoles from "@/components/hyper-roles"
+import HyperEarnPoints from "@/components/hyper-earn"
+import HyperToMeta from "@/components/hyper-meta"
+import HyperMetrics from "@/components/hyper-metrics"
 import Footer from "@/components/footer"
 
 const HomePage: React.FC = () => {
-  const fadeInAnimationVariants = {
+  const fadeInAnimationVariants: Variants = {
     initial: {
       opacity: 0,
     },
@@ -30,10 +30,10 @@ const HomePage: React.FC = () => {
     <>
       <main className="flex flex-col items-center bg-white min-h-screen">
         <motion.div
-          variants={fadeInAnimationVariants}
           initial="initial"
           whileInView="whileInView"
           viewport={{ once: true, amount: "some" }}
+          variants={fadeInAnimationVariants}
           className="w-full"
         >
           <HeroSection />

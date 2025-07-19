@@ -1,7 +1,7 @@
-import { DocsHeader } from "@/components/docs/docsHeader"
-import { DocsSidebar } from "@/components/docs/docsSidebar"
-import { DocsContent } from "@/components/docs/docsContent"
-import { DocsTableOfContents } from "@/components/docs/docsToc"
+import { DocsHeader } from "@/views/docs/docs-header"
+import { DocsSidebar } from "@/views/docs/docs-sidebar"
+import { DocsContent } from "@/views/docs/docs-contents"
+import { DocsTableOfContents } from "@/views/docs/docs-tos"
 
 export function DocsLayout() {
   return (

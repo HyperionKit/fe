@@ -4,7 +4,7 @@ import Link from "next/link"
 import { GitHubLogoIcon } from "@radix-ui/react-icons"
 import { ChevronRight, LifeBuoy, Play } from "lucide-react"
 
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/docs/customCollapsible"
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 export function DocsSidebar() {
   return (
