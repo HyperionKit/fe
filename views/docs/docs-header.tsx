@@ -8,39 +8,31 @@ export function DocsHeader() {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 0) {
-        setScrolled(true)
-      } else {
-        setScrolled(false)
-      }
+      setScrolled(window.scrollY > 0)
     }
 
     window.addEventListener("scroll", handleScroll)
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
+    return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
   return (
     <header
       className={`sticky top-0 z-40 w-full border-b transition-all duration-300 ${
-        scrolled ? "bg-background/80 backdrop-blur-md shadow-sm" : ""
+        scrolled ? "bg-white/80 backdrop-blur-md shadow-sm" : "bg-white"
       }`}
     >
-      <div className="container flex h-16 items-center max-w-6xl mx-auto">
-        {" "}
-        {/* Added max-w-6xl and mx-auto */}
-        <Link href="#" className="mr-6 flex items-center space-x-2">
-          <span className="font-bold">Hyperkit</span>
+      <div className="container flex h-16 items-center max-w-6xl mx-auto px-4">
+        <Link href="#" className="mr-8 flex items-center space-x-2">
+          <span className="font-bold text-xl">Hyperkit</span>
         </Link>
-        <nav className="flex items-center space-x-4 lg:space-x-6">
-          <Link href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+        <nav className="flex items-center space-x-8">
+          <Link href="#" className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900">
             Get Started
           </Link>
-          <Link href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+          <Link href="#" className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900">
             Metis Chain
           </Link>
-          <Link href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+          <Link href="#" className="text-sm font-medium text-gray-600 transition-colors hover:text-gray-900">
             Hyperkit
           </Link>
         </nav>

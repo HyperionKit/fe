@@ -2,7 +2,7 @@ export default function EarnDemo() {
   return (
     <div className="text-gray-300">
       <div className="mb-4">
-        <span className="text-blue-400">// Earn Component Demo</span>
+        <span className="text-blue-400">// Stake Component Demo</span>
       </div>
       <pre className="text-green-400">
 {`import { EarnComponent } from 'hyperionkit'

@@ -1,5 +1,11 @@
-"use client";
-import { CheckSquare } from "lucide-react"
+"use client"
+
+import dynamic from "next/dynamic"
+import { useState, useEffect } from "react"
+
+const SquareCheckBig = dynamic(() => import("lucide-react").then(mod => mod.SquareCheckBig), {
+  ssr: false,
+})
 
 export default function HyperkitRewards() {
   const benefits = [
@@ -8,6 +14,12 @@ export default function HyperkitRewards() {
     "Receive badges based on your objective and verifiable accomplishments",
     'Get Exclusive opportunities in role "HyperContributor", "HyperCoder", "HyperDeveloper" our tiered badge system',
   ]
+
+  const [isClient, setIsClient] = useState(false)
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   return (
     <div className="flex justify-center py-18 items-center p-4">
@@ -26,7 +38,7 @@ export default function HyperkitRewards() {
               key={index}
               className="flex items-start gap-3 p-4 rounded-xl hover:bg-gray-50 border border-purple-100 shadow-sm shadow-purple-50 ring-1 ring-purple-100 bg-white"
             >
-              <CheckSquare className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />
+              {isClient && <SquareCheckBig className="w-5 h-5 text-purple-600 flex-shrink-0 mt-0.5" />}
               <p className="text-gray-500 text-base">{benefit}</p>
             </div>
           ))}

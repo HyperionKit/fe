@@ -2,7 +2,7 @@ export default function TransactDemo() {
   return (
     <div className="text-gray-300">
       <div className="mb-4">
-        <span className="text-blue-400">// Transact Component Demo</span>
+        <span className="text-blue-400">// Bridge Component Demo</span>
       </div>
       <pre className="text-green-400">
 {`import { FundComponent } from 'hyperionkit'

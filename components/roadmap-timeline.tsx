@@ -1,4 +1,7 @@
+"use client"
+
 import type React from "react"
+import { useState, useEffect } from "react"
 
 interface TimelinePointProps {
   id: string
@@ -9,6 +12,7 @@ interface TimelinePointProps {
   markerColor?: string
   left: string
   lineColorClass: string
+  index: number
 }
 
 const TimelinePoint: React.FC<TimelinePointProps> = ({
@@ -19,33 +23,38 @@ const TimelinePoint: React.FC<TimelinePointProps> = ({
   markerColor,
   left,
   lineColorClass,
+  index,
 }) => {
   const isPhase = type === "phase"
-  const markerSize = isPhase ? "w-6 h-6" : "w-3 h-3"
+  const markerSize = isPhase ? "w-3 h-3 md:w-4 md:h-4" : "w-2 h-2 md:w-2 md:h-2"
   const markerClasses = isPhase
     ? `relative rounded-full flex items-center justify-center bg-gradient-to-br ${markerGradient}`
     : `rounded-full ${markerColor}`
 
   return (
     <div
-      className="absolute flex flex-col items-center"
-      style={{ left, top: "50%", transform: "translate(-50%, -50%)" }}
+      className="absolute flex flex-col items-center px-2 md:px-2"
+      style={{
+        left,
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+      }}
     >
       {isPhase ? (
         <>
-          <div className="absolute bottom-[calc(100%+60px)] text-center text-sm font-medium text-gray-700 whitespace-pre-line w-[120px]">
+          <div className="absolute bottom-[calc(100%+20px)] md:bottom-[calc(100%+30px)] text-center text-xs md:text-sm font-medium text-gray-700 whitespace-pre-line w-[80px] md:w-[100px]">
             {title}
           </div>
-          <div className={`absolute bottom-full w-0.5 h-12 ${lineColorClass}`} />
+          <div className={`absolute bottom-full w-0.5 h-4 md:h-6 ${lineColorClass}`} />
           <div className={`relative z-10 ${markerClasses} ${markerSize}`}>
-            <div className="w-3 h-3 bg-white rounded-full" />
+            <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full" />
           </div>
         </>
       ) : (
         <>
           <div className={`relative z-10 ${markerClasses} ${markerSize}`} />
-          <div className={`absolute top-full w-0.5 h-12 ${lineColorClass}`} />
-          <div className="absolute top-[calc(100%+60px)] text-center text-xs text-gray-600 max-w-[100px] whitespace-pre-line">
+          <div className={`absolute top-full w-0.5 h-4 md:h-6 ${lineColorClass}`} />
+          <div className="absolute top-[calc(100%+20px)] md:top-[calc(100%+30px)] text-center text-xs md:text-sm text-gray-600 max-w-[75px] md:max-w-[90px] whitespace-pre-line leading-tight">
             {description}
           </div>
         </>
@@ -54,7 +63,7 @@ const TimelinePoint: React.FC<TimelinePointProps> = ({
   )
 }
 
-const timelineData: TimelinePointProps[] = [
+const timelineData: Omit<TimelinePointProps, "index">[] = [
   {
     id: "q3-phase1",
     type: "phase",
@@ -154,20 +163,57 @@ const timelineData: TimelinePointProps[] = [
 ]
 
 export default function Component() {
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   return (
-    <div className="relative w-full max-w-6xl mx-auto h-[350px] flex items-center justify-center bg-white py-12 px-4">
-      <div className="relative h-full w-full flex items-center">
+    <div className="relative w-full max-w-6xl mx-auto h-[140px] md:h-[200px] flex items-center justify-center bg-white py-4 md:py-6 px-2 md:px-8">
+      <div 
+        className="relative h-full w-full flex items-center overflow-x-auto md:overflow-x-visible px-8 md:px-8"
+        style={{
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+          WebkitOverflowScrolling: 'touch'
+        }}
+      >
         <div
-          className="absolute top-1/2 h-0.5 left-0 right-0 rounded-full"
+          className="absolute top-1/2 h-0.5 left-8 md:left-8 md:right-8 rounded-full"
           style={{
-            background: "linear-gradient(to right, #8B5CF6 0%, #EC4899 30%, #3B82F6 60%, #06B6D4 100%)",
+            background:
+              "linear-gradient(to right, #8B5CF6 0%, #EC4899 30%, #3B82F6 60%, #06B6D4 100%)",
+            width: isMobile ? "300%" : "calc(100% - 4rem)",
           }}
         />
-
-        {timelineData.map((item) => (
-          <TimelinePoint key={item.id} {...item} />
-        ))}
+        <div
+          className="relative flex-shrink-0 md:w-full"
+          style={{
+            width: isMobile ? "300%" : "100%",
+            minWidth: isMobile ? "300%" : "100%",
+          }}
+        >
+          {timelineData.map((item, index) => (
+            <TimelinePoint key={item.id} {...item} index={index} />
+          ))}
+        </div>
       </div>
+
+      <style dangerouslySetInnerHTML={{
+        __html: `
+          div[style*="overflow-x"]::-webkit-scrollbar {
+            display: none;
+          }
+        `
+      }} />
     </div>
   )
 }

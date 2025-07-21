@@ -3,59 +3,60 @@
 import Link from "next/link"
 import { GitHubLogoIcon } from "@radix-ui/react-icons"
 import { ChevronRight, LifeBuoy, Play } from "lucide-react"
-
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 export function DocsSidebar() {
   return (
-    <div className="h-full py-6 pr-6 lg:py-8 overflow-y-auto">
-      <div className="space-y-4">
-        <div className="grid gap-1">
+    <div className="h-full py-8 pr-8 overflow-y-auto">
+      <div className="space-y-6 px-4 md:px-0">
+        {/* Quick Links */}
+        <div className="space-y-2">
           <Link
             href="#"
-            className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+            className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900"
           >
-            <GitHubLogoIcon className="mr-2 h-4 w-4" />
+            <GitHubLogoIcon className="mr-3 h-4 w-4" />
             GitHub
           </Link>
           <Link
             href="#"
-            className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+            className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900"
           >
-            <Play className="mr-2 h-4 w-4" />
+            <Play className="mr-3 h-4 w-4" />
             Playground
           </Link>
           <Link
             href="#"
-            className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+            className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900"
           >
-            <LifeBuoy className="mr-2 h-4 w-4" />
+            <LifeBuoy className="mr-3 h-4 w-4" />
             Support
           </Link>
         </div>
 
-        <div className="grid gap-2">
+        {/* Navigation Sections */}
+        <div className="space-y-4">
           <Collapsible defaultOpen>
-            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-4 py-2 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground [&[data-state=open]>svg]:rotate-90">
+            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-4 py-2 text-sm font-semibold transition-colors hover:bg-violet-200 hover:text-gray-900 [&[data-state=open]>svg]:rotate-90">
               Introduction
               <ChevronRight className="h-4 w-4 shrink-0 transition-transform" />
             </CollapsibleTrigger>
-            <CollapsibleContent className="grid gap-1 pl-4">
+            <CollapsibleContent className="space-y-1 pl-4 mt-2">
               <Link
                 href="#"
-                className={`inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 justify-start bg-accent text-accent-foreground`}
+                className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md hover:bg-violet-200 text-gray-900"
               >
                 Getting Started
               </Link>
               <Link
                 href="#"
-                className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+                className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900 text-gray-600"
               >
                 Telemetry
               </Link>
               <Link
                 href="#"
-                className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+                className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900 text-gray-600"
               >
                 Troubleshooting
               </Link>
@@ -63,32 +64,32 @@ export function DocsSidebar() {
           </Collapsible>
 
           <Collapsible defaultOpen>
-            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-4 py-2 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground [&[data-state=open]>svg]:rotate-90">
+            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-4 py-2 text-sm font-semibold transition-colors hover:bg-violet-200 hover:text-gray-900 [&[data-state=open]>svg]:rotate-90">
               Installation
               <ChevronRight className="h-4 w-4 shrink-0 transition-transform" />
             </CollapsibleTrigger>
-            <CollapsibleContent className="grid gap-1 pl-4">
+            <CollapsibleContent className="space-y-1 pl-4 mt-2">
               <Link
                 href="#"
-                className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+                className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900 text-gray-600"
               >
                 Next.js Installation
               </Link>
               <Link
                 href="#"
-                className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+                className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900 text-gray-600"
               >
                 Vite Installation
               </Link>
               <Link
                 href="#"
-                className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+                className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900 text-gray-600"
               >
                 Remix Installation
               </Link>
               <Link
                 href="#"
-                className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+                className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900 text-gray-600"
               >
                 Astro Installation
               </Link>
@@ -96,20 +97,20 @@ export function DocsSidebar() {
           </Collapsible>
 
           <Collapsible>
-            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-4 py-2 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground [&[data-state=open]>svg]:rotate-90">
+            <CollapsibleTrigger className="flex w-full items-center justify-between rounded-md px-4 py-2 text-sm font-semibold transition-colors hover:bg-violet-200 hover:text-gray-900 [&[data-state=open]>svg]:rotate-90">
               Config
               <ChevronRight className="h-4 w-4 shrink-0 transition-transform" />
             </CollapsibleTrigger>
-            <CollapsibleContent className="grid gap-1 pl-4">
+            <CollapsibleContent className="space-y-1 pl-4 mt-2">
               <Link
                 href="#"
-                className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+                className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900 text-gray-600"
               >
                 {"<OnchainKitProvider />"}
               </Link>
               <Link
                 href="#"
-                className="inline-flex items-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 h-9 px-4 py-2 hover:bg-accent hover:text-accent-foreground justify-start"
+                className="flex items-center h-9 px-4 py-2 text-sm font-medium rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900 text-gray-600"
               >
                 Supplemental Providers
               </Link>
@@ -118,7 +119,7 @@ export function DocsSidebar() {
 
           <Link
             href="#"
-            className="inline-flex items-center whitespace-nowrap rounded-md px-4 py-2 text-sm font-semibold transition-colors hover:bg-accent hover:text-accent-foreground"
+            className="flex items-center px-4 py-2 text-sm font-semibold rounded-md transition-colors hover:bg-violet-200 hover:text-gray-900"
           >
             Guides
           </Link>

@@ -46,7 +46,7 @@ const HomePage: React.FC = () => {
           viewport={{ once: true, amount: "some" }}
           className="min-h-screen w-full bg-white"
         >
-          <div className="max-w-6xl mx-auto px-8">
+          <div className="max-w-6xl mx-auto px-4">
             <WalletDemo />
           </div>
         </motion.div>

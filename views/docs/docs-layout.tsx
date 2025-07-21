@@ -18,7 +18,7 @@ export function DocsLayout() {
             <DocsContent />
           </div>
           <div className="hidden text-sm xl:block">
-            <div className="sticky top-16 -mt-10 pt-4">
+            <div className="sticky top-16 -mt-10 pt-8">
               <DocsTableOfContents />
             </div>
           </div>
