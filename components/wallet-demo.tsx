@@ -3,8 +3,16 @@
 import { useState, useEffect } from "react"
 import { Settings, Menu, X } from "lucide-react"
 
+// Define the styles type
+interface WalletStyles {
+  pageContainer: string;
+  connectButton: string;
+  errorCard: string;
+  connectedButton: string;
+}
+
 // Mock components since we don't have the actual imports
-const ConnectWalletPage = ({ styles }) => (
+const ConnectWalletPage = ({ styles }: { styles: WalletStyles }) => (
   <div className="bg-gray-800 p-6 rounded-lg border border-gray-600 w-fit mx-auto">
     <h3 className="text-white text-lg font-semibold mb-4 text-center">Connect Wallet</h3>
     <button className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-medium transition-colors block mx-auto">
@@ -100,7 +108,7 @@ const styles = {
   connectedButton: "connected-button",
 }
 
-const walletStyles = {
+const walletStyles: WalletStyles = {
   pageContainer: styles.pageContainer,
   connectButton: styles.connectButton,
   errorCard: styles.errorCard,
