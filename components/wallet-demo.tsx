@@ -3,117 +3,90 @@
 import { useState, useEffect } from "react"
 import { Settings, Menu, X } from "lucide-react"
 
-// Define the styles type
-interface WalletStyles {
-  pageContainer: string;
-  connectButton: string;
-  errorCard: string;
-  connectedButton: string;
-}
-
-// Mock components since we don't have the actual imports
-const ConnectWalletPage = ({ styles }: { styles: WalletStyles }) => (
-  <div className="bg-gray-800 p-6 rounded-lg border border-gray-600 w-fit mx-auto">
-    <h3 className="text-white text-lg font-semibold mb-4 text-center">Connect Wallet</h3>
-    <button className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-lg font-medium transition-colors block mx-auto">
-      Connect to MetaMask
-    </button>
-  </div>
-)
+import {ConnectWalletPage} from "hyperionkit"
+import {SwapPage} from "hyperionkit"
+import {BridgePage} from "hyperionkit"
+import {StakingPage} from "hyperionkit"
+import {BuyPage} from "hyperionkit"
 
 const ConnectWalletDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
     <pre className="whitespace-pre-wrap">{`import { ConnectWalletPage } from 'hyperionkit';
-
-export default function App() {
-  return (
-    <ConnectWalletPage 
-      styles={walletStyles}
-    />
-  );
-}`}</pre>
+    export default function App() {
+      return (
+        <ConnectWalletPage 
+          styles={walletStyles}
+        />
+      );
+    }`}</pre>
   </div>
 )
 
 const BuyDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
     <pre className="whitespace-pre-wrap">{`import { BuyComponent } from 'hyperionkit';
-
-export default function Buy() {
-  return (
-    <BuyComponent 
-      onPurchase={(data) => {
-        console.log('Purchase:', data);
-      }}
-    />
-  );
-}`}</pre>
+    export default function Buy() {
+      return (
+        <BuyComponent 
+          onPurchase={(data) => {
+            console.log('Purchase:', data);
+          }}
+        />
+      );
+    }`}
+    </pre>
   </div>
 )
 
 const FundDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
     <pre className="whitespace-pre-wrap">{`import { SwapComponent } from 'hyperionkit';
-
-export default function Swap() {
-  return (
-    <SwapComponent 
-      onSwap={(amount) => {
-        console.log('Swapped:', amount);
-      }}
-    />
-  );
-}`}</pre>
+    export default function Swap() {
+      return (
+        <SwapComponent 
+          onSwap={(amount) => {
+            console.log('Swapped:', amount);
+          }}
+        />
+      );
+    }`}
+    </pre>
   </div>
 )
 
 const EarnDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
     <pre className="whitespace-pre-wrap">{`import { StakeComponent } from 'hyperionkit';
-
-export default function Stake() {
-  return (
-    <StakeComponent 
-      rewardPools={pools}
-      onStake={(pool, amount) => {
-        console.log('Staked:', pool, amount);
-      }}
-    />
-  );
-}`}</pre>
+    export default function Stake() {
+      return (
+        <StakeComponent 
+          rewardPools={pools}
+          onStake={(pool, amount) => {
+            console.log('Staked:', pool, amount);
+          }}
+        />
+      );
+    }`}
+    </pre>
   </div>
 )
 
 const TransactDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
     <pre className="whitespace-pre-wrap">{`import { BridgeComponent } from 'hyperionkit';
-
-export default function Bridge() {
-  return (
-    <BridgeComponent 
-      onBridge={(tx) => {
-        console.log('BridgeTransaction:', tx);
-      }}
-    />
-  );
-}`}</pre>
+    export default function Bridge() {
+      return (
+        <BridgeComponent 
+          onBridge={(tx) => {
+            console.log('BridgeTransaction:', tx);
+          }}
+        />
+      );
+    }`}
+    </pre>
   </div>
 )
 
-// Mock styles
-const styles = {
-  pageContainer: "page-container",
-  connectButton: "connect-button",
-  errorCard: "error-card",
-  connectedButton: "connected-button",
-}
-
-const walletStyles: WalletStyles = {
-  pageContainer: styles.pageContainer,
-  connectButton: styles.connectButton,
-  errorCard: styles.errorCard,
-  connectedButton: styles.connectedButton,
-}
 
 export default function WalletDemo() {
   const [activeTab, setActiveTab] = useState("Wallet")
@@ -131,39 +104,33 @@ export default function WalletDemo() {
     switch (activeTab) {
       case "Wallet":
         return {
-          component: <ConnectWalletPage styles={walletStyles}/>,
-          demo: <ConnectWalletDemo />,
-          description: "Enable users to onboard and log into your app with a wallet."
+          component: <ConnectWalletPage />,
+          demo: <ConnectWalletDemo />
         }
       case "Buy":
         return {
-          component: <div className="text-center text-gray-300 p-8">Buy Component Coming Soon</div>,
-          demo: <BuyDemo />,
-          description: "Let users purchase crypto directly within your app."
+          component: <BuyPage />,
+          demo: <BuyDemo />
         }
       case "Swap":
         return {
-          component: <div className="text-center text-gray-300 p-8">Swap Component Coming Soon</div>,
-          demo: <FundDemo />,
-          description: "Enable users to exchange crypto to their wallets easily."
+          component: <SwapPage />,
+          demo: <FundDemo />
         }
       case "Stake":
         return {
-          component: <div className="text-center text-gray-300 p-8">Stake Component Coming Soon</div>,
-          demo: <EarnDemo />,
-          description: "Allow users to stake and earn rewards and tokens."
+          component: <StakingPage />,
+          demo: <EarnDemo />
         }
       case "Bridge":
         return {
-          component: <div className="text-center text-gray-300 p-8">Bridge Component Coming Soon</div>,
-          demo: <TransactDemo />,
-          description: "Facilitate seamless bridge transactions for your users."
-        }
+          component: <BridgePage />,
+          demo: <TransactDemo />
+          }
       default:
         return {
-          component: <ConnectWalletPage styles={walletStyles}/>,
-          demo: <ConnectWalletDemo />,
-          description: "Enable users to onboard and log into your app with a wallet."
+          component: <ConnectWalletPage/>,
+          demo: <ConnectWalletDemo />
         }
     }
   }
@@ -172,13 +139,6 @@ export default function WalletDemo() {
 
   return (
     <div className="bg-black text-white rounded-lg shadow-2xl border border-gray-700 overflow-hidden w-full max-w-7xl mx-auto">
-      {/* Mobile Description Banner */}
-      <div className="block sm:hidden px-4 py-3 bg-gray-900/50 border-b border-gray-800">
-        <p className="text-xs text-gray-400 text-center">
-          {tabContent.description}
-        </p>
-      </div>
-
       {/* Top Navigation */}
       <nav className="border-b border-gray-800">
         {/* Mobile Navigation */}
@@ -275,15 +235,8 @@ export default function WalletDemo() {
       <div className="flex flex-col lg:flex-row min-h-[500px] lg:h-[600px]">
         {/* Left Panel - Interactive Component */}
         <div className="w-full lg:w-1/2 flex flex-col bg-gray-950/30 min-h-[300px] lg:min-h-0 order-2 lg:order-1">
-          {/* Desktop Description */}
-          <div className="hidden sm:block px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6 lg:pt-8">
-            <p className="text-sm text-gray-400 max-w-md">
-              {tabContent.description}
-            </p>
-          </div>
-          
           {/* Centered Content Container */}
-          <div className="flex-1 flex items-center justify-center px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8">
+          <div className="flex-1 flex items-center justify-center py-2 px-4 sm:px-6 lg:px-8 sm:pb-4 lg:pb-6">
             {tabContent.component}
           </div>
         </div>
