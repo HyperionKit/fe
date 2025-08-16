@@ -8,6 +8,7 @@ import {SwapPage} from "hyperionkit"
 import {BridgePage} from "hyperionkit"
 import {StakingPage} from "hyperionkit"
 import {BuyPage} from "hyperionkit"
+import FaucetButton from "./ui/faucet-button"
 
 const ConnectWalletDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
@@ -238,6 +239,10 @@ export default function WalletDemo() {
           {/* Centered Content Container */}
           <div className="flex-1 flex items-center justify-center py-2 px-4 sm:px-6 lg:px-8 sm:pb-4 lg:pb-6">
             {tabContent.component}
+          </div>
+          {/* Faucet Button */}
+          <div className="flex justify-center pb-4">
+            <FaucetButton />
           </div>
         </div>
 

@@ -34,8 +34,17 @@ const HeroSection: React.FC = () => {
         
         {/* Mobile-first responsive button layout */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4">
-          <button className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all duration-300 text-sm sm:text-base">
+          <button 
+            onClick={() => {
+              navigator.clipboard.writeText("npm create hyperkit");
+              // You can add a toast notification here if needed
+            }}
+            className="w-full sm:w-auto bg-violet-600 hover:bg-violet-700 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all duration-300 text-sm sm:text-base flex items-center justify-center gap-2"
+          >
             npm create hyperkit
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
           </button>
           <div className="flex gap-3 sm:gap-4 w-full sm:w-auto">
             <Link href="/docs" className="flex-1 sm:flex-none bg-black hover:bg-gray-800 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 text-sm sm:text-base">

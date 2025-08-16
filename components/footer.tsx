@@ -3,13 +3,16 @@ import Image from "next/image"
 import Link from "next/link"
 
 export default function Footer() {
+
+
+
   return (
     <footer className="w-full bg-white py-8 px-4 md:px-8 border-t border-gray-100">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-3">
             <Link href="/">
               <Image
-                src="/Hyperkit_Logo.png"
+                src="/l_2.png"
                 alt="Hyperkit Logo"
                 width={150}
                 height={100}

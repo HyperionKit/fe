@@ -57,7 +57,7 @@ export default function FeatureGrid() {
           {features.map((feature, index) => (
             <div 
               key={index} 
-              className="flex flex-col items-start space-y-4 p-4 border-1 hover:border-purple-400 transition-colors duration-300 h-full rounded-lg"
+              className="flex flex-col items-start space-y-4 p-4 border-1 hover:border-purple-400 transition-colors duration-300 h-full rounded-lg bg-white border-gray-200"
             >
               <div className="p-3 text-purple-600">
                 <img 
@@ -66,8 +66,8 @@ export default function FeatureGrid() {
                   className="w-6 h-6 object-contain"
                 />
               </div>
-              <h3 className="text-xl font-bold text-purple-800 text-left">{feature.title}</h3>
-              <p className="text-blue-500 leading-relaxed text-left">{feature.description}</p>
+                          <h3 className="text-xl font-bold text-purple-800 text-left">{feature.title}</h3>
+            <p className="text-blue-500 leading-relaxed text-left">{feature.description}</p>
             </div>
           ))}
         </div>

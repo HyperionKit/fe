@@ -8,22 +8,10 @@ const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileCampaignsOpen, setIsMobileCampaignsOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // Initialize dark mode from localStorage or system preference
-  useEffect(() => {
-    const saved = localStorage.getItem('darkMode');
-    if (saved !== null) {
-      setIsDarkMode(JSON.parse(saved));
-    } else {
-      setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
-    }
-  }, []);
 
-  // Store dark mode preference (but don't apply to document yet)
-  useEffect(() => {
-    localStorage.setItem('darkMode', JSON.stringify(isDarkMode));
-  }, [isDarkMode]);
+
+
 
   // Close mobile menu when screen size changes
   useEffect(() => {
@@ -47,22 +35,20 @@ const Navbar: React.FC = () => {
       if (!target.closest('.mobile-menu-container')) {
         setIsMobileMenuOpen(false);
       }
+
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+
 
   const navigationLinks = [
     { href: "/#", label: "Explore" },
     { href: "/#", label: "Builders" },
     { href: "/#", label: "Community" },
-    { href: "/#", label: "About" },
-    { href: "/#", label: "Socials" }
+    { href: "/#", label: "About" }
   ];
 
   const campaignLinks = [
@@ -79,7 +65,7 @@ const Navbar: React.FC = () => {
           <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
             <Link href="/" className="flex-shrink-0">
               <Image
-                src="/Hyperkit_Logo.png"
+                src="/l_2.png"
                 alt="Hyperkit Logo"
                 width={150}
                 height={100}
@@ -102,27 +88,12 @@ const Navbar: React.FC = () => {
                 {link.label}
               </Link>
             ))}
+            
+
           </div>
 
           {/* Right Side - Desktop */}
           <div className="hidden md:flex items-center space-x-4">
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={toggleDarkMode}
-              className="p-2 rounded-lg text-gray-700 hover:text-violet-600 hover:bg-gray-100 transition-all duration-300"
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              )}
-            </button>
-
             {/* Campaigns Dropdown */}
             <div className="relative dropdown-container">
               <button
@@ -163,7 +134,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden mobile-menu-container">
+          <div className="md:hidden flex items-center space-x-2">
             <button
               type="button"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -190,7 +161,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu Overlay */}
       <div 
-        className={`md:hidden absolute top-full left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50 mobile-menu-container overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`md:hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg z-50 mobile-menu-container overflow-hidden transition-all duration-300 ease-in-out ${
           isMobileMenuOpen 
             ? 'max-h-screen opacity-100 visible' 
             : 'max-h-0 opacity-0 invisible'
@@ -216,38 +187,11 @@ const Navbar: React.FC = () => {
                 {link.label}
               </Link>
             ))}
+            
+
           </div>
 
-          {/* Dark Mode Toggle - Mobile */}
-          <div className={`pt-4 border-t border-gray-200 mt-4 transition-all duration-300 transform ${
-            isMobileMenuOpen 
-              ? 'translate-y-0 opacity-100' 
-              : 'translate-y-2 opacity-0'
-          }`}
-          style={{
-            transitionDelay: isMobileMenuOpen ? `${navigationLinks.length * 50}ms` : '0ms'
-          }}>
-            <button
-              onClick={toggleDarkMode}
-              className="flex items-center space-x-3 w-full px-3 py-3 text-base font-medium text-gray-700 hover:text-violet-600 hover:bg-gray-50 rounded-md transition-colors"
-            >
-              {isDarkMode ? (
-                <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                  <span>Light Mode</span>
-                </>
-              ) : (
-                <>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                  </svg>
-                  <span>Dark Mode</span>
-                </>
-              )}
-            </button>
-          </div>
+
 
           {/* Campaigns Section - Now as Dropdown */}
           <div className={`pt-4 border-t border-gray-200 mt-4 transition-all duration-300 transform ${
@@ -256,7 +200,7 @@ const Navbar: React.FC = () => {
               : 'translate-y-2 opacity-0'
           }`}
           style={{
-            transitionDelay: isMobileMenuOpen ? `${(navigationLinks.length + 1) * 50}ms` : '0ms'
+            transitionDelay: isMobileMenuOpen ? `${navigationLinks.length * 50}ms` : '0ms'
           }}>
             <button
               onClick={() => setIsMobileCampaignsOpen(!isMobileCampaignsOpen)}

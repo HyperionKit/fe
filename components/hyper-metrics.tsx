@@ -18,9 +18,9 @@ export default function Component() {
           {metrics.map((metric, index) => (
             <div
               key={index}
-              className={`grid grid-cols-[150px_1fr] items-center gap-4 pb-4 ${
-                index < metrics.length - 1 ? "border-b border-gray-200" : ""
-              }`}
+                                    className={`grid grid-cols-[150px_1fr] items-center gap-4 pb-4 ${
+                        index < metrics.length - 1 ? "border-b border-gray-200" : ""
+                      }`}
             >
               <div className="text-3xl font-medium text-gray-900 md:text-2xl lg:text-2xl">{metric.value}</div>
               <div className="text-lg text-gray-700 md:text-lg lg:text-lg">{metric.description}</div>
