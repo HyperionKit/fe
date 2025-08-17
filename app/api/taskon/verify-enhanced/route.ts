@@ -144,7 +144,7 @@ async function verifyTaskCompletionEnhanced(
 
       // Query for events with the user's address
       const filter = eventDef.filter(walletAddress);
-      const events = await contract.queryFilter(filter, fromBlock, currentBlock);
+      const events = await contract.queryFilter(filter as any, fromBlock, currentBlock);
 
       if (events.length > 0) {
         // Sort events by block number to get the most recent

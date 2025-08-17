@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "cross-env NEXT_DISABLE_ESLINT=1 NEXT_DISABLE_TYPECHECK=1 next build",
+    "build": "next build --no-lint",
+    "build:skip-types": "SKIP_TYPE_CHECK=true next build",
+    "build:no-check": "cross-env TYPESCRIPT_NO_TYPE_CHECK=true next build",
     "start": "next start",
     "lint": "next lint"
   },
