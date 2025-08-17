@@ -8,7 +8,6 @@ import {SwapPage} from "hyperionkit"
 import {BridgePage} from "hyperionkit"
 import {StakingPage} from "hyperionkit"
 import {BuyPage} from "hyperionkit"
-import FaucetPage from "../views/wallet-demo/faucet/faucet-demo"
 
 
 const ConnectWalletDemo = () => (
@@ -95,43 +94,13 @@ export default function WalletDemo() {
   const [isMounted, setIsMounted] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  // Function to add token to MetaMask/Web3 wallet
-  const addTokenToWallet = async (symbol: string, address: string, decimals: number) => {
-    if (typeof window.ethereum === 'undefined') {
-      alert('MetaMask or Web3 wallet not detected! Please install MetaMask.');
-      return;
-    }
 
-    try {
-      const wasAdded = await window.ethereum.request({
-        method: 'wallet_watchAsset',
-        params: {
-          type: 'ERC20',
-          options: {
-            address: address,
-            symbol: symbol,
-            decimals: decimals,
-            image: 'https://hyperion-testnet-explorer.metisdevops.link/favicon.ico', // Placeholder image
-          },
-        } as any,
-      });
-
-      if (wasAdded) {
-        alert(`${symbol} token added to your wallet successfully!`);
-      } else {
-        alert(`${symbol} token was not added. Please try again.`);
-      }
-    } catch (error) {
-      console.error('Error adding token:', error);
-      alert(`Failed to add ${symbol} token: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    }
-  };
 
   useEffect(() => {
     setIsMounted(true)
   }, [])
 
-  const navItems = ["Wallet", "Buy", "Swap", "Stake", "Bridge", "Faucet"]
+  const navItems = ["Wallet", "Buy", "Swap", "Stake", "Bridge"]
   const rightNavItems = ["Docs", "AI docs", "Playground"]
 
   const renderTabContent = () => {
@@ -161,27 +130,7 @@ export default function WalletDemo() {
            component: <BridgePage />,
            demo: <TransactDemo />
          }
-       case "Faucet":
-         return {
-           component: <FaucetPage />,
-           demo: <div className="text-gray-300 text-xs leading-relaxed">
-             <pre className="whitespace-pre-wrap">{`// Faucet Component - Hyperion Testnet
-import FaucetPage from './faucet/faucet-demo';
 
-export default function App() {
-  return (
-    <FaucetPage />
-  );
-}
-
-// Features:
-// - Wallet connection via MetaMask
-// - Token claiming with 24h cooldown
-// - Support for USDT, DAI, WETH, WMETIS
-// - Smart contract integration
-// - Transaction status tracking`}</pre>
-           </div>
-         }
        default:
         return {
           component: <ConnectWalletPage/>,
