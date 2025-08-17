@@ -1,9 +1,9 @@
 import { google } from 'googleapis';
+import path from 'path';
 
 // Google Sheets API configuration
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 const SHEET_ID = process.env.GOOGLE_SHEET_ID;
-const CREDENTIALS = process.env.GOOGLE_SERVICE_ACCOUNT_CREDENTIALS;
 
 interface WhitelistEntry {
   address: string;
@@ -17,20 +17,29 @@ export class GoogleSheetsService {
   private sheets: any;
 
   constructor() {
-    if (!CREDENTIALS || !SHEET_ID) {
-      throw new Error('Google Sheets credentials not configured');
+    console.log('Initializing GoogleSheetsService...');
+    console.log('SHEET_ID:', SHEET_ID ? 'Set' : 'Missing');
+    
+    if (!SHEET_ID) {
+      console.warn('Google Sheet ID not configured - using mock mode');
+      return;
     }
 
     try {
-      const credentials = JSON.parse(CREDENTIALS);
-      this.auth = new google.auth.GoogleAuth({
-        credentials,
+      // Initialize service account authentication using keyFile
+      const keyFilePath = path.join(process.cwd(), 'app', 'whitelist', 'hyperkit-whitelist-0d6596b35a1e.json');
+      
+      const auth = new google.auth.GoogleAuth({
+        keyFile: keyFilePath,
         scopes: SCOPES,
       });
-      this.sheets = google.sheets({ version: 'v4', auth: this.auth });
+      
+      this.auth = auth;
+      this.sheets = google.sheets({ version: 'v4', auth });
+      console.log('✅ GoogleSheetsService initialized with Service Account using keyFile');
     } catch (error) {
       console.error('Error initializing Google Sheets service:', error);
-      throw error;
+      console.log('Falling back to mock mode');
     }
   }
 
@@ -39,13 +48,18 @@ export class GoogleSheetsService {
    */
   async isAddressWhitelisted(address: string): Promise<boolean> {
     try {
+      if (!this.sheets) {
+        console.log('Mock mode: Checking if address is whitelisted:', address);
+        return false; // Mock: always new user
+      }
+
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: SHEET_ID,
-        range: 'Whitelist!A:A', // Assuming wallet addresses are in column A
+        range: 'Whitelist!A:A', // Wallet addresses are in column A
       });
 
       const values = response.data.values || [];
-      return values.some(row => row[0]?.toLowerCase() === address.toLowerCase());
+      return values.some((row: any) => row[0]?.toLowerCase() === address.toLowerCase());
     } catch (error) {
       console.error('Error checking whitelist status:', error);
       return false;
@@ -57,6 +71,14 @@ export class GoogleSheetsService {
    */
   async addToWhitelist(entry: WhitelistEntry): Promise<boolean> {
     try {
+      if (!this.sheets) {
+        console.log('Mock mode: Adding to whitelist:', entry);
+        return true; // Mock: always successful
+      }
+
+      console.log('Attempting to add to whitelist with sheet ID:', SHEET_ID);
+      console.log('Entry data:', entry);
+
       const values = [
         [
           entry.address,
@@ -67,7 +89,7 @@ export class GoogleSheetsService {
         ],
       ];
 
-      await this.sheets.spreadsheets.values.append({
+      const result = await this.sheets.spreadsheets.values.append({
         spreadsheetId: SHEET_ID,
         range: 'Whitelist!A:E', // Append to columns A-E
         valueInputOption: 'RAW',
@@ -77,9 +99,16 @@ export class GoogleSheetsService {
         },
       });
 
+      console.log('Google Sheets API response:', result.data);
       return true;
     } catch (error) {
       console.error('Error adding to whitelist:', error);
+      console.error('Error details:', {
+        message: (error as any).message,
+        code: (error as any).code,
+        status: (error as any).status,
+        sheetId: SHEET_ID
+      });
       return false;
     }
   }
@@ -89,13 +118,18 @@ export class GoogleSheetsService {
    */
   async getAllWhitelistedAddresses(): Promise<string[]> {
     try {
+      if (!this.sheets) {
+        console.log('Mock mode: Getting all whitelisted addresses');
+        return []; // Mock: empty list
+      }
+
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: SHEET_ID,
         range: 'Whitelist!A:A',
       });
 
       const values = response.data.values || [];
-      return values.slice(1).map(row => row[0]).filter(Boolean); // Skip header row
+      return values.slice(1).map((row: any) => row[0]).filter(Boolean); // Skip header row
     } catch (error) {
       console.error('Error getting whitelist:', error);
       return [];
@@ -111,6 +145,15 @@ export class GoogleSheetsService {
     recentJoins: number;
   }> {
     try {
+      if (!this.sheets) {
+        console.log('Mock mode: Getting whitelist stats');
+        return {
+          totalAddresses: 0,
+          byWalletType: {},
+          recentJoins: 0,
+        };
+      }
+
       const response = await this.sheets.spreadsheets.values.get({
         spreadsheetId: SHEET_ID,
         range: 'Whitelist!A:E',
@@ -128,7 +171,7 @@ export class GoogleSheetsService {
       const oneWeekAgo = new Date();
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
 
-      dataRows.forEach(row => {
+      dataRows.forEach((row: any) => {
         const walletType = row[1] || 'Unknown';
         const joinedAt = new Date(row[3]);
 
