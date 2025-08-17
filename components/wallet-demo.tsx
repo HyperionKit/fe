@@ -151,7 +151,7 @@ export default function WalletDemo() {
         return {
           component: (
             <Bridge 
-              width="700px"
+              width="500px"
               height="auto"
               scale={0.8}
               theme="light"
@@ -166,7 +166,7 @@ export default function WalletDemo() {
         return {
           component: (
             <Staking 
-              width="700px"
+              width="500px"
               height="auto"
               scale={0.8}
               theme="light"
@@ -180,7 +180,7 @@ export default function WalletDemo() {
         return {
           component: (
             <Faucet 
-              width="700px"
+              width="400px"
               height="auto"
               scale={0.9}
               theme="light"

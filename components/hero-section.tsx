@@ -50,7 +50,7 @@ const HeroSection: React.FC = () => {
             Whitelist
           </Link>
           <div className="flex gap-3 sm:gap-4 w-full sm:w-auto">
-            <Link href="/" className="flex-1 sm:flex-none bg-black hover:bg-gray-800 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 text-sm sm:text-base">
+            <Link href="/docs" className="flex-1 sm:flex-none bg-black hover:bg-gray-800 text-white px-4 sm:px-6 py-3 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center space-x-2 text-sm sm:text-base">
               <span>Docs</span>
               <span>→</span>
             </Link>

@@ -8,8 +8,6 @@ interface WalletInfo {
   type: 'metamask' | 'okx';
 }
 
-
-
 export default function WhitelistPage() {
   const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
   const [isConnecting, setIsConnecting] = useState(false);
