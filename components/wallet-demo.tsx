@@ -8,7 +8,7 @@ import {SwapPage} from "hyperionkit"
 import {BridgePage} from "hyperionkit"
 import {StakingPage} from "hyperionkit"
 import {BuyPage} from "hyperionkit"
-import FaucetButton from "./ui/faucet-button"
+
 
 const ConnectWalletDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
@@ -94,6 +94,8 @@ export default function WalletDemo() {
   const [isMounted, setIsMounted] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
+
+
   useEffect(() => {
     setIsMounted(true)
   }, [])
@@ -123,12 +125,13 @@ export default function WalletDemo() {
           component: <StakingPage />,
           demo: <EarnDemo />
         }
-      case "Bridge":
-        return {
-          component: <BridgePage />,
-          demo: <TransactDemo />
-          }
-      default:
+             case "Bridge":
+         return {
+           component: <BridgePage />,
+           demo: <TransactDemo />
+         }
+
+       default:
         return {
           component: <ConnectWalletPage/>,
           demo: <ConnectWalletDemo />
