@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useAccount, useNetwork, useSwitchNetwork } from 'wagmi';
 import { TASKON_TASKS, TaskOnTask, calculateUserScore } from '@/lib/taskon-config';
 
 interface VerificationResult {
@@ -20,9 +19,9 @@ interface TaskCompletion {
 }
 
 export default function TaskOnVerificationDemo() {
-  const { address, isConnected } = useAccount();
-  const { chain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork();
+  const [address, setAddress] = useState<string | null>(null);
+  const [isConnected, setIsConnected] = useState(false);
+  const [chainId, setChainId] = useState<number | null>(null);
   
   const [selectedTask, setSelectedTask] = useState<string>('');
   const [verificationResult, setVerificationResult] = useState<VerificationResult | null>(null);
@@ -32,6 +31,50 @@ export default function TaskOnVerificationDemo() {
 
   // Hyperion Testnet Chain ID
   const HYPERION_CHAIN_ID = 1337; // Update with actual Hyperion testnet chain ID
+
+  useEffect(() => {
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+      // Try to detect if MetaMask or another wallet is connected
+      const checkWalletConnection = async () => {
+        try {
+          if (window.ethereum) {
+            const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+            if (accounts && accounts.length > 0) {
+              setIsConnected(true);
+              setAddress(accounts[0]);
+            }
+
+            // Get current chain ID
+            const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+            setChainId(parseInt(chainId, 16));
+          }
+        } catch (error) {
+          console.log('Wallet not connected or not available');
+        }
+      };
+
+      checkWalletConnection();
+
+      // Listen for account changes
+      if (window.ethereum) {
+        window.ethereum.on('accountsChanged', (accounts: string[]) => {
+          if (accounts && accounts.length > 0) {
+            setIsConnected(true);
+            setAddress(accounts[0]);
+          } else {
+            setIsConnected(false);
+            setAddress(null);
+          }
+        });
+
+        // Listen for chain changes
+        window.ethereum.on('chainChanged', (chainId: string) => {
+          setChainId(parseInt(chainId, 16));
+        });
+      }
+    }
+  }, []);
 
   useEffect(() => {
     if (isConnected && address) {
@@ -99,7 +142,10 @@ export default function TaskOnVerificationDemo() {
       console.error('Verification error:', error);
       setVerificationResult({
         isValid: false,
-        message: 'Error during verification'
+        message: 'Verification failed. Please try again.',
+        taskDetails: null,
+        verificationData: null,
+        userProgress: null
       });
     } finally {
       setIsVerifying(false);
@@ -119,9 +165,10 @@ export default function TaskOnVerificationDemo() {
       );
 
       const result = await response.json();
-      
+      setVerificationResult(result);
+
+      // Update all completions based on batch results
       if (result.results) {
-        // Update all completions based on batch results
         setUserCompletions(prev => prev.map(comp => {
           const batchResult = result.results.find((r: any) => r.result.taskDetails?.id === comp.taskId);
           if (batchResult && batchResult.result.isValid) {
@@ -134,212 +181,256 @@ export default function TaskOnVerificationDemo() {
           }
           return comp;
         }));
-
-        setVerificationResult({
-          isValid: true,
-          message: `Batch verification completed. ${result.results.filter((r: any) => r.result.isValid).length} tasks verified.`
-        });
       }
     } catch (error) {
       console.error('Batch verification error:', error);
       setVerificationResult({
         isValid: false,
-        message: 'Error during batch verification'
+        message: 'Batch verification failed. Please try again.',
+        taskDetails: null,
+        verificationData: null,
+        userProgress: null
       });
     } finally {
       setIsVerifying(false);
     }
   };
 
-  const getTaskById = (taskId: string): TaskOnTask | undefined => {
-    return TASKON_TASKS.find(task => task.id === taskId);
+  const connectWallet = async () => {
+    if (typeof window !== 'undefined' && window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (accounts && accounts.length > 0) {
+          setIsConnected(true);
+          setAddress(accounts[0]);
+        }
+      } catch (error) {
+        console.error('Failed to connect wallet:', error);
+      }
+    }
   };
 
-  const getCompletionStatus = (taskId: string) => {
-    return userCompletions.find(comp => comp.taskId === taskId);
+  const switchNetwork = async () => {
+    if (window.ethereum) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: `0x${HYPERION_CHAIN_ID.toString(16)}` }],
+        });
+      } catch (error: any) {
+        // If the chain doesn't exist, add it
+        if (error.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: `0x${HYPERION_CHAIN_ID.toString(16)}`,
+                chainName: 'Hyperion Testnet',
+                nativeCurrency: {
+                  name: 'ETH',
+                  symbol: 'ETH',
+                  decimals: 18
+                },
+                rpcUrls: ['https://hyperion-testnet.rpc.com'], // Update with actual RPC URL
+                blockExplorerUrls: ['https://hyperion-testnet.explorer.com'] // Update with actual explorer URL
+              }]
+            });
+          } catch (addError) {
+            console.error('Failed to add network:', addError);
+          }
+        }
+      }
+    }
   };
 
   if (!isConnected) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
-          <h2 className="text-xl font-semibold text-yellow-800 mb-2">
-            Wallet Not Connected
-          </h2>
-          <p className="text-yellow-700">
-            Please connect your wallet to use the TaskOn verification system.
-          </p>
-        </div>
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+        <h2 className="text-xl font-semibold text-yellow-800 mb-2">
+          Wallet Not Connected
+        </h2>
+        <p className="text-yellow-700 mb-4">
+          Please connect your wallet to use the TaskOn verification demo.
+        </p>
+        <button
+          onClick={connectWallet}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Connect Wallet
+        </button>
       </div>
     );
   }
 
-  if (chain?.id !== HYPERION_CHAIN_ID) {
+  if (chainId !== HYPERION_CHAIN_ID) {
     return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
-          <h2 className="text-xl font-semibold text-blue-800 mb-2">
-            Wrong Network
-          </h2>
-          <p className="text-blue-700 mb-4">
-            Please switch to Hyperion Testnet to use the TaskOn verification system.
-          </p>
-          <button
-            onClick={() => switchNetwork?.(HYPERION_CHAIN_ID)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Switch to Hyperion Testnet
-          </button>
-        </div>
+      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
+        <h2 className="text-xl font-semibold text-blue-800 mb-2">
+          Wrong Network
+        </h2>
+        <p className="text-blue-700 mb-4">
+          Please switch to Hyperion Testnet to use the TaskOn verification demo.
+        </p>
+        <button
+          onClick={switchNetwork}
+          className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Switch to Hyperion Testnet
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">
-          TaskOn Verification Demo
-        </h1>
-        
-        {/* User Info */}
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Connected Wallet</p>
-              <p className="font-mono text-sm text-gray-900">{address}</p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Total Score</p>
-              <p className="text-2xl font-bold text-blue-600">{totalScore}</p>
-            </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="text-center">
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Task Verification Demo</h2>
+        <p className="text-gray-600">
+          Test the TaskOn verification system with your wallet
+        </p>
+      </div>
+
+      {/* Wallet Info */}
+      <div className="bg-gray-50 rounded-lg p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm text-gray-600">Connected Wallet:</p>
+            <p className="font-mono text-sm text-gray-900">{address}</p>
+          </div>
+          <div className="text-right">
+            <p className="text-sm text-gray-600">Total Score:</p>
+            <p className="text-lg font-bold text-blue-600">{totalScore} pts</p>
           </div>
         </div>
+      </div>
 
-        {/* Task Selection */}
-        <div className="mb-6">
-          <label htmlFor="task-select" className="block text-sm font-medium text-gray-700 mb-2">
-            Select Task to Verify
-          </label>
-          <select
-            id="task-select"
-            value={selectedTask}
-            onChange={(e) => setSelectedTask(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Choose a task...</option>
-            {TASKON_TASKS.map((task) => (
-              <option key={task.id} value={task.id}>
-                {task.name} ({task.points} pts, max {task.maxCompletions}x)
-              </option>
-            ))}
-          </select>
+      {/* Task Selection */}
+      <div className="bg-white rounded-lg p-6 border border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Select Task to Verify</h3>
+        <div className="grid md:grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="task-select" className="block text-sm font-medium text-gray-700 mb-2">
+              Task Type
+            </label>
+            <select
+              id="task-select"
+              value={selectedTask}
+              onChange={(e) => setSelectedTask(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select a task...</option>
+              {TASKON_TASKS.map((task) => (
+                <option key={task.id} value={task.id}>
+                  {task.name} ({task.points} pts)
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-end">
+            <button
+              onClick={handleVerifyTask}
+              disabled={!selectedTask || isVerifying}
+              className="w-full bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {isVerifying ? 'Verifying...' : 'Verify Task'}
+            </button>
+          </div>
         </div>
+      </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-4 mb-6">
-          <button
-            onClick={handleVerifyTask}
-            disabled={!selectedTask || isVerifying}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
-            {isVerifying ? 'Verifying...' : 'Verify Selected Task'}
-          </button>
-          
+      {/* Batch Verification */}
+      <div className="bg-white rounded-lg p-6 border border-gray-200">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Batch Verification</h3>
+            <p className="text-sm text-gray-600">
+              Verify all tasks at once to check your complete progress
+            </p>
+          </div>
           <button
             onClick={handleBatchVerification}
             disabled={isVerifying}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
             {isVerifying ? 'Verifying...' : 'Verify All Tasks'}
           </button>
         </div>
+      </div>
 
-        {/* Verification Result */}
-        {verificationResult && (
-          <div className={`border rounded-lg p-4 mb-6 ${
-            verificationResult.isValid 
-              ? 'border-green-200 bg-green-50' 
-              : 'border-red-200 bg-red-50'
-          }`}>
-            <h3 className={`font-semibold mb-2 ${
-              verificationResult.isValid ? 'text-green-800' : 'text-red-800'
-            }`}>
-              {verificationResult.isValid ? '✓ Verification Successful' : '✗ Verification Failed'}
-            </h3>
-            <p className={`text-sm ${
-              verificationResult.isValid ? 'text-green-700' : 'text-red-700'
-            }`}>
-              {verificationResult.message}
-            </p>
-            
+      {/* Verification Result */}
+      {verificationResult && (
+        <div className="bg-white rounded-lg p-6 border border-gray-200">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Verification Result</h3>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <span className={`text-lg ${verificationResult.isValid ? 'text-green-600' : 'text-red-600'}`}>
+                {verificationResult.isValid ? '✅' : '❌'}
+              </span>
+              <span className={`font-medium ${verificationResult.isValid ? 'text-green-600' : 'text-red-600'}`}>
+                {verificationResult.message}
+              </span>
+            </div>
+
+            {verificationResult.taskDetails && (
+              <div className="bg-gray-50 rounded p-3">
+                <h4 className="font-medium text-gray-900 mb-2">Task Details:</h4>
+                <pre className="text-xs text-gray-700 overflow-x-auto">
+                  {JSON.stringify(verificationResult.taskDetails, null, 2)}
+                </pre>
+              </div>
+            )}
+
             {verificationResult.verificationData && (
-              <div className="mt-3 p-3 bg-white rounded border">
-                <h4 className="font-medium text-gray-900 mb-2">Transaction Details</h4>
-                <div className="grid grid-cols-2 gap-2 text-sm">
-                  <div>
-                    <span className="text-gray-600">Hash:</span>
-                    <p className="font-mono text-xs break-all">{verificationResult.verificationData.transactionHash}</p>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">Amount:</span>
-                    <p>{verificationResult.verificationData.amount}</p>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">Block:</span>
-                    <p>{verificationResult.verificationData.blockNumber}</p>
-                  </div>
-                  <div>
-                    <span className="text-gray-600">Gas Used:</span>
-                    <p>{verificationResult.verificationData.gasUsed}</p>
-                  </div>
-                </div>
+              <div className="bg-gray-50 rounded p-3">
+                <h4 className="font-medium text-gray-900 mb-2">Verification Data:</h4>
+                <pre className="text-xs text-gray-700 overflow-x-auto">
+                  {JSON.stringify(verificationResult.verificationData, null, 2)}
+                </pre>
+              </div>
+            )}
+
+            {verificationResult.userProgress && (
+              <div className="bg-gray-50 rounded p-3">
+                <h4 className="font-medium text-gray-900 mb-2">User Progress:</h4>
+                <pre className="text-xs text-gray-700 overflow-x-auto">
+                  {JSON.stringify(verificationResult.userProgress, null, 2)}
+                </pre>
               </div>
             )}
           </div>
-        )}
-
-        {/* Task Progress */}
-        <div className="bg-gray-50 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Task Progress</h3>
-          <div className="grid gap-3">
-            {TASKON_TASKS.map((task) => {
-              const completion = getCompletionStatus(task.id);
-              return (
-                <div key={task.id} className="flex items-center justify-between p-3 bg-white rounded border">
-                  <div className="flex-1">
-                    <h4 className="font-medium text-gray-900">{task.name}</h4>
-                    <p className="text-sm text-gray-600">
-                      {task.points} points • Max {task.maxCompletions} completions
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-sm text-gray-600">
-                      Completed: {completion?.completions || 0}/{task.maxCompletions}
-                    </div>
-                    <div className="text-lg font-semibold text-blue-600">
-                      {Math.min((completion?.completions || 0), task.maxCompletions) * task.points} pts
-                    </div>
-                    {completion?.lastVerified && (
-                      <div className="text-xs text-gray-500">
-                        Last: {new Date(completion.lastVerified).toLocaleDateString()}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
         </div>
+      )}
 
-        {/* API Information */}
-        <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-lg font-semibold text-blue-900 mb-2">API Endpoints</h3>
-          <div className="space-y-2 text-sm text-blue-800">
-            <p><strong>Basic Verification:</strong> POST /api/taskon/verify</p>
-            <p><strong>Enhanced Verification:</strong> POST /api/taskon/verify-enhanced</p>
-            <p><strong>Test Endpoint:</strong> GET /api/taskon/verify?walletAddress=0x...&taskType=buy</p>
-          </div>
+      {/* User Progress */}
+      <div className="bg-white rounded-lg p-6 border border-gray-200">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Your Progress</h3>
+        <div className="space-y-3">
+          {userCompletions.map((completion) => {
+            const task = TASKON_TASKS.find(t => t.id === completion.taskId);
+            if (!task) return null;
+            
+            return (
+              <div key={completion.taskId} className="flex items-center justify-between p-3 border border-gray-200 rounded-lg">
+                <div>
+                  <h4 className="font-medium text-gray-900">{task.name}</h4>
+                  <p className="text-sm text-gray-600">
+                    {task.points} points • {completion.completions}/{task.maxCompletions} completions
+                  </p>
+                </div>
+                <div className="text-right">
+                  <div className="text-lg font-semibold text-blue-600">
+                    {Math.min(completion.completions, task.maxCompletions) * task.points} pts
+                  </div>
+                  {completion.lastVerified && (
+                    <div className="text-xs text-gray-500">
+                      Last: {new Date(completion.lastVerified).toLocaleDateString()}
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>

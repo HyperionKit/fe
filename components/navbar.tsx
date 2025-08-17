@@ -48,7 +48,8 @@ const Navbar: React.FC = () => {
     { href: "/#", label: "Explore" },
     { href: "/#", label: "Builders" },
     { href: "/#", label: "Community" },
-    { href: "/#", label: "About" }
+    { href: "/#", label: "About" },
+    { href: "/taskon", label: "TaskOn" }
   ];
 
   const campaignLinks = [
