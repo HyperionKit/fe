@@ -240,10 +240,6 @@ export default function WalletDemo() {
           <div className="flex-1 flex items-center justify-center py-2 px-4 sm:px-6 lg:px-8 sm:pb-4 lg:pb-6">
             {tabContent.component}
           </div>
-          {/* Faucet Button */}
-          <div className="flex justify-center pb-4">
-            <FaucetButton />
-          </div>
         </div>
 
         {/* Right Panel - Code Display */}

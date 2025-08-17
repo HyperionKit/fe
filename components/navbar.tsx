@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -8,47 +8,66 @@ const Navbar: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileCampaignsOpen, setIsMobileCampaignsOpen] = useState(false);
-
-
-
-
+  
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   // Close mobile menu when screen size changes
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         setIsMobileMenuOpen(false);
+        setIsMobileCampaignsOpen(false);
       }
     };
-
+    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Close dropdowns when clicking outside
+  // Close dropdowns when clicking outside - using refs for better performance
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Element;
-      if (!target.closest('.dropdown-container')) {
+      const target = event.target as Node;
+      
+      // Close desktop dropdown if clicked outside
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         setIsDropdownOpen(false);
       }
-      if (!target.closest('.mobile-menu-container')) {
+      
+      // Close mobile menu if clicked outside
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(target)) {
         setIsMobileMenuOpen(false);
+        setIsMobileCampaignsOpen(false);
       }
-
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+    // Only add listener if any dropdown is open
+    if (isDropdownOpen || isMobileMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isDropdownOpen, isMobileMenuOpen]);
 
-
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen]);
 
   const navigationLinks = [
-    { href: "/#", label: "Explore" },
-    { href: "/#", label: "Builders" },
-    { href: "/#", label: "Community" },
-    { href: "/#", label: "About" }
+    { href: "/", label: "Explore" },
+    { href: "/#roadmap", label: "Roadmap" },
+    { href: "/whitelist", label: "Whitelist" },
+    { href: "/#how-to", label: "How to Earn" }
   ];
 
   const campaignLinks = [
@@ -57,13 +76,34 @@ const Navbar: React.FC = () => {
     { href: "/#", label: "Completed Campaigns" }
   ];
 
+  const handleMobileMenuToggle = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+    // Close campaigns dropdown when toggling main menu
+    if (isMobileCampaignsOpen) {
+      setIsMobileCampaignsOpen(false);
+    }
+  };
+
+  const handleDesktopDropdownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleMobileCampaignsToggle = () => {
+    setIsMobileCampaignsOpen(!isMobileCampaignsOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    setIsMobileCampaignsOpen(false);
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo Section */}
           <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-            <Link href="/" className="flex-shrink-0">
+            <Link href="/" className="flex-shrink-0" onClick={closeMobileMenu}>
               <Image
                 src="/l_2.png"
                 alt="Hyperkit Logo"
@@ -88,23 +128,21 @@ const Navbar: React.FC = () => {
                 {link.label}
               </Link>
             ))}
-            
-
           </div>
 
           {/* Right Side - Desktop */}
           <div className="hidden md:flex items-center space-x-4">
             {/* Campaigns Dropdown */}
-            <div className="relative dropdown-container">
+            <div className="relative" ref={dropdownRef}>
               <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="flex items-center space-x-1 text-gray-700 hover:text-violet-600 transition-colors px-3 py-2 rounded-md"
+                onClick={handleDesktopDropdownToggle}
+                className="flex items-center space-x-1 text-gray-700 hover:text-violet-600 transition-colors px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2"
+                aria-expanded={isDropdownOpen}
+                aria-haspopup="true"
               >
                 <span>Campaigns</span>
                 <svg
-                  className={`w-4 h-4 transition-transform ${
-                    isDropdownOpen ? 'rotate-180' : ''
-                  }`}
+                  className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -137,13 +175,13 @@ const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center space-x-2">
             <button
               type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-700 hover:text-violet-600 focus:outline-none p-2 rounded-md transition-colors"
+              onClick={handleMobileMenuToggle}
+              className="text-gray-700 hover:text-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 p-2 rounded-md transition-colors"
               aria-expanded={isMobileMenuOpen}
               aria-label="Toggle mobile menu"
             >
               <svg 
-                className={`h-6 w-6 transition-transform ${isMobileMenuOpen ? 'rotate-90' : ''}`} 
+                className={`h-6 w-6 transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-180' : ''}`} 
                 fill="none" 
                 viewBox="0 0 24 24" 
                 stroke="currentColor"
@@ -161,13 +199,14 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu Overlay */}
       <div 
-        className={`md:hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg z-50 mobile-menu-container overflow-hidden transition-all duration-300 ease-in-out ${
+        ref={mobileMenuRef}
+        className={`md:hidden fixed inset-x-0 top-16 bg-white border-t border-gray-200 shadow-lg z-40 overflow-hidden transition-all duration-300 ease-in-out ${
           isMobileMenuOpen 
             ? 'max-h-screen opacity-100 visible' 
             : 'max-h-0 opacity-0 invisible'
         }`}
       >
-        <div className="px-4 py-3 space-y-1">
+        <div className="px-4 py-3 space-y-1 max-h-[calc(100vh-4rem)] overflow-y-auto">
           {/* Navigation Links */}
           <div className="space-y-1">
             {navigationLinks.map((link, index) => (
@@ -182,18 +221,14 @@ const Navbar: React.FC = () => {
                 style={{
                   transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
                 }}
-                onClick={() => setIsMobileMenuOpen(false)}
+                onClick={closeMobileMenu}
               >
                 {link.label}
               </Link>
             ))}
-            
-
           </div>
 
-
-
-          {/* Campaigns Section - Now as Dropdown */}
+          {/* Campaigns Section - Mobile */}
           <div className={`pt-4 border-t border-gray-200 mt-4 transition-all duration-300 transform ${
             isMobileMenuOpen 
               ? 'translate-y-0 opacity-100' 
@@ -203,8 +238,9 @@ const Navbar: React.FC = () => {
             transitionDelay: isMobileMenuOpen ? `${navigationLinks.length * 50}ms` : '0ms'
           }}>
             <button
-              onClick={() => setIsMobileCampaignsOpen(!isMobileCampaignsOpen)}
-              className="flex items-center justify-between w-full px-3 py-3 text-base font-medium text-gray-700 hover:text-violet-600 hover:bg-gray-50 rounded-md transition-colors"
+              onClick={handleMobileCampaignsToggle}
+              className="flex items-center justify-between w-full px-3 py-3 text-base font-medium text-gray-700 hover:text-violet-600 hover:bg-gray-50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
+              aria-expanded={isMobileCampaignsOpen}
             >
               <span>Campaigns</span>
               <svg
@@ -219,7 +255,7 @@ const Navbar: React.FC = () => {
               </svg>
             </button>
             
-            {/* Campaigns Dropdown with Animation */}
+            {/* Campaigns Dropdown */}
             <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
               isMobileCampaignsOpen 
                 ? 'max-h-48 opacity-100' 
@@ -238,10 +274,7 @@ const Navbar: React.FC = () => {
                     style={{
                       transitionDelay: isMobileCampaignsOpen ? `${index * 75}ms` : '0ms'
                     }}
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      setIsMobileCampaignsOpen(false);
-                    }}
+                    onClick={closeMobileMenu}
                   >
                     {link.label}
                   </Link>

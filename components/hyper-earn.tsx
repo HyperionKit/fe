@@ -1,4 +1,5 @@
 "use client";
+
 export default function HowToEarnPoints() {
   const activities = [
     { name: "Deploy a dApp", points: "+50" },
@@ -10,7 +11,7 @@ export default function HowToEarnPoints() {
   ]
 
   return (
-    <div className="flex flex-col items-center justify-center bg-white p-4">
+    <div id="how-to" className="flex flex-col items-center justify-center bg-white p-4 scroll-mt-20">
       <div className="text-center mb-10">
         <h2 className="text-4xl font-bold text-[#8b5cf6] mb-3">How to Earn Points</h2>
         <p className="text-gray-600 text-lg max-w-2xl">
@@ -34,8 +35,8 @@ export default function HowToEarnPoints() {
       <div className="bg-gradient-to-r from-[#f3e8ff] to-[#e0f7fa] p-6 rounded-lg shadow-md max-w-5xl w-full text-gray-800">
         <h3 className="font-bold text-lg mb-2">Pro Tip</h3>
         <p className="text-sm">
-          NFTs evolve as you earn more points! Higher tiers unlock governance rights, token allocations, and direct
-          collaboration opportunities with our core team.
+          NFTs evolve as you earn more points! Higher tiers unlock governance rights, token allocations,
+          and direct collaboration opportunities with our core team.
         </p>
       </div>
     </div>
