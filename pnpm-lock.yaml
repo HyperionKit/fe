@@ -30,8 +30,8 @@ importers:
         specifier: ^156.0.0
         version: 156.0.0
       hyperionkit:
-        specifier: ^1.0.9
-        version: 1.0.9(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(utf-8-validate@5.0.10)
+        specifier: ^1.1.3
+        version: 1.1.3(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(utf-8-validate@5.0.10)
       lucide-react:
         specifier: ^0.525.0
         version: 0.525.0(react@19.1.0)
@@ -1865,12 +1865,8 @@ packages:
     resolution: {integrity: sha512-0hJU9SCPvmMzIBdZFqNPXWa6dqh7WdH0cII9y+CyS8rG3nL48Bclra9HmKhVVUHyPWNH5Y7xDwAB7bfgSjkUMQ==}
     engines: {node: '>= 0.4'}
 
-  https-proxy-agent@7.0.6:
-    resolution: {integrity: sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==}
-    engines: {node: '>= 14'}
-
-  hyperionkit@1.0.9:
-    resolution: {integrity: sha512-zigsF4r93IC2lY2kBpf/XETMzlNkhBTcutX9afq0igoKE3V0sTtxxPOL3ovcHk9ShB4lJFK+6JKw9J2BCl8SyQ==}
+  hyperionkit@1.1.3:
+    resolution: {integrity: sha512-X2Lat/dOBpSArBJrj251JT8Iq8VXhFJWHK7vaiDtq4ki+czVwR67JkgQjmDp/0hXyCdYjxGnlPQWo9WY5N0Mlw==}
     peerDependencies:
       react: ^18.0.0
       react-dom: ^18.0.0
@@ -5950,14 +5946,7 @@ snapshots:
     dependencies:
       function-bind: 1.1.2
 
-  https-proxy-agent@7.0.6:
-    dependencies:
-      agent-base: 7.1.4
-      debug: 4.4.1
-    transitivePeerDependencies:
-      - supports-color
-
-  hyperionkit@1.0.9(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(utf-8-validate@5.0.10):
+  hyperionkit@1.1.3(bufferutil@4.0.9)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(utf-8-validate@5.0.10):
     dependencies:
       ethers: 6.15.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       lucide-react: 0.525.0(react@19.1.0)

@@ -28,8 +28,7 @@ const HomePage: React.FC = () => {
   }
 
   return (
-    <>
-      <main className="flex flex-col items-center bg-white min-h-screen">
+    <main className="flex flex-col items-center bg-white min-h-screen">
         <motion.div
           initial="initial"
           whileInView="whileInView"
@@ -145,7 +144,6 @@ const HomePage: React.FC = () => {
           <Footer />
         </motion.div>
       </main>
-    </>
   )
 }
 

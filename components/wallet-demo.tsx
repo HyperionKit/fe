@@ -2,88 +2,104 @@
 
 import { useState, useEffect } from "react"
 import { Settings, Menu, X } from "lucide-react"
-
-import {ConnectWalletPage} from "hyperionkit"
-import {SwapPage} from "hyperionkit"
-import {BridgePage} from "hyperionkit"
-import {StakingPage} from "hyperionkit"
-import {BuyPage} from "hyperionkit"
-
+import {ConnectWallet, Swap, Bridge, Staking, Faucet} from "hyperionkit"
 
 const ConnectWalletDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
-    <pre className="whitespace-pre-wrap">{`import { ConnectWalletPage } from 'hyperionkit';
-    export default function App() {
-      return (
-        <ConnectWalletPage 
-          styles={walletStyles}
-        />
-      );
-    }`}</pre>
+    <pre className="whitespace-pre-wrap">{`import { ConnectWallet } from 'hyperionkit';
+    
+export default function App() {
+  return (
+    <ConnectWallet 
+      width="400px"
+      height="auto"
+      theme="light"
+      onSuccess={(address) => {
+        console.log('Connected:', address);
+      }}
+    />
+  );
+}`}</pre>
   </div>
 )
 
-const BuyDemo = () => (
+const SwapDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
-    <pre className="whitespace-pre-wrap">{`import { BuyComponent } from 'hyperionkit';
-    export default function Buy() {
-      return (
-        <BuyComponent 
-          onPurchase={(data) => {
-            console.log('Purchase:', data);
-          }}
-        />
-      );
-    }`}
+    <pre className="whitespace-pre-wrap">{`import { Swap } from 'hyperionkit';
+    
+export default function SwapPage() {
+  return (
+    <Swap 
+      width="500px"
+      theme="light"
+      supportedTokens={['USDT', 'USDC', 'WETH', 'DAI']}
+      onSuccess={(txHash) => {
+        console.log('Swap successful:', txHash);
+      }}
+    />
+  );
+}`}
     </pre>
   </div>
 )
 
-const FundDemo = () => (
+const BridgeDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
-    <pre className="whitespace-pre-wrap">{`import { SwapComponent } from 'hyperionkit';
-    export default function Swap() {
-      return (
-        <SwapComponent 
-          onSwap={(amount) => {
-            console.log('Swapped:', amount);
-          }}
-        />
-      );
-    }`}
+    <pre className="whitespace-pre-wrap">{`import { Bridge } from 'hyperionkit';
+    
+export default function BridgePage() {
+  return (
+    <Bridge 
+      width="500px"
+      theme="light"
+      supportedTokens={['USDT', 'USDC']}
+      supportedNetworks={['metis-hyperion-testnet', 'metisSepolia']}
+      onSuccess={(txHash) => {
+        console.log('Bridge successful:', txHash);
+      }}
+    />
+  );
+}`}
     </pre>
   </div>
 )
 
-const EarnDemo = () => (
+const StakingDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
-    <pre className="whitespace-pre-wrap">{`import { StakeComponent } from 'hyperionkit';
-    export default function Stake() {
-      return (
-        <StakeComponent 
-          rewardPools={pools}
-          onStake={(pool, amount) => {
-            console.log('Staked:', pool, amount);
-          }}
-        />
-      );
-    }`}
+    <pre className="whitespace-pre-wrap">{`import { Staking } from 'hyperionkit';
+    
+export default function StakingPage() {
+  return (
+    <Staking 
+      width="500px"
+      theme="light"
+      supportedTokens={['USDT', 'USDC']}
+      onSuccess={(txHash) => {
+        console.log('Stake successful:', txHash);
+      }}
+    />
+  );
+}`}
     </pre>
   </div>
 )
 
-const TransactDemo = () => (
+const FaucetDemo = () => (
   <div className="text-gray-300 text-xs leading-relaxed">
-    <pre className="whitespace-pre-wrap">{`import { BridgeComponent } from 'hyperionkit';
-    export default function Bridge() {
-      return (
-        <BridgeComponent 
-          onBridge={(tx) => {
-            console.log('BridgeTransaction:', tx);
-          }}
-        />
-      );
-    }`}
+    <pre className="whitespace-pre-wrap">{`import { Faucet } from 'hyperionkit';
+    
+export default function FaucetPage() {
+  return (
+    <Faucet 
+      width="500px"
+      theme="light"
+      supportedTokens={['USDT', 'USDC', 'WETH', 'DAI']}
+      onSuccess={(txHash) => {
+        console.log('Faucet drip successful:', txHash);
+      }}
+    />
+  );
+}`}
     </pre>
   </div>
 )
@@ -100,40 +116,90 @@ export default function WalletDemo() {
     setIsMounted(true)
   }, [])
 
-  const navItems = ["Wallet", "Buy", "Swap", "Stake", "Bridge"]
+  const navItems = ["Wallet", "Swap", "Bridge", "Staking", "Faucet"]
   const rightNavItems = ["Docs", "AI docs", "Playground"]
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "Wallet":
         return {
-          component: <ConnectWalletPage />,
+          component: (
+            <ConnectWallet 
+              width="400px"
+              height="auto"
+              theme="light"
+              onSuccess={(address: string) => console.log('Connected:', address)}
+            />
+          ),
           demo: <ConnectWalletDemo />
-        }
-      case "Buy":
-        return {
-          component: <BuyPage />,
-          demo: <BuyDemo />
         }
       case "Swap":
         return {
-          component: <SwapPage />,
-          demo: <FundDemo />
+          component: (
+            <Swap 
+              width="auto"
+              height="auto"
+              scale={0.9}
+              theme="light"
+              supportedTokens={['USDT', 'USDC', 'WETH', 'DAI']}
+              onSuccess={(txHash) => console.log('Swap successful:', txHash)}
+            />
+          ),
+          demo: <SwapDemo />
         }
-      case "Stake":
+      case "Bridge":
         return {
-          component: <StakingPage />,
-          demo: <EarnDemo />
+          component: (
+            <Bridge 
+              width="700px"
+              height="auto"
+              scale={0.8}
+              theme="light"
+              supportedTokens={['USDT', 'USDC']}
+              supportedNetworks={['metis-hyperion-testnet', 'metisSepolia']}
+              onSuccess={(txHash) => console.log('Bridge successful:', txHash)}
+            />
+          ),
+          demo: <BridgeDemo />
         }
-             case "Bridge":
-         return {
-           component: <BridgePage />,
-           demo: <TransactDemo />
-         }
-
-       default:
+      case "Staking":
         return {
-          component: <ConnectWalletPage/>,
+          component: (
+            <Staking 
+              width="700px"
+              height="auto"
+              scale={0.8}
+              theme="light"
+              supportedTokens={['USDT', 'USDC']}
+              onSuccess={(txHash) => console.log('Stake successful:', txHash)}
+            />
+          ),
+          demo: <StakingDemo />
+        }
+      case "Faucet":
+        return {
+          component: (
+            <Faucet 
+              width="700px"
+              height="auto"
+              scale={0.9}
+              theme="light"
+              supportedTokens={['USDT', 'USDC', 'WETH', 'DAI']}
+              onSuccess={(txHash) => console.log('Faucet drip successful:', txHash)}
+            />
+          ),
+          demo: <FaucetDemo />
+        }
+      default:
+        return {
+          component: (
+            <ConnectWallet 
+              width="400px"
+              height="auto"
+              theme="light"
+              onSuccess={(address: string) => console.log('Connected:', address)}
+            />
+          ),
           demo: <ConnectWalletDemo />
         }
     }
@@ -240,7 +306,7 @@ export default function WalletDemo() {
         {/* Left Panel - Interactive Component */}
         <div className="w-full lg:w-1/2 flex flex-col bg-gray-950/30 min-h-[300px] lg:min-h-0 order-2 lg:order-1">
           {/* Centered Content Container */}
-          <div className="flex-1 flex items-center justify-center py-2 px-4 sm:px-6 lg:px-8 sm:pb-4 lg:pb-6">
+          <div className="flex-1 flex items-center justify-center">
             {tabContent.component}
           </div>
         </div>
