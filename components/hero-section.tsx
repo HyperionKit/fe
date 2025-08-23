@@ -59,10 +59,10 @@ const HeroSection: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 md:gap-5 w-full sm:w-auto">
             {/* Whitelist Button */}
             <Link 
-              href="/" 
+              href="https://ai.hyperionkit.xyz" 
               className="flex-1 sm:flex-none bg-black hover:bg-gray-800 active:bg-gray-900 text-white px-4 sm:px-6 md:px-8 py-3 md:py-4 rounded-lg font-semibold transition-all duration-300 flex items-center justify-center text-sm sm:text-base md:text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 min-w-[120px]"
             >
-              Whitelist
+              HyperKit AI
             </Link>
 
             {/* Docs and GitHub Container */}

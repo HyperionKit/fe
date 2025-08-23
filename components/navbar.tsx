@@ -62,7 +62,8 @@ const Navbar: React.FC = () => {
     { href: "/", label: "Explore" },
     { href: "/#roadmap", label: "Roadmap" },
     { href: "/whitelist", label: "Whitelist" },
-    { href: "/#how-to", label: "How to Earn" }
+    { href: "/#how-to", label: "How to Earn" },
+    { href: "https://ai.hyperionkit.xyz", label: "HyperKit AI" }
   ];
 
   const campaignLinks = [
