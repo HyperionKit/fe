@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Loader from './3d-loader';
+import ShaderBackground from './shader-background';
 
 export default function MaintenancePage() {
   const [email, setEmail] = useState('');
@@ -21,8 +22,12 @@ export default function MaintenancePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto text-center">
+    <div className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 relative">
+      {/* Shader Background */}
+      <ShaderBackground />
+      
+      {/* Content */}
+      <div className="max-w-4xl mx-auto text-center relative z-10">
         {/* Logo */}
         <div className="mb-16 sm:mb-12">
           <img 
@@ -35,7 +40,7 @@ export default function MaintenancePage() {
         {/* Main Content with 3D Background */}
         <div className="mb-8 sm:mb-12 relative">
           {/* 3D Loader as Background */}
-          <div className="absolute inset-0 flex items-end justify-center z-0 opacity-80 pb-8">
+          <div className="absolute inset-0 flex items-end justify-center z-0 opacity-100 pb-8">
             <Loader />
           </div>
           
