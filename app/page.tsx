@@ -8,13 +8,15 @@ import Footer from '@/components/footer';
 
 export default function Home() {
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="w-full">
       <Navbar/>
-      <HeroPage/>
-      <TimelinePage/>
-      <CardPage/>
-      <RewardPage/>
-      <Footer/>
+      <div className="pt-20">
+        <HeroPage/>
+        <TimelinePage/>
+        <CardPage/>
+        <RewardPage/>
+        <Footer/>
+      </div>
     </div>
   );
 }
