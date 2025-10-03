@@ -31,16 +31,16 @@ export default function RewardPage() {
               }}
             />
             <div className="flex flex-col space-y-2 sm:space-y-3 pt-32 sm:pt-36 lg:pt-40 pb-20 sm:pb-22 lg:pb-25 pl-1 pr-1 z-15">
-              <div className="text-white text-xs sm:text-sm font-normal leading-relaxed text-left" style={{fontFamily: 'Inter'}}>
+              <div className="text-white text-xs sm:text-xs font-normal leading-relaxed text-left" style={{fontFamily: 'Inter'}}>
                 • Receive priority access to future Hyperion network event Badge holders get marketing recognition
               </div>
-              <div className="text-white text-xs sm:text-sm font-normal leading-relaxed text-left" style={{fontFamily: 'Inter'}}>
+              <div className="text-white text-xs sm:text-xs font-normal leading-relaxed text-left" style={{fontFamily: 'Inter'}}>
                 • Receive badges based on your objective and verifiable accomplishments
               </div>
-              <div className="text-white text-xs sm:text-sm font-normal leading-relaxed text-left" style={{fontFamily: 'Inter'}}>
+              <div className="text-white text-xs sm:text-xs font-normal leading-relaxed text-left" style={{fontFamily: 'Inter'}}>
                 • Badge holders get marketing recognition
               </div>
-              <div className="text-white text-xs sm:text-sm font-normal leading-relaxed text-left" style={{fontFamily: 'Inter'}}>
+              <div className="text-white text-xs sm:text-xs font-normal leading-relaxed text-left" style={{fontFamily: 'Inter'}}>
                 • Get Exclusive opportunities in role our tiered badge system
               </div>
             </div>

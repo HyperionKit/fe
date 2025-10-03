@@ -47,7 +47,7 @@ export default function Navbar() {
         
         {/* Desktop Launch App Button */}
         <div className="hidden lg:flex items-center gap-4">
-          <button className="bg-transparent text-white px-4 xl:px-8 py-2 rounded-lg font-semibold hover:bg-gray-800 transition-colors whitespace-nowrap text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+          <button className="bg-transparent text-white px-4 xl:px-8 py-2 rounded-lg font-semibold transition-colors whitespace-nowrap text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
             Launch App
           </button>
         </div>

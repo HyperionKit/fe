@@ -1,4 +1,56 @@
+'use client';
+
+import { useState } from 'react';
+
 export default function HeroPage() {
+  const [isDemoPlaying, setIsDemoPlaying] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handlePlayDemo = () => {
+    setIsDemoPlaying(true);
+    // Here you can add logic to start the actual demo
+    // For now, we'll just show a placeholder
+    console.log('Starting demo...');
+    
+    // Simulate demo completion after 3 seconds
+    setTimeout(() => {
+      setIsDemoPlaying(false);
+    }, 3000);
+  };
+
+  const handleCopyCommand = async () => {
+    try {
+      await navigator.clipboard.writeText('npm create hyperkit');
+      setIsCopied(true);
+      
+      // Reset the copied state after 2 seconds
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy command:', err);
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = 'npm create hyperkit';
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      setIsCopied(true);
+      
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 2000);
+    }
+  };
+
+  const handleInnovateNow = () => {
+    // Here you can add logic to navigate to a specific page or open a modal
+    console.log('Innovate now clicked');
+    // For example, you could scroll to a specific section or open a contact form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
@@ -26,9 +78,22 @@ export default function HeroPage() {
         <div className="bg-sky-400 rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 xl:p-20 mb-8 sm:mb-12 relative shadow-2xl shadow-white/40 h-[700px] flex items-center justify-center">
           {/* Play Demo Button in center */}
           <div className="flex items-center justify-center">
-            <button className="flex items-center gap-2 bg-black text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full sm:rounded-[40px] font-semibold hover:bg-gray-800 transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>
-              Play Demo
-              <img src="/icons/demo/play.png" alt="Play" className="w-6 h-6 sm:w-8 sm:h-8" />
+            <button 
+              onClick={handlePlayDemo}
+              disabled={isDemoPlaying}
+              className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full sm:rounded-[40px] font-semibold transition-all duration-300 text-sm sm:text-base ${
+                isDemoPlaying 
+                  ? 'bg-gray-600 text-gray-300 cursor-not-allowed' 
+                  : 'bg-black text-white hover:bg-gray-800 hover:scale-105'
+              }`} 
+              style={{fontFamily: 'Inter'}}
+            >
+              {isDemoPlaying ? 'Playing Demo...' : 'Play Demo'}
+              <img 
+                src="/icons/demo/play.png" 
+                alt="Play" 
+                className={`w-6 h-6 sm:w-8 sm:h-8 ${isDemoPlaying ? 'animate-pulse' : ''}`} 
+              />
             </button>
           </div>
         </div>
@@ -39,7 +104,24 @@ export default function HeroPage() {
           <div className="flex items-center w-full lg:w-auto">
             <div className="bg-transparent border border-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 w-full lg:w-auto">
               <span className="text-white font-mono text-xs sm:text-sm" style={{fontFamily: 'Inter'}}>npm create hyperkit</span>
-              <img src="/icons/actions/copy.png" alt="Copy" className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+              <button 
+                onClick={handleCopyCommand}
+                className="flex items-center justify-center p-1 hover:bg-white/10 rounded transition-colors"
+                title={isCopied ? 'Copied!' : 'Copy command'}
+              >
+                <img 
+                  src="/icons/actions/copy.png" 
+                  alt="Copy" 
+                  className={`w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 transition-all duration-200 ${
+                    isCopied ? 'opacity-50' : 'hover:opacity-80'
+                  }`} 
+                />
+                {isCopied && (
+                  <span className="ml-1 text-green-400 text-xs font-semibold">
+                    ✓
+                  </span>
+                )}
+              </button>
             </div>
           </div>
           
@@ -48,7 +130,11 @@ export default function HeroPage() {
             <p className="text-white text-base sm:text-lg leading-relaxed" style={{fontFamily: 'Inter'}}>
               Modular tools and cross-chain magic with empowering developers to create, connect, and grow in minutes.
             </p>
-            <button className="bg-transparent border border-white text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base" style={{fontFamily: 'Inter'}}>
+            <button 
+              onClick={handleInnovateNow}
+              className="bg-transparent border border-white text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg font-semibold text-sm sm:text-base hover:bg-white hover:text-black transition-all duration-300 hover:scale-105" 
+              style={{fontFamily: 'Inter'}}
+            >
               Innovate now
             </button>
           </div>
