@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="w-full">
       <Navbar/>
-      <div className="pt-20">
+      <div className="pt-16 sm:pt-18 lg:pt-20">
         <HeroPage/>
         <TimelinePage/>
         <CardPage/>

@@ -240,26 +240,26 @@ export default function TimelinePage() {
   }
 
   return (
-    <div className="min-h-screen bg-black px-4 py-12">
+    <div className="min-h-screen bg-black px-2 sm:px-4 py-8 sm:py-12">
       <div className="w-full max-w-full">
         {/* Top Section - Title and Description */}
-        <div className="flex flex-col gap-4 mb-12 items-center text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white leading-tight px-4" style={{fontFamily: 'Inter'}}>
+        <div className="flex flex-col gap-3 sm:gap-4 mb-8 sm:mb-10 lg:mb-12 items-center text-center">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight px-2 sm:px-4" style={{fontFamily: 'Inter'}}>
             Launch DeFi, Connect Chains, Ignite Hyperion
           </h2>
-          <p className="text-white text-base leading-relaxed max-w-4xl px-4" style={{fontFamily: 'Inter'}}>
+          <p className="text-white text-sm sm:text-base leading-relaxed max-w-4xl px-2 sm:px-4" style={{fontFamily: 'Inter'}}>
             Empowers developers with modular DeFi tools and seamless cross-chain bridging, sparking innovation and community-driven growth in the Hyperion ecosystem.
           </p>
         </div>
         
         {/* Timeline Section */}
-        <div className="bg-black/40 backdrop-blur-sm rounded-2xl border border-white/10 overflow-hidden scrollbar-hide">
+        <div className="bg-black/40 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-white/10 overflow-hidden scrollbar-hide">
           {/* Timeline header with months */}
           <div className="border-b border-white/10">
-            <div className="flex min-h-[100px]">
+            <div className="flex min-h-[60px] sm:min-h-[80px] lg:min-h-[100px]">
               {/* Left sidebar for milestone names */}
-              <div className="w-80 flex-shrink-0 flex items-center justify-center border-r border-white/10">
-                <span className="text-xs font-semibold text-white/70 uppercase tracking-wider px-2" style={{fontFamily: 'Inter'}}>
+              <div className="w-32 sm:w-48 lg:w-80 flex-shrink-0 flex items-center justify-center border-r border-white/10">
+                <span className="text-xs font-semibold text-white/70 uppercase tracking-wider px-1 sm:px-2" style={{fontFamily: 'Inter'}}>
                   Milestones
                 </span>
               </div>
@@ -320,7 +320,7 @@ export default function TimelinePage() {
                           onMouseLeave={() => setHoveredItem(null)}
                         >
                     {/* Left sidebar - Milestone name */}
-                    <div className="w-80 flex-shrink-0 px-4 py-3 flex items-center gap-2 border-r border-white/10">
+                    <div className="w-32 sm:w-48 lg:w-80 flex-shrink-0 px-2 sm:px-3 lg:px-4 py-2 sm:py-3 flex items-center gap-1 sm:gap-2 border-r border-white/10">
                       <span className="text-white font-medium group-hover:text-cyan-300 transition-colors text-xs leading-tight" style={{fontFamily: 'Inter'}}>
                         {item.title}
                       </span>
@@ -343,7 +343,7 @@ export default function TimelinePage() {
                     </div>
                     
                            {/* Timeline grid area */}
-                           <div className="flex-1 relative h-14 overflow-visible">
+                           <div className="flex-1 relative h-12 sm:h-14 overflow-visible">
                              {/* Week grid background */}
                              <div className="absolute inset-0 flex min-w-full">
                                {Array.from({ length: totalWeeks }).map((_, idx) => (

@@ -2,84 +2,84 @@ import React from 'react';
 
 export default function Footer() {
   return (
-    <footer className="bg-black text-white py-16 px-8 w-full">
+    <footer className="bg-black text-white py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 w-full">
       <div className="w-full">
         {/* Top Section */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-12 lg:mb-16">
           {/* Logo */}
-          <div className="flex items-start">
+          <div className="flex items-start sm:col-span-2 lg:col-span-1">
             <img 
               src="/logo/brand/hyperkit/Hyperkit Abstract.svg" 
               alt="Hyperkit Logo" 
-              className="w-auto h-25"
+              className="w-auto h-16 sm:h-20 lg:h-25"
             />
           </div>
 
           {/* Column 1 - Developers */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-white text-lg font-bold mb-2" style={{fontFamily: 'Inter'}}>Developers</h3>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Documentation</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Changelog</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Status page</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Trust center</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Under the hood</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Example project</a>
+          <div className="flex flex-col gap-2 sm:gap-3">
+            <h3 className="text-white text-base sm:text-lg font-bold mb-1 sm:mb-2" style={{fontFamily: 'Inter'}}>Developers</h3>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Documentation</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Changelog</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Status page</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Trust center</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Under the hood</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Example project</a>
             
             {/* Hyperion Icon and Text */}
-            <div className="flex flex-col items-center gap-2 mt-6">
+            <div className="flex flex-col items-center gap-2 mt-4 sm:mt-6">
               <img 
                 src="/logo/brand/hyperion/hyperion-icon-white.png" 
                 alt="Hyperion Icon" 
-                className="w-8 h-8"
+                className="w-6 h-6 sm:w-8 sm:h-8"
               />
               <div className="text-center">
-                <p className="text-white text-sm font-medium" style={{fontFamily: 'Inter'}}>Hyperhack</p>
-                <p className="text-white text-sm font-medium" style={{fontFamily: 'Inter'}}>Winners</p>
+                <p className="text-white text-xs sm:text-sm font-medium" style={{fontFamily: 'Inter'}}>Hyperhack</p>
+                <p className="text-white text-xs sm:text-sm font-medium" style={{fontFamily: 'Inter'}}>Winners</p>
               </div>
             </div>
           </div>
 
           {/* Column 2 - Resources */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-white text-lg font-bold mb-2" style={{fontFamily: 'Inter'}}>Resources</h3>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Blog</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Customer Stories</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Modern Billing Stack</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Unbundled Monetization</a>
+          <div className="flex flex-col gap-2 sm:gap-3">
+            <h3 className="text-white text-base sm:text-lg font-bold mb-1 sm:mb-2" style={{fontFamily: 'Inter'}}>Resources</h3>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Blog</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Customer Stories</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Modern Billing Stack</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Unbundled Monetization</a>
           </div>
 
           {/* Column 3 - Company */}
-          <div className="flex flex-col gap-3">
-            <h3 className="text-white text-lg font-bold mb-2" style={{fontFamily: 'Inter'}}>Company</h3>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>About</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Pricing</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Careers</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Partners</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Privacy policy</a>
-            <a href="#" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>Terms of use</a>
-            <a href="mailto:support@hyperkit.xyz" className="text-gray-400 hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>support@hyperkit.xyz</a>
+          <div className="flex flex-col gap-2 sm:gap-3">
+            <h3 className="text-white text-base sm:text-lg font-bold mb-1 sm:mb-2" style={{fontFamily: 'Inter'}}>Company</h3>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>About</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Pricing</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Careers</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Partners</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Privacy policy</a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Terms of use</a>
+            <a href="mailto:support@hyperkit.xyz" className="text-gray-400 hover:text-white transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>support@hyperkit.xyz</a>
           </div>
         </div>
 
         {/* Middle Section - Status */}
-        <div className="mb-16 max-w-md">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
-            <span className="text-gray-400 text-sm" style={{fontFamily: 'Inter'}}>All systems development</span>
+        <div className="mb-8 sm:mb-12 lg:mb-16 max-w-md">
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-orange-500 rounded-full"></div>
+            <span className="text-gray-400 text-xs sm:text-sm" style={{fontFamily: 'Inter'}}>All systems development</span>
           </div>
         </div>
 
         {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 pt-8 border-t border-gray-800">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-6 lg:gap-8 pt-6 sm:pt-8 border-t border-gray-800">
           {/* Copyright */}
-          <div className="text-gray-400 text-sm" style={{fontFamily: 'Inter'}}>© 2024 Hyperkit. All rights reserved.</div>
+          <div className="text-gray-400 text-xs sm:text-sm" style={{fontFamily: 'Inter'}}>© 2024 Hyperkit. All rights reserved.</div>
 
           {/* Social Icons */}
-          <div className="flex gap-6 items-center">
-            <img src="/icons/footer/social/x-white.svg" alt="X (Twitter)" className="w-6 h-6 hover:opacity-80 transition-opacity" />
-            <img src="/icons/footer/social/telegram-white.svg" alt="Telegram" className="w-6 h-6 hover:opacity-80 transition-opacity" />
-            <img src="/icons/footer/social/discord-white.svg" alt="Discord" className="w-6 h-6 hover:opacity-80 transition-opacity" />
-            <img src="/icons/footer/social/github-white.svg" alt="GitHub" className="w-6 h-6 hover:opacity-80 transition-opacity" />
+          <div className="flex gap-4 sm:gap-6 items-center">
+            <img src="/icons/footer/social/x-white.svg" alt="X (Twitter)" className="w-5 h-5 sm:w-6 sm:h-6 hover:opacity-80 transition-opacity" />
+            <img src="/icons/footer/social/telegram-white.svg" alt="Telegram" className="w-5 h-5 sm:w-6 sm:h-6 hover:opacity-80 transition-opacity" />
+            <img src="/icons/footer/social/discord-white.svg" alt="Discord" className="w-5 h-5 sm:w-6 sm:h-6 hover:opacity-80 transition-opacity" />
+            <img src="/icons/footer/social/github-white.svg" alt="GitHub" className="w-5 h-5 sm:w-6 sm:h-6 hover:opacity-80 transition-opacity" />
           </div>
         </div>
       </div>
