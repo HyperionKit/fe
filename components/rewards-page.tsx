@@ -54,9 +54,9 @@ export default function RewardPage() {
             </div>
             
             {/* Three boxes in a row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-0">
               {/* First box - HyperContributor */}
-              <div className="bg-gradient-to-br from-[#0C0C0D] to-[#7C3AED] h-48 sm:h-52 lg:h-58 w-full rounded-lg p-3 sm:p-4 shadow-2xl shadow-gray-900 hover:scale-105 transition-transform duration-300 hover:cursor-pointer">
+              <div className="bg-gradient-to-br from-[#0C0C0D] to-[#7C3AED] h-58 sm:h-58 lg:h-58 w-full rounded-lg p-3 sm:p-4 shadow-2xl shadow-gray-900 hover:scale-105 transition-transform duration-300 hover:cursor-pointer">
                 <div className="flex flex-col h-full">
                   <div className="flex-1">
                     <h3 className="text-white text-base sm:text-lg font-semibold mb-2" style={{fontFamily: 'Inter'}}>HyperContributor</h3>

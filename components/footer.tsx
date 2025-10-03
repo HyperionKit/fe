@@ -76,10 +76,42 @@ export default function Footer() {
 
           {/* Social Icons */}
           <div className="flex gap-4 sm:gap-6 items-center">
-            <img src="/icons/footer/social/x-white.svg" alt="X (Twitter)" className="w-5 h-5 sm:w-6 sm:h-6 hover:opacity-80 transition-opacity" />
-            <img src="/icons/footer/social/telegram-white.svg" alt="Telegram" className="w-5 h-5 sm:w-6 sm:h-6 hover:opacity-80 transition-opacity" />
-            <img src="/icons/footer/social/discord-white.svg" alt="Discord" className="w-5 h-5 sm:w-6 sm:h-6 hover:opacity-80 transition-opacity" />
-            <img src="/icons/footer/social/github-white.svg" alt="GitHub" className="w-5 h-5 sm:w-6 sm:h-6 hover:opacity-80 transition-opacity" />
+            <a 
+              href="https://x.com/HyperionKit" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+              aria-label="Follow us on X (Twitter)"
+            >
+              <img src="/icons/footer/social/x-white.svg" alt="X (Twitter)" className="w-5 h-5 sm:w-6 sm:h-6" />
+            </a>
+            <a 
+              href="https://t.me/hyperionkit" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+              aria-label="Join our Telegram"
+            >
+              <img src="/icons/footer/social/telegram-white.svg" alt="Telegram" className="w-5 h-5 sm:w-6 sm:h-6" />
+            </a>
+            <a 
+              href="https://discord.com/invite/MDh7jY8vWe" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+              aria-label="Join our Discord"
+            >
+              <img src="/icons/footer/social/discord-white.svg" alt="Discord" className="w-5 h-5 sm:w-6 sm:h-6" />
+            </a>
+            <a 
+              href="https://github.com/HyperionKit" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+              aria-label="Visit our GitHub"
+            >
+              <img src="/icons/footer/social/github-white.svg" alt="GitHub" className="w-5 h-5 sm:w-6 sm:h-6" />
+            </a>
           </div>
         </div>
       </div>
