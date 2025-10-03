@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Loader from './3d-loader';
 
 export default function MaintenancePage() {
   const [email, setEmail] = useState('');
@@ -31,14 +32,26 @@ export default function MaintenancePage() {
           />
         </div>
 
-        {/* Main Content */}
-        <div className="mb-8 sm:mb-12">
-          <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-5xl font-bold text-white leading-tight mb-4 sm:mb-6" style={{fontFamily: 'Inter'}}>
-            Under Development
-          </h1>
-          <p className="text-gray-300 text-lg sm:text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto" style={{fontFamily: 'Inter'}}>
-            Please be patient while we build something amazing for you
-          </p>
+        {/* Main Content with 3D Background */}
+        <div className="mb-8 sm:mb-12 relative">
+          {/* 3D Loader as Background */}
+          <div className="absolute inset-0 flex items-end justify-center z-0 opacity-80 pb-8">
+            <Loader />
+          </div>
+          
+          {/* Text Content */}
+          <div className="relative z-10">
+            <h1 className="text-4xl sm:text-5xl md:text-5xl lg:text-5xl font-bold text-white leading-tight mb-4 sm:mb-6 animate-fade-in-up" style={{fontFamily: 'Inter'}}>
+              <span className="inline-block animate-typing overflow-hidden whitespace-nowrap border-r-2 border-white pr-2">
+                Under Development
+              </span>
+            </h1>
+            <p className="text-gray-300 text-lg sm:text-xl md:text-2xl leading-relaxed max-w-2xl mx-auto animate-fade-in-up-delayed" style={{fontFamily: 'Inter'}}>
+              <span className="inline-block animate-gradient-text bg-gradient-to-r from-gray-300 via-white to-gray-300 bg-clip-text text-transparent bg-[length:200%_100%]">
+                Please be patient while we build something amazing for you
+              </span>
+            </p>
+          </div>
         </div>
 
         {/* Newsletter Signup */}
