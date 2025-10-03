@@ -23,7 +23,7 @@ export default function HeroPage() {
         </div>
 
         {/* Main Hero Section */}
-        <div className="bg-sky-400 rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 xl:p-20 mb-8 sm:mb-12 relative shadow-2xl shadow-white/40 min-h-[200px] sm:min-h-[300px] lg:min-h-[400px] flex items-center justify-center">
+        <div className="bg-sky-400 rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 xl:p-20 mb-8 sm:mb-12 relative shadow-2xl shadow-white/40 h-[700px] flex items-center justify-center">
           {/* Play Demo Button in center */}
           <div className="flex items-center justify-center">
             <button className="flex items-center gap-2 bg-black text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full sm:rounded-[40px] font-semibold hover:bg-gray-800 transition-colors text-sm sm:text-base" style={{fontFamily: 'Inter'}}>
