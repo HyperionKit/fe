@@ -18,95 +18,43 @@ interface TimelineItem {
 const timelineData: TimelineItem[] = [
   {
     id: "1",
-    title: "Month 1: Rebrand & MVP Launch",
-    description: "New logo/UI. Local-only AI project generator. Onboard first 5 developers.",
+    title: "October 2025: HyperKit Project Launch",
+    description: "Complete rebranding, AI project generation system, and modular customization platform with community engagement.",
     startWeek: 1,
     duration: 4,
     tasks: [
-      { name: "Branding/Logo & Landing", startWeek: 1, duration: 1 },
-      { name: "AI Project Generator (local)", startWeek: 1, duration: 3 },
-      { name: "User Onboarding (5 devs)", startWeek: 1, duration: 4 },
-    ],
-  },
-  {
-    id: "2",
-    title: "Month 2: Dashboard & Audit",
-    description: "Custom dashboard, first NFT mint boilerplate, launch one on-chain component, smart contract audit, onboard 10 devs.",
-    startWeek: 5,
-    duration: 4,
-    tasks: [
-      { name: "Dashboard Customization", startWeek: 5, duration: 2 },
-      { name: "NFT Mint Boilerplate", startWeek: 6, duration: 2 },
-      { name: "Initial Audit", startWeek: 7, duration: 2 },
-      { name: "Dev Onboarding (10 devs)", startWeek: 5, duration: 4 },
-      { name: "Ecosystem Partnership", startWeek: 7, duration: 2 },
-    ],
-  },
-  {
-    id: "3",
-    title: "Month 3: Cross-chain & SDK",
-    description: "Bridge support (Metis/Hyperion), SDK/CLI upgrades, open governance, onboard new partner.",
-    startWeek: 9,
-    duration: 4,
-    tasks: [
-      { name: "Bridge: Metis/Hyperion/Andromeda", startWeek: 9, duration: 3 },
-      { name: "SDK/CLI Improvements", startWeek: 10, duration: 2 },
-      { name: "Governance Launch", startWeek: 11, duration: 2 },
-      { name: "Ecosystem Partnership", startWeek: 12, duration: 2 },
-    ],
-  },
-  {
-    id: "4",
-    title: "Month 4: UI Builder & Roles",
-    description: "Drag-and-drop builder, code preview, role unlocks, DeFi partnerships.",
-    startWeek: 13,
-    duration: 4,
-    tasks: [
-      { name: "AI Project Builder UX", startWeek: 13, duration: 2 },
-      { name: "Code Preview", startWeek: 13, duration: 2 },
-      { name: "Role Unlocks", startWeek: 15, duration: 2 },
-      { name: "DeFi Partnership", startWeek: 15, duration: 2 },
-    ],
-  },
-  {
-    id: "5",
-    title: "Month 5: Hosted Projects & Training",
-    description: "Host AI-generated projects, enhance builder features, Discord integration, dev training, AI partner.",
-    startWeek: 17,
-    duration: 4,
-    tasks: [
-      { name: "AI Project Hosting", startWeek: 17, duration: 2 },
-      { name: "Component Builder: Icons/Layout", startWeek: 18, duration: 2 },
-      { name: "Discord Community Roles", startWeek: 18, duration: 2 },
-      { name: "Developer Training", startWeek: 19, duration: 2 },
-      { name: "AI Partnership", startWeek: 20, duration: 2 },
-    ],
-  },
-  {
-    id: "6",
-    title: "Month 6: Monetization & TGE",
-    description: "Launch Freemium/Premium, SaaS model, TGE readiness, ecosystem plan, >50 devs engaged.",
-    startWeek: 21,
-    duration: 4,
-    tasks: [
-      { name: "Monetization Setup (Freemium/Premium)", startWeek: 21, duration: 2 },
-      { name: "Component SaaS", startWeek: 22, duration: 2 },
-      { name: "TGE Prep & Tokenomics", startWeek: 23, duration: 2 },
-      { name: "Ecosystem Expansion Plan", startWeek: 24, duration: 2 },
-      { name: "Developer Engagement Tracking", startWeek: 21, duration: 4 },
+      // Week 1 - Rebranding & Accessibility
+      { name: "Finalize & Deploy New Logo Design", startWeek: 1, duration: 1 },
+      { name: "Implement Universal Theme Across UI", startWeek: 1, duration: 1 },
+      { name: "Specify Supported Project Types", startWeek: 1, duration: 1 },
+      
+      // Week 2 - Landing Page & AI UX
+      { name: "Redesign & Launch New Landing Page", startWeek: 2, duration: 1 },
+      { name: "Validate A11y & Responsive Navigation", startWeek: 2, duration: 1 },
+      { name: "Visual Regression Test Suite", startWeek: 2, duration: 1 },
+      { name: "Complete AI Generation Flow UX/UI", startWeek: 2, duration: 1 },
+      
+      // Week 3 - AI Integration & Modules
+      { name: "Integrate AI Models for Project Creation", startWeek: 3, duration: 1 },
+      { name: "Build Artifact Generation Logic", startWeek: 3, duration: 1 },
+      { name: "Backend Upgrade: Logging & Error Reporting", startWeek: 3, duration: 1 },
+      { name: "Launch Customizable Module Editor", startWeek: 3, duration: 1 },
+      { name: "Enable Dynamic Preview & Copy-Paste", startWeek: 3, duration: 1 },
+      
+      // Week 4 - Final Integration & Community
+      { name: "NLP Enhancement & Backend Integration", startWeek: 4, duration: 1 },
+      { name: "Deliver First-Stage Dashboard", startWeek: 4, duration: 1 },
+      { name: "Code Validation & Security Scanning", startWeek: 4, duration: 1 },
+      { name: "Drag-and-Drop UI Library Integration", startWeek: 4, duration: 1 },
+      { name: "Early Access Program Launch (100 users)", startWeek: 4, duration: 1 },
     ],
   },
 ]
 
 const months = [
   "October 2025",  // Month 1
-  "November 2025",  // Month 2
-  "December 2025",   // Month 3
-  "January 2026",  // Month 4
-  "February 2026",     // Month 5
-  "March 2026",     // Month 6
 ]
-const weeksPerMonth = [4, 4, 4, 4, 4, 4] // Each sprint is 4 weeks
+const weeksPerMonth = [4] // October 2025 - 4 weeks
 
 export default function TimelinePage() {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
@@ -150,42 +98,30 @@ export default function TimelinePage() {
 
   // Task completion percentages (0-100)
   const taskCompletion = {
-    // Month 1 - Mostly completed/in progress
-    "Branding/Logo & Landing": 80,
-    "AI Project Generator (local)": 0,
-    "User Onboarding (5 devs)": 0,
+    // October 2025 - Week 1 (Rebranding & Accessibility)
+    "Finalize & Deploy New Logo Design": 0,
+    "Implement Universal Theme Across UI": 0,
+    "Specify Supported Project Types": 0,
     
-    // Month 2 - In progress
-    "Dashboard Customization": 0,
-    "NFT Mint Boilerplate": 0,
-    "Initial Audit": 0,
-    "Dev Onboarding (10 devs)": 0,
-    "Ecosystem Partnership": 0,
+    // October 2025 - Week 2 (Landing Page & AI UX)
+    "Redesign & Launch New Landing Page": 0,
+    "Validate A11y & Responsive Navigation": 0,
+    "Visual Regression Test Suite": 0,
+    "Complete AI Generation Flow UX/UI": 0,
     
-    // Month 3 - Started
-    "Bridge: Metis/Hyperion/Andromeda": 0,
-    "SDK/CLI Improvements": 0,
-    "Governance Launch": 0,
-    "AI Project Builder UX": 0,
-    "Code Preview": 0,
-    "Role Unlocks": 0,
-    "DeFi Partnership": 0,
+    // October 2025 - Week 3 (AI Integration & Modules)
+    "Integrate AI Models for Project Creation": 0,
+    "Build Artifact Generation Logic": 0,
+    "Backend Upgrade: Logging & Error Reporting": 0,
+    "Launch Customizable Module Editor": 0,
+    "Enable Dynamic Preview & Copy-Paste": 0,
     
-    // Month 4 - Not started
-    "AI Project Hosting": 0,
-    "Component Builder: Icons/Layout": 0,
-    "Discord Community Roles": 0,
-    "Developer Training": 0,
-    "AI Partnership": 0,
-    
-    // Month 5 - Not started
-    "Monetization Setup (Freemium/Premium)": 0,
-    "Component SaaS": 0,
-    "TGE Prep & Tokenomics": 0,
-    
-    // Month 6 - Not started
-    "Ecosystem Expansion Plan": 0,
-    "Developer Engagement Tracking": 0,
+    // October 2025 - Week 4 (Final Integration & Community)
+    "NLP Enhancement & Backend Integration": 0,
+    "Deliver First-Stage Dashboard": 0,
+    "Code Validation & Security Scanning": 0,
+    "Drag-and-Drop UI Library Integration": 0,
+    "Early Access Program Launch (100 users)": 0,
   }
 
   const toggleItem = (id: string) => {
@@ -205,24 +141,21 @@ export default function TimelinePage() {
   // Color mapping for milestones
   const getMilestoneColor = (id: string) => {
     const colors = {
-      "1": "from-purple-500 to-purple-700",
-      "2": "from-blue-500 to-blue-700", 
-      "3": "from-green-500 to-green-700",
-      "4": "from-orange-500 to-orange-700",
-      "5": "from-pink-500 to-pink-700",
-      "6": "from-cyan-500 to-cyan-700"
+      "1": "from-cyan-500 to-cyan-700"
     }
     return colors[id as keyof typeof colors] || "from-gray-500 to-gray-700"
   }
 
   // Color mapping for task types
   const getTaskColor = (taskName: string) => {
-    if (taskName.includes("AI") || taskName.includes("Generator")) return "bg-purple-400"
-    if (taskName.includes("Dashboard") || taskName.includes("UI")) return "bg-blue-400"
-    if (taskName.includes("Bridge") || taskName.includes("Cross-chain")) return "bg-green-400"
-    if (taskName.includes("Audit") || taskName.includes("Security")) return "bg-red-400"
-    if (taskName.includes("Partnership") || taskName.includes("Ecosystem")) return "bg-yellow-400"
-    if (taskName.includes("Monetization") || taskName.includes("TGE")) return "bg-cyan-400"
+    if (taskName.includes("AI") || taskName.includes("Generator") || taskName.includes("NLP")) return "bg-purple-400"
+    if (taskName.includes("Dashboard") || taskName.includes("UI") || taskName.includes("Landing") || taskName.includes("Theme")) return "bg-blue-400"
+    if (taskName.includes("Bridge") || taskName.includes("Cross-chain") || taskName.includes("SDK")) return "bg-green-400"
+    if (taskName.includes("Audit") || taskName.includes("Security") || taskName.includes("Validation")) return "bg-red-400"
+    if (taskName.includes("Partnership") || taskName.includes("Ecosystem") || taskName.includes("Community") || taskName.includes("AMA")) return "bg-yellow-400"
+    if (taskName.includes("Monetization") || taskName.includes("TGE") || taskName.includes("SaaS")) return "bg-cyan-400"
+    if (taskName.includes("Documentation") || taskName.includes("Tutorial") || taskName.includes("Training")) return "bg-indigo-400"
+    if (taskName.includes("Module") || taskName.includes("Editor") || taskName.includes("Preview")) return "bg-pink-400"
     return "bg-gray-400"
   }
 
@@ -245,10 +178,10 @@ export default function TimelinePage() {
         {/* Top Section - Title and Description */}
         <div className="flex flex-col gap-3 sm:gap-4 mb-8 sm:mb-10 lg:mb-12 items-center text-center">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight px-2 sm:px-4" style={{fontFamily: 'Inter'}}>
-            Launch DeFi, Connect Chains, Ignite Hyperion
+            HyperKit Project Roadmap
           </h2>
           <p className="text-white text-sm sm:text-base leading-relaxed max-w-4xl px-2 sm:px-4" style={{fontFamily: 'Inter'}}>
-            Empowers developers with modular DeFi tools and seamless cross-chain bridging, sparking innovation and community-driven growth in the Hyperion ecosystem.
+            Complete rebranding, AI-powered project generation, and modular customization platform. Building the future of web3 development with community-driven innovation and seamless cross-chain integration.
           </p>
         </div>
         
@@ -256,11 +189,11 @@ export default function TimelinePage() {
         <div className="bg-black/40 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-white/10 overflow-hidden scrollbar-hide">
           {/* Timeline header with months */}
           <div className="border-b border-white/10">
-            <div className="flex min-h-[60px] sm:min-h-[80px] lg:min-h-[100px]">
+            <div className="flex min-h-[50px] sm:min-h-[60px]">
               {/* Left sidebar for milestone names */}
-              <div className="w-32 sm:w-48 lg:w-80 flex-shrink-0 flex items-center justify-center border-r border-white/10">
-                <span className="text-xs font-semibold text-white/70 uppercase tracking-wider px-1 sm:px-2" style={{fontFamily: 'Inter'}}>
-                  Milestones
+              <div className="w-48 sm:w-64 lg:w-80 flex-shrink-0 flex items-center justify-center border-r border-white/10">
+                <span className="text-xs font-semibold text-white/70 uppercase tracking-wider px-2" style={{fontFamily: 'Inter'}}>
+                  Project Phases
                 </span>
               </div>
               
@@ -276,9 +209,9 @@ export default function TimelinePage() {
                 {months.map((month, idx) => {
                   const weeks = weeksPerMonth[idx]
                   return (
-                    <div key={month} className="flex-1 border-l border-white/10 first:border-l-0 min-w-[100px]" style={{ flex: weeks }}>
-                      <div className="px-2 py-3 text-center">
-                        <span className="text-xs font-semibold text-white/90" style={{fontFamily: 'Inter'}}>{month}</span>
+                    <div key={month} className="flex-1 border-l border-white/10 first:border-l-0 min-w-[120px]" style={{ flex: weeks }}>
+                      <div className="px-3 py-2 text-center">
+                        <span className="text-sm font-semibold text-white/90" style={{fontFamily: 'Inter'}}>{month}</span>
                       </div>
                       <div className="flex border-t border-white/10">
                         {Array.from({ length: weeks }).map((_, weekIdx) => {
@@ -287,7 +220,7 @@ export default function TimelinePage() {
                           return (
                             <div
                               key={weekIdx}
-                              className={`flex-1 border-l border-white/10 first:border-l-0 px-1 py-2 text-center min-w-[25px] ${
+                              className={`flex-1 border-l border-white/10 first:border-l-0 px-1 py-1 text-center min-w-[30px] ${
                                 isCurrentWeek ? 'bg-red-500/20' : ''
                               }`}
                             >
@@ -314,19 +247,19 @@ export default function TimelinePage() {
 
               return (
                 <div key={item.id}>
-                        <div 
-                          className="flex items-center hover:bg-white/5 transition-all duration-300 group min-h-[70px]"
-                          onMouseEnter={() => setHoveredItem(item.id)}
-                          onMouseLeave={() => setHoveredItem(null)}
-                        >
+                  <div 
+                    className="flex items-center hover:bg-white/5 transition-all duration-300 group min-h-[45px]"
+                    onMouseEnter={() => setHoveredItem(item.id)}
+                    onMouseLeave={() => setHoveredItem(null)}
+                  >
                     {/* Left sidebar - Milestone name */}
-                    <div className="w-32 sm:w-48 lg:w-80 flex-shrink-0 px-2 sm:px-3 lg:px-4 py-2 sm:py-3 flex items-center gap-1 sm:gap-2 border-r border-white/10">
-                      <span className="text-white font-medium group-hover:text-cyan-300 transition-colors text-xs leading-tight" style={{fontFamily: 'Inter'}}>
+                    <div className="w-48 sm:w-64 lg:w-80 flex-shrink-0 px-3 py-2 flex items-center gap-2 border-r border-white/10">
+                      <span className="text-white font-medium group-hover:text-cyan-300 transition-colors text-sm leading-tight" style={{fontFamily: 'Inter'}}>
                         {item.title}
                       </span>
                       {hasSubtasks && (
                         <button
-                          className="h-5 w-5 text-white/50 hover:text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
+                          className="h-4 w-4 text-white/50 hover:text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
                           onClick={() => toggleItem(item.id)}
                         >
                           {isExpanded ? (
@@ -342,53 +275,53 @@ export default function TimelinePage() {
                       )}
                     </div>
                     
-                           {/* Timeline grid area */}
-                           <div className="flex-1 relative h-12 sm:h-14 overflow-visible">
-                             {/* Week grid background */}
-                             <div className="absolute inset-0 flex min-w-full">
-                               {Array.from({ length: totalWeeks }).map((_, idx) => (
-                                 <div key={idx} className="flex-1 border-l border-white/5 first:border-l-0 min-w-[25px]" />
-                               ))}
-                             </div>
-                             
-                             {/* Main milestone bar */}
-                             <div className="absolute inset-y-0 flex items-center px-1 min-w-full">
-                               <div
-                                 className={`h-5 bg-gradient-to-r ${getMilestoneColor(item.id)} rounded-md relative shadow-lg transition-all duration-300 cursor-pointer hover:shadow-xl hover:scale-105 ${
-                                   isHovered ? 'shadow-2xl scale-110' : ''
-                                 }`}
-                                 style={{
-                                   marginLeft: `${((item.startWeek - 1) / totalWeeks) * 100}%`,
-                                   width: `${(item.duration / totalWeeks) * 100}%`,
-                                 }}
-                                 onMouseEnter={() => setHoveredItem(item.id)}
-                                 onMouseLeave={() => setHoveredItem(null)}
-                               >
-                                 {/* Task segments within milestone bar */}
-                                 {item.tasks && (
-                                   <div className="absolute inset-0 flex">
-                                     {item.tasks.map((task, taskIdx) => {
-                                       const taskStart = ((task.startWeek - item.startWeek) / item.duration) * 100
-                                       const taskWidth = (task.duration / item.duration) * 100
-                                       return (
-                                         <div
-                                           key={taskIdx}
-                                           className={`h-full ${getTaskColor(task.name)} opacity-80 rounded-sm mx-0.5`}
-                                           style={{
-                                             marginLeft: `${taskStart}%`,
-                                             width: `${taskWidth}%`,
-                                           }}
-                                           title={task.name}
-                                         />
-                                       )
-                                     })}
-                                   </div>
-                                 )}
-                                 
-                                 {/* Milestone label */}
-                                 <span className="absolute left-full ml-2 text-xs text-white/90 whitespace-nowrap top-1/2 -translate-y-1/2 font-semibold" style={{fontFamily: 'Inter'}}>
-                                   W{item.startWeek}-{item.startWeek + item.duration - 1}
-                                 </span>
+                    {/* Timeline grid area */}
+                    <div className="flex-1 relative h-8 overflow-visible">
+                      {/* Week grid background */}
+                      <div className="absolute inset-0 flex min-w-full">
+                        {Array.from({ length: totalWeeks }).map((_, idx) => (
+                          <div key={idx} className="flex-1 border-l border-white/5 first:border-l-0 min-w-[30px]" />
+                        ))}
+                      </div>
+                      
+                      {/* Main milestone bar */}
+                      <div className="absolute inset-y-0 flex items-center px-1 min-w-full">
+                        <div
+                          className={`h-6 bg-gradient-to-r ${getMilestoneColor(item.id)} rounded-md relative shadow-lg transition-all duration-300 cursor-pointer hover:shadow-xl hover:scale-105 ${
+                            isHovered ? 'shadow-2xl scale-110' : ''
+                          }`}
+                          style={{
+                            marginLeft: `${((item.startWeek - 1) / totalWeeks) * 100}%`,
+                            width: `${(item.duration / totalWeeks) * 100}%`,
+                          }}
+                          onMouseEnter={() => setHoveredItem(item.id)}
+                          onMouseLeave={() => setHoveredItem(null)}
+                        >
+                          {/* Task segments within milestone bar */}
+                          {item.tasks && (
+                            <div className="absolute inset-0 flex">
+                              {item.tasks.map((task, taskIdx) => {
+                                const taskStart = ((task.startWeek - item.startWeek) / item.duration) * 100
+                                const taskWidth = (task.duration / item.duration) * 100
+                                return (
+                                  <div
+                                    key={taskIdx}
+                                    className={`h-full ${getTaskColor(task.name)} opacity-80 rounded-sm mx-0.5`}
+                                    style={{
+                                      marginLeft: `${taskStart}%`,
+                                      width: `${taskWidth}%`,
+                                    }}
+                                    title={task.name}
+                                  />
+                                )
+                              })}
+                            </div>
+                          )}
+                          
+                          {/* Milestone label */}
+                          <span className="absolute left-full ml-2 text-xs text-white/90 whitespace-nowrap top-1/2 -translate-y-1/2 font-semibold" style={{fontFamily: 'Inter'}}>
+                            W{item.startWeek}-{item.startWeek + item.duration - 1}
+                          </span>
 
                                  {/* Milestone hover tooltip - anchored to the bar */}
                                  {isHovered && (() => {
@@ -470,9 +403,9 @@ export default function TimelinePage() {
 
                   {/* Enhanced accordion content */}
                   {isExpanded && item.description && (
-                    <div className="px-4 py-3 bg-white/5 border-t border-white/10 transition-all duration-300 ease-in-out">
+                    <div className="px-3 py-2 bg-white/5 border-t border-white/10 transition-all duration-300 ease-in-out">
                       <div className="flex">
-                        <div className="w-80 flex-shrink-0"></div>
+                        <div className="w-48 sm:w-64 lg:w-80 flex-shrink-0"></div>
                         <div className="flex-1">
                           <p className="text-xs text-white/70 leading-relaxed" style={{fontFamily: 'Inter'}}>
                             {item.description}
@@ -484,11 +417,11 @@ export default function TimelinePage() {
 
                   {isExpanded && item.tasks && (
                     <div className="bg-black/20 transition-all duration-300 ease-in-out">
-                      <div className="px-4 py-2">
+                      <div className="px-3 py-1">
                         <div className="flex">
-                          <div className="w-80 flex-shrink-0"></div>
+                          <div className="w-48 sm:w-64 lg:w-80 flex-shrink-0"></div>
                           <div className="flex-1">
-                            <h4 className="text-xs font-semibold text-white/90 mb-3" style={{fontFamily: 'Inter'}}>
+                            <h4 className="text-xs font-semibold text-white/90 mb-2" style={{fontFamily: 'Inter'}}>
                               Detailed Tasks & Timeline
                             </h4>
                           </div>
@@ -503,27 +436,27 @@ export default function TimelinePage() {
   return (
                           <div
                             key={taskIdx}
-                            className="flex items-center border-t border-white/5 hover:bg-white/5 transition-all duration-200 group min-h-[50px] relative"
+                            className="flex items-center border-t border-white/5 hover:bg-white/5 transition-all duration-200 group min-h-[35px] relative"
                             onMouseEnter={() => setHoveredTask(taskId)}
                             onMouseLeave={() => setHoveredTask(null)}
                           >
                             {/* Left sidebar - Task name with completion status */}
-                            <div className="w-80 flex-shrink-0 px-8 py-2 border-r border-white/10">
+                            <div className="w-48 sm:w-64 lg:w-80 flex-shrink-0 px-6 py-1 border-r border-white/10">
                               <div className="flex items-center gap-2">
-                                <div className={`w-2 h-2 rounded-full ${getTaskColor(task.name)}`} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${getTaskColor(task.name)}`} />
                                 <span className="text-xs text-white/80 group-hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>
                                   {task.name}
                                 </span>
-                                <div className={`w-2 h-2 rounded-full ${completionStatus.color} ml-auto`} title={completionStatus.text} />
+                                <div className={`w-1.5 h-1.5 rounded-full ${completionStatus.color} ml-auto`} title={completionStatus.text} />
                               </div>
                             </div>
                             
                             {/* Timeline grid area for task with Gantt chart */}
-                            <div className="flex-1 relative h-10 overflow-visible">
+                            <div className="flex-1 relative h-6 overflow-visible">
                               {/* Week grid background */}
                               <div className="absolute inset-0 flex">
                                 {Array.from({ length: totalWeeks }).map((_, idx) => (
-                                  <div key={idx} className="flex-1 border-l border-white/5 first:border-l-0 min-w-[25px]" />
+                                  <div key={idx} className="flex-1 border-l border-white/5 first:border-l-0 min-w-[30px]" />
                                 ))}
                               </div>
                               
@@ -541,7 +474,7 @@ export default function TimelinePage() {
                               <div className="absolute inset-y-0 flex items-center justify-between px-1 w-full">
                                 <div className="flex items-center">
                                   <div
-                                    className={`h-2 ${getTaskColor(task.name)} rounded-full shadow-sm transition-all duration-300 group-hover:shadow-md hover:shadow-lg hover:scale-105 cursor-pointer relative overflow-visible ${
+                                    className={`h-4 ${getTaskColor(task.name)} rounded-full shadow-sm transition-all duration-300 group-hover:shadow-md hover:shadow-lg hover:scale-105 cursor-pointer relative overflow-visible ${
                                       hoveredTask === taskId ? 'shadow-xl scale-110' : ''
                                     }`}
                                     style={{
