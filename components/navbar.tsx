@@ -9,21 +9,23 @@ export default function Navbar() {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-black w-full">
       <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
         {/* Logo - Hyperkit Header White */}
-        <div className="flex items-center">
-          <img 
-            src="/logo/brand/hyperkit/Hyperkit Header White.svg" 
-            alt="Hyperkit" 
-            className="h-12 sm:h-14 lg:h-18 w-auto"
-          />
-        </div>
+        <a href="/" className="flex items-center">
+          <div className="flex items-center">
+            <img 
+              src="/logo/brand/hyperkit/Hyperkit Header White.svg" 
+              alt="Hyperkit" 
+              className="h-12 sm:h-14 lg:h-18 w-auto"
+            />
+          </div>
+        </a>
         
         {/* Desktop Navigation Links */}
         <div className="hidden lg:flex items-center flex-1 justify-center gap-6 xl:gap-12">
-          <a href="#" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+          <a href="/foundation" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
             <img src="/icons/navbar/foundation.svg" alt="Foundation" className="w-4 h-4" />
             <span className="hidden xl:inline">Foundation</span>
           </a>
-          <a href="#" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+          <a href="/products" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
             <img src="/icons/navbar/products.png" alt="Products" className="w-4 h-4" />
             <span className="hidden xl:inline">Products</span>
           </a>
@@ -31,11 +33,11 @@ export default function Navbar() {
             <img src="/icons/navbar/explore.png" alt="Explore" className="w-4 h-4" />
             <span className="hidden xl:inline">Explore</span>
           </a>
-          <a href="#" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+          <a href="/roadmap" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
             <img src="/icons/navbar/roadmap.png" alt="Roadmap" className="w-4 h-4" />
             <span className="hidden xl:inline">Roadmap</span>
           </a>
-          <a href="#" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+          <a href="/build" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
             <img src="/icons/navbar/build.svg" alt="Build" className="w-4 h-4" />
             <span className="hidden xl:inline">Build</span>
           </a>
