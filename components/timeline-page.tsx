@@ -200,7 +200,7 @@ export default function TimelinePage() {
     }
   }
 
-  // Enhanced tooltip content rendering with better task display
+  // Enhanced tooltip content rendering with compact task display
   const renderTooltipContent = (item: TimelineItem) => {
     const completedTasks = item.tasks.filter(task => {
       const completion = taskCompletion[task.name as keyof typeof taskCompletion] || 0
@@ -218,43 +218,43 @@ export default function TimelinePage() {
     })
     
     return (
-      <div className="space-y-4">
+      <div className="space-y-3">
         {/* Header */}
-        <div className="flex items-center gap-3">
-          <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
-          <h3 className="text-white font-semibold text-lg" style={{fontFamily: 'Inter'}}>
+        <div className="flex items-center gap-2">
+          <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full"></div>
+          <h3 className="text-white font-semibold text-base" style={{fontFamily: 'Inter'}}>
             {item.title}
           </h3>
         </div>
         
         {/* Description */}
-        <p className="text-gray-300 text-sm leading-relaxed" style={{fontFamily: 'Inter'}}>
+        <p className="text-gray-300 text-xs leading-relaxed" style={{fontFamily: 'Inter'}}>
           {item.description}
         </p>
         
-        {/* Task Summary */}
-        <div className="space-y-3">
+        {/* Task Summary - Compact Layout */}
+        <div className="space-y-2">
           {/* Completed Tasks */}
           {completedTasks.length > 0 && (
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <div className="w-1 h-1 bg-green-400 rounded-full"></div>
                 <span className="text-green-400 text-xs font-medium" style={{fontFamily: 'Inter'}}>
                   Completed ({completedTasks.length})
                 </span>
               </div>
-              <div className="space-y-1">
-                {completedTasks.slice(0, 3).map((task, index) => (
-                  <div key={index} className="text-gray-300 text-xs flex items-center gap-2" style={{fontFamily: 'Inter'}}>
-                    <svg className="w-3 h-3 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="space-y-0.5">
+                {completedTasks.slice(0, 4).map((task, index) => (
+                  <div key={index} className="text-gray-300 text-xs flex items-center gap-1.5" style={{fontFamily: 'Inter'}}>
+                    <svg className="w-2.5 h-2.5 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     <span className="truncate">{task.name}</span>
                   </div>
                 ))}
-                {completedTasks.length > 3 && (
+                {completedTasks.length > 4 && (
                   <div className="text-gray-400 text-xs" style={{fontFamily: 'Inter'}}>
-                    +{completedTasks.length - 3} more completed
+                    +{completedTasks.length - 4} more completed
                   </div>
                 )}
               </div>
@@ -264,33 +264,33 @@ export default function TimelinePage() {
           {/* In Progress Tasks */}
           {inProgressTasks.length > 0 && (
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <div className="w-1 h-1 bg-yellow-400 rounded-full"></div>
                 <span className="text-yellow-400 text-xs font-medium" style={{fontFamily: 'Inter'}}>
                   In Progress ({inProgressTasks.length})
                 </span>
               </div>
               <div className="space-y-1">
-                {inProgressTasks.slice(0, 2).map((task, index) => {
+                {inProgressTasks.slice(0, 3).map((task, index) => {
                   const completion = taskCompletion[task.name as keyof typeof taskCompletion] || 0
                   return (
                     <div key={index} className="text-gray-300 text-xs" style={{fontFamily: 'Inter'}}>
-                      <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center justify-between mb-0.5">
                         <span className="truncate">{task.name}</span>
-                        <span className="text-yellow-400 font-medium">{completion}%</span>
+                        <span className="text-yellow-400 font-medium text-xs">{completion}%</span>
                       </div>
-                      <div className="w-full bg-gray-700 rounded-full h-1">
+                      <div className="w-full bg-gray-700 rounded-full h-0.5">
                         <div 
-                          className="bg-yellow-400 h-1 rounded-full transition-all duration-500"
+                          className="bg-yellow-400 h-0.5 rounded-full transition-all duration-500"
                           style={{ width: `${completion}%` }}
                         ></div>
                       </div>
                     </div>
                   )
                 })}
-                {inProgressTasks.length > 2 && (
+                {inProgressTasks.length > 3 && (
                   <div className="text-gray-400 text-xs" style={{fontFamily: 'Inter'}}>
-                    +{inProgressTasks.length - 2} more in progress
+                    +{inProgressTasks.length - 3} more in progress
                   </div>
                 )}
               </div>
@@ -300,22 +300,22 @@ export default function TimelinePage() {
           {/* Pending Tasks */}
           {pendingTasks.length > 0 && (
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+              <div className="flex items-center gap-1.5 mb-1.5">
+                <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
                 <span className="text-gray-400 text-xs font-medium" style={{fontFamily: 'Inter'}}>
                   Pending ({pendingTasks.length})
                 </span>
               </div>
-              <div className="space-y-1">
-                {pendingTasks.slice(0, 2).map((task, index) => (
-                  <div key={index} className="text-gray-400 text-xs flex items-center gap-2" style={{fontFamily: 'Inter'}}>
-                    <div className="w-1 h-1 bg-gray-400 rounded-full flex-shrink-0"></div>
+              <div className="space-y-0.5">
+                {pendingTasks.slice(0, 4).map((task, index) => (
+                  <div key={index} className="text-gray-400 text-xs flex items-center gap-1.5" style={{fontFamily: 'Inter'}}>
+                    <div className="w-0.5 h-0.5 bg-gray-400 rounded-full flex-shrink-0"></div>
                     <span className="truncate">{task.name}</span>
                   </div>
                 ))}
-                {pendingTasks.length > 2 && (
+                {pendingTasks.length > 4 && (
                   <div className="text-gray-400 text-xs" style={{fontFamily: 'Inter'}}>
-                    +{pendingTasks.length - 2} more pending
+                    +{pendingTasks.length - 4} more pending
                   </div>
                 )}
               </div>
@@ -597,26 +597,26 @@ export default function TimelinePage() {
                                    return (
                                        <div 
                                          className="absolute z-[9999] bg-gray-900/98 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-2xl pointer-events-none animate-in fade-in-0 zoom-in-95 duration-200 timeline-tooltip"
-                                          style={{
-                                            left: position.left,
-                                            transform: position.transform,
+                                         style={{
+                                           left: position.left,
+                                           transform: position.transform,
                                            bottom: position.bottom,
                                            top: position.top,
-                                            marginBottom: '16px',
+                                           marginBottom: '16px',
                                            marginRight: '20px', // Add right margin to avoid scrollbar
                                            minWidth: '350px',
-                                           maxWidth: '480px',
+                                           maxWidth: '520px', // Increased width to accommodate more content
                                            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.3)',
                                            // Ensure tooltip stays within viewport bounds
                                            position: 'absolute',
                                            zIndex: 9999,
-                                           // Prevent overflow and add scrolling if needed
-                                           maxHeight: '70vh',
-                                           overflowY: 'auto',
+                                           // Remove internal scrolling - let content flow naturally
+                                           maxHeight: 'none',
+                                           overflowY: 'visible',
                                            // Smart positioning to avoid cut-off
                                            wordWrap: 'break-word',
                                            whiteSpace: 'normal'
-                                          }}>
+                                         }}>
                                        {/* Enhanced arrow pointing down to the bar */}
                                        <div 
                                          className="absolute top-full w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-transparent"
