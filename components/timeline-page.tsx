@@ -24,29 +24,32 @@ const timelineData: TimelineItem[] = [
     duration: 4,
     tasks: [
       // Week 1 - Rebranding & Accessibility
-      { name: "Finalize & Deploy New Logo Design", startWeek: 1, duration: 1 },
+      { name: "Finalize and Deploy New Logo Design", startWeek: 1, duration: 1 },
       { name: "Implement Universal Theme Across UI", startWeek: 1, duration: 1 },
-      { name: "Specify Supported Project Types", startWeek: 1, duration: 1 },
+      { name: "Specify and Publish Supported Project Types", startWeek: 1, duration: 1 },
       
       // Week 2 - Landing Page & AI UX
-      { name: "Redesign & Launch New Landing Page", startWeek: 2, duration: 1 },
-      { name: "Validate A11y & Responsive Navigation", startWeek: 2, duration: 1 },
+      { name: "Redesign and Launch New Landing Page", startWeek: 2, duration: 1 },
+      { name: "Complete Onboarding Flow", startWeek: 2, duration: 1 },
+      { name: "Validate A11y and Responsive Navigation", startWeek: 2, duration: 1 },
       { name: "Visual Regression Test Suite", startWeek: 2, duration: 1 },
       { name: "Complete AI Generation Flow UX/UI", startWeek: 2, duration: 1 },
       
       // Week 3 - AI Integration & Modules
-      { name: "Integrate AI Models for Project Creation", startWeek: 3, duration: 1 },
+      { name: "Integrate 12 AI Models for Project Creation", startWeek: 3, duration: 1 },
       { name: "Build Artifact Generation Logic", startWeek: 3, duration: 1 },
-      { name: "Backend Upgrade: Logging & Error Reporting", startWeek: 3, duration: 1 },
+      { name: "Backend Upgrade: Logging and Error Reporting", startWeek: 3, duration: 1 },
       { name: "Launch Customizable Module Editor", startWeek: 3, duration: 1 },
-      { name: "Enable Dynamic Preview & Copy-Paste", startWeek: 3, duration: 1 },
+      { name: "Enable Dynamic Preview and Copy-Paste", startWeek: 3, duration: 1 },
       
       // Week 4 - Final Integration & Community
-      { name: "NLP Enhancement & Backend Integration", startWeek: 4, duration: 1 },
+      { name: "NLP Enhancement and Backend Integration", startWeek: 4, duration: 1 },
       { name: "Deliver First-Stage Dashboard", startWeek: 4, duration: 1 },
-      { name: "Code Validation & Security Scanning", startWeek: 4, duration: 1 },
+      { name: "Code Validation and Security Scanning", startWeek: 4, duration: 1 },
       { name: "Drag-and-Drop UI Library Integration", startWeek: 4, duration: 1 },
       { name: "Early Access Program Launch (100 users)", startWeek: 4, duration: 1 },
+      { name: "Custom Module Preview System", startWeek: 4, duration: 1 },
+      { name: "Documentation Publishing and Distribution", startWeek: 4, duration: 1 },
     ],
   },
 ]
@@ -54,7 +57,32 @@ const timelineData: TimelineItem[] = [
 const months = [
   "October 2025",  // Month 1
 ]
+
 const weeksPerMonth = [4] // October 2025 - 4 weeks
+
+// Dynamic week calculation for future expansion
+const calculateTotalWeeks = () => {
+  return weeksPerMonth.reduce((total, weeks) => total + weeks, 0)
+}
+
+const getWeekInfo = (weekNumber: number) => {
+  let currentMonth = 0
+  let weekInMonth = weekNumber
+  
+  for (let i = 0; i < weeksPerMonth.length; i++) {
+    if (weekInMonth <= weeksPerMonth[i]) {
+      currentMonth = i
+      break
+    }
+    weekInMonth -= weeksPerMonth[i]
+  }
+  
+  return {
+    month: months[currentMonth],
+    weekInMonth,
+    monthIndex: currentMonth
+  }
+}
 
 export default function TimelinePage() {
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
@@ -62,66 +90,132 @@ export default function TimelinePage() {
   const [hoveredTask, setHoveredTask] = useState<string | null>(null)
   const [currentWeek, setCurrentWeek] = useState(1) // Current week indicator
 
-  // Enhanced positioning function for tooltips with better edge detection
-  const getTooltipPosition = (barStartPercent: number, barWidthPercent: number, tooltipWidth: number = 320) => {
+  // Enhanced positioning function for tooltips with better edge detection and overflow prevention
+  const getTooltipPosition = (barStartPercent: number, barWidthPercent: number, tooltipWidth: number = 350) => {
     const barCenter = barStartPercent + (barWidthPercent / 2)
     const tooltipHalfWidth = (tooltipWidth / 2) / 100 // Convert to percentage
     const leftEdge = barCenter - tooltipHalfWidth
     const rightEdge = barCenter + tooltipHalfWidth
     
-    // Add padding from edges (5% margin)
-    const margin = 5
+    // Dynamic margin based on viewport and content
+    const margin = 2
+    const maxRight = 100 - margin
+    
+    // Calculate optimal position
+    let left = barCenter
+    let transform = 'translateX(-50%)'
+    let arrowPosition = 'center'
+    let arrowOffset = '50%'
     
     if (leftEdge < margin) {
-      return { 
-        left: `${margin}%`, 
-        transform: 'translateX(0)',
-        arrowPosition: 'left',
-        arrowOffset: `${Math.max(0, barCenter - margin)}%`
+      left = margin
+      transform = 'translateX(0)'
+      arrowPosition = 'left'
+      arrowOffset = `${Math.max(0, barCenter - margin)}%`
+    } else if (rightEdge > maxRight) {
+      left = maxRight
+      transform = 'translateX(-100%)'
+      arrowPosition = 'right'
+      arrowOffset = `${Math.min(100, barCenter - maxRight)}%`
+    }
+    
+    return { 
+      left: `${left}%`, 
+      transform,
+      arrowPosition,
+      arrowOffset
+    }
+  }
+
+  // Smart positioning function specifically for milestone tooltips to prevent cut-off
+  const getMilestoneTooltipPosition = (barStartPercent: number, barWidthPercent: number, tooltipWidth: number = 320) => {
+    const barCenter = barStartPercent + (barWidthPercent / 2)
+    const tooltipHalfWidth = (tooltipWidth / 2) / 100 // Convert to percentage
+    const leftEdge = barCenter - tooltipHalfWidth
+    const rightEdge = barCenter + tooltipHalfWidth
+    
+    // More aggressive margin for milestone tooltips to prevent cut-off
+    const margin = 0.5
+    const maxRight = 100 - margin
+    
+    // Calculate optimal position with smart fallback strategies
+    let left = barCenter
+    let transform = 'translateX(-50%)'
+    let arrowPosition = 'center'
+    let arrowOffset = '50%'
+    
+    // Strategy 1: If tooltip would be cut off on the right, position it to the left of the bar
+    if (rightEdge > maxRight) {
+      // Try to position it to the left of the bar start
+      const leftPosition = Math.max(margin, barStartPercent - tooltipHalfWidth)
+      if (leftPosition >= margin) {
+        left = leftPosition
+        transform = 'translateX(0)'
+        arrowPosition = 'right'
+        arrowOffset = `${Math.min(100, barCenter - left)}%`
+      } else {
+        // Fallback: position at the very left edge
+        left = margin
+        transform = 'translateX(0)'
+        arrowPosition = 'left'
+        arrowOffset = '0%'
       }
-    } else if (rightEdge > (100 - margin)) {
-      return { 
-        left: `${100 - margin}%`, 
-        transform: 'translateX(-100%)',
-        arrowPosition: 'right',
-        arrowOffset: `${Math.min(100, barCenter - (100 - margin))}%`
+    }
+    // Strategy 2: If tooltip would be cut off on the left, position it to the right of the bar
+    else if (leftEdge < margin) {
+      // Try to position it to the right of the bar end
+      const rightPosition = Math.min(maxRight, barStartPercent + barWidthPercent + tooltipHalfWidth)
+      if (rightPosition <= maxRight) {
+        left = rightPosition
+        transform = 'translateX(-100%)'
+        arrowPosition = 'left'
+        arrowOffset = `${Math.max(0, left - barCenter)}%`
+      } else {
+        // Fallback: position at the very right edge
+        left = maxRight
+        transform = 'translateX(-100%)'
+        arrowPosition = 'right'
+        arrowOffset = '0%'
       }
-    } else {
-      return { 
-        left: `${barCenter}%`, 
-        transform: 'translateX(-50%)',
-        arrowPosition: 'center',
-        arrowOffset: '50%'
-      }
+    }
+    
+    return { 
+      left: `${left}%`, 
+      transform,
+      arrowPosition,
+      arrowOffset
     }
   }
 
   // Task completion percentages (0-100)
   const taskCompletion = {
     // October 2025 - Week 1 (Rebranding & Accessibility)
-    "Finalize & Deploy New Logo Design": 0,
-    "Implement Universal Theme Across UI": 0,
-    "Specify Supported Project Types": 0,
+    "Finalize and Deploy New Logo Design": 100,
+    "Implement Universal Theme Across UI": 75,
+    "Specify and Publish Supported Project Types": 0,
     
     // October 2025 - Week 2 (Landing Page & AI UX)
-    "Redesign & Launch New Landing Page": 0,
-    "Validate A11y & Responsive Navigation": 0,
+    "Redesign and Launch New Landing Page": 75,
+    "Complete Onboarding Flow": 0,
+    "Validate A11y and Responsive Navigation": 0,
     "Visual Regression Test Suite": 0,
     "Complete AI Generation Flow UX/UI": 0,
     
     // October 2025 - Week 3 (AI Integration & Modules)
-    "Integrate AI Models for Project Creation": 0,
+    "Integrate 12 AI Models for Project Creation": 0,
     "Build Artifact Generation Logic": 0,
-    "Backend Upgrade: Logging & Error Reporting": 0,
+    "Backend Upgrade: Logging and Error Reporting": 0,
     "Launch Customizable Module Editor": 0,
-    "Enable Dynamic Preview & Copy-Paste": 0,
+    "Enable Dynamic Preview and Copy-Paste": 0,
     
     // October 2025 - Week 4 (Final Integration & Community)
-    "NLP Enhancement & Backend Integration": 0,
+    "NLP Enhancement and Backend Integration": 0,
     "Deliver First-Stage Dashboard": 0,
-    "Code Validation & Security Scanning": 0,
+    "Code Validation and Security Scanning": 0,
     "Drag-and-Drop UI Library Integration": 0,
     "Early Access Program Launch (100 users)": 0,
+    "Custom Module Preview System": 0,
+    "Documentation Publishing and Distribution": 0,
   }
 
   const toggleItem = (id: string) => {
@@ -136,7 +230,7 @@ export default function TimelinePage() {
     })
   }
 
-  const totalWeeks = weeksPerMonth.reduce((a, b) => a + b, 0)
+  const totalWeeks = calculateTotalWeeks()
 
   // Color mapping for milestones
   const getMilestoneColor = (id: string) => {
@@ -146,16 +240,38 @@ export default function TimelinePage() {
     return colors[id as keyof typeof colors] || "from-gray-500 to-gray-700"
   }
 
-  // Color mapping for task types
+  // Enhanced color mapping for task types with better categorization
   const getTaskColor = (taskName: string) => {
-    if (taskName.includes("AI") || taskName.includes("Generator") || taskName.includes("NLP")) return "bg-purple-400"
-    if (taskName.includes("Dashboard") || taskName.includes("UI") || taskName.includes("Landing") || taskName.includes("Theme")) return "bg-blue-400"
-    if (taskName.includes("Bridge") || taskName.includes("Cross-chain") || taskName.includes("SDK")) return "bg-green-400"
-    if (taskName.includes("Audit") || taskName.includes("Security") || taskName.includes("Validation")) return "bg-red-400"
-    if (taskName.includes("Partnership") || taskName.includes("Ecosystem") || taskName.includes("Community") || taskName.includes("AMA")) return "bg-yellow-400"
-    if (taskName.includes("Monetization") || taskName.includes("TGE") || taskName.includes("SaaS")) return "bg-cyan-400"
-    if (taskName.includes("Documentation") || taskName.includes("Tutorial") || taskName.includes("Training")) return "bg-indigo-400"
-    if (taskName.includes("Module") || taskName.includes("Editor") || taskName.includes("Preview")) return "bg-pink-400"
+    const name = taskName.toLowerCase()
+    
+    // AI & Machine Learning
+    if (name.includes("ai") || name.includes("generator") || name.includes("nlp") || name.includes("models")) return "bg-purple-400"
+    
+    // UI/UX & Frontend
+    if (name.includes("dashboard") || name.includes("ui") || name.includes("landing") || name.includes("theme") || 
+        name.includes("ux") || name.includes("responsive") || name.includes("visual") || name.includes("preview")) return "bg-blue-400"
+    
+    // Backend & Infrastructure
+    if (name.includes("backend") || name.includes("logging") || name.includes("integration") || 
+        name.includes("validation") || name.includes("scanning")) return "bg-green-400"
+    
+    // Security & Quality Assurance
+    if (name.includes("audit") || name.includes("security") || name.includes("validation") || 
+        name.includes("regression") || name.includes("a11y")) return "bg-red-400"
+    
+    // Community & Marketing
+    if (name.includes("partnership") || name.includes("ecosystem") || name.includes("community") || 
+        name.includes("access") || name.includes("launch")) return "bg-yellow-400"
+    
+    // Documentation & Support
+    if (name.includes("documentation") || name.includes("tutorial") || name.includes("training") || 
+        name.includes("publishing") || name.includes("distribution")) return "bg-indigo-400"
+    
+    // Modules & Development Tools
+    if (name.includes("module") || name.includes("editor") || name.includes("preview") || 
+        name.includes("customizable") || name.includes("drag-and-drop")) return "bg-pink-400"
+    
+    // Default
     return "bg-gray-400"
   }
 
@@ -173,32 +289,32 @@ export default function TimelinePage() {
   }
 
   return (
-    <div className="min-h-screen bg-black px-2 sm:px-4 py-8 sm:py-12">
-      <div className="w-full max-w-full">
+    <main className="min-h-screen bg-black" role="main">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
         {/* Top Section - Title and Description */}
-        <div className="flex flex-col gap-3 sm:gap-4 mb-8 sm:mb-10 lg:mb-12 items-center text-center">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white leading-tight px-2 sm:px-4" style={{fontFamily: 'Inter'}}>
+        <header className="flex flex-col gap-4 sm:gap-6 mb-12 sm:mb-16 lg:mb-20 items-center text-center">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight" style={{fontFamily: 'Inter'}}>
             HyperKit Project Roadmap
-          </h2>
-          <p className="text-white text-sm sm:text-base leading-relaxed max-w-4xl px-2 sm:px-4" style={{fontFamily: 'Inter'}}>
+          </h1>
+          <p className="text-white text-base sm:text-lg leading-relaxed max-w-5xl" style={{fontFamily: 'Inter'}}>
             Complete rebranding, AI-powered project generation, and modular customization platform. Building the future of web3 development with community-driven innovation and seamless cross-chain integration.
           </p>
-        </div>
+        </header>
         
         {/* Timeline Section */}
-        <div className="bg-black/40 backdrop-blur-sm rounded-xl sm:rounded-2xl border border-white/10 overflow-hidden scrollbar-hide">
+        <section className="bg-black/40 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-white/10 overflow-hidden shadow-2xl" aria-label="Project Timeline">
           {/* Timeline header with months */}
-          <div className="border-b border-white/10">
-            <div className="flex min-h-[50px] sm:min-h-[60px]">
+          <div className="border-b border-white/10 bg-gradient-to-r from-gray-800/50 to-gray-900/50">
+            <div className="flex min-h-[60px] sm:min-h-[70px] lg:min-h-[80px]">
               {/* Left sidebar for milestone names */}
-              <div className="w-48 sm:w-64 lg:w-80 flex-shrink-0 flex items-center justify-center border-r border-white/10">
-                <span className="text-xs font-semibold text-white/70 uppercase tracking-wider px-2" style={{fontFamily: 'Inter'}}>
+              <div className="w-48 sm:w-56 md:w-72 lg:w-96 flex-shrink-0 flex items-center justify-center border-r border-white/10 bg-gray-800/30">
+                <h2 className="text-xs sm:text-sm font-bold text-white/90 uppercase tracking-widest px-2 sm:px-4" style={{fontFamily: 'Inter'}}>
                   Project Phases
-                </span>
+                </h2>
               </div>
               
-              {/* Timeline grid */}
-              <div className="flex-1 flex relative overflow-x-auto scrollbar-hide">
+              {/* Timeline grid with enhanced mobile scrolling */}
+              <div className="flex-1 flex relative overflow-x-auto scrollbar-hide min-w-0">
                 {/* Current week indicator */}
                 <div
                   className="absolute top-0 bottom-0 w-0.5 bg-red-500 z-10 animate-pulse"
@@ -209,9 +325,9 @@ export default function TimelinePage() {
                 {months.map((month, idx) => {
                   const weeks = weeksPerMonth[idx]
                   return (
-                    <div key={month} className="flex-1 border-l border-white/10 first:border-l-0 min-w-[120px]" style={{ flex: weeks }}>
-                      <div className="px-3 py-2 text-center">
-                        <span className="text-sm font-semibold text-white/90" style={{fontFamily: 'Inter'}}>{month}</span>
+                    <div key={month} className="flex-1 border-l border-white/10 first:border-l-0 min-w-[120px] sm:min-w-[140px] lg:min-w-[160px] bg-gradient-to-b from-gray-800/20 to-gray-900/20" style={{ flex: weeks }}>
+                      <div className="px-2 sm:px-4 py-2 sm:py-3 text-center bg-gradient-to-r from-gray-700/30 to-gray-800/30">
+                        <span className="text-sm sm:text-base font-bold text-white/95" style={{fontFamily: 'Inter'}}>{month}</span>
                       </div>
                       <div className="flex border-t border-white/10">
                         {Array.from({ length: weeks }).map((_, weekIdx) => {
@@ -220,11 +336,11 @@ export default function TimelinePage() {
                           return (
                             <div
                               key={weekIdx}
-                              className={`flex-1 border-l border-white/10 first:border-l-0 px-1 py-1 text-center min-w-[30px] ${
-                                isCurrentWeek ? 'bg-red-500/20' : ''
+                              className={`flex-1 border-l border-white/10 first:border-l-0 px-1 sm:px-2 py-1 sm:py-2 text-center min-w-[30px] sm:min-w-[35px] ${
+                                isCurrentWeek ? 'bg-red-500/30 shadow-lg' : 'hover:bg-white/5'
                               }`}
                             >
-                              <span className={`text-xs ${isCurrentWeek ? 'text-red-400 font-bold' : 'text-white/50'}`} style={{fontFamily: 'Inter'}}>
+                              <span className={`text-xs font-medium ${isCurrentWeek ? 'text-red-300 font-bold' : 'text-white/60'}`} style={{fontFamily: 'Inter'}}>
                                 W{weekNumber}
                               </span>
                             </div>
@@ -239,28 +355,38 @@ export default function TimelinePage() {
           </div>
 
           {/* Timeline items with enhanced visualization */}
-          <div className="divide-y divide-white/10">
+          <div className="divide-y divide-white/10" role="list" aria-label="Project milestones">
             {timelineData.map((item) => {
               const isExpanded = expandedItems.has(item.id)
               const hasSubtasks = item.tasks && item.tasks.length > 0
               const isHovered = hoveredItem === item.id
 
               return (
-                <div key={item.id}>
+                <article key={item.id} role="listitem" aria-expanded={isExpanded}>
                   <div 
-                    className="flex items-center hover:bg-white/5 transition-all duration-300 group min-h-[45px]"
+                    className="flex items-center hover:bg-white/5 transition-all duration-300 group min-h-[60px] sm:min-h-[70px]"
                     onMouseEnter={() => setHoveredItem(item.id)}
                     onMouseLeave={() => setHoveredItem(null)}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`${item.title} milestone, ${isExpanded ? 'expanded' : 'collapsed'}`}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        if (hasSubtasks) toggleItem(item.id)
+                      }
+                    }}
                   >
                     {/* Left sidebar - Milestone name */}
-                    <div className="w-48 sm:w-64 lg:w-80 flex-shrink-0 px-3 py-2 flex items-center gap-2 border-r border-white/10">
-                      <span className="text-white font-medium group-hover:text-cyan-300 transition-colors text-sm leading-tight" style={{fontFamily: 'Inter'}}>
+                    <div className="w-48 sm:w-56 md:w-72 lg:w-96 flex-shrink-0 px-2 sm:px-4 py-2 sm:py-3 flex items-center gap-2 sm:gap-3 border-r border-white/10 bg-gray-800/20">
+                      <span className="text-white font-semibold group-hover:text-cyan-300 transition-colors text-xs sm:text-sm md:text-base leading-tight" style={{fontFamily: 'Inter'}}>
                         {item.title}
                       </span>
                       {hasSubtasks && (
                         <button
-                          className="h-4 w-4 text-white/50 hover:text-white flex items-center justify-center transition-all duration-300 hover:scale-110"
+                          className="h-4 w-4 sm:h-5 sm:w-5 text-white/60 hover:text-cyan-300 flex items-center justify-center transition-all duration-300 hover:scale-110 bg-white/10 rounded-full hover:bg-cyan-500/20 flex-shrink-0"
                           onClick={() => toggleItem(item.id)}
+                          aria-label={isExpanded ? "Collapse tasks" : "Expand tasks"}
                         >
                           {isExpanded ? (
                             <svg className="h-3 w-3 transition-transform duration-300 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -275,8 +401,8 @@ export default function TimelinePage() {
                       )}
                     </div>
                     
-                    {/* Timeline grid area */}
-                    <div className="flex-1 relative h-8 overflow-visible">
+                    {/* Timeline grid area with smart tooltip container */}
+                    <div className="flex-1 relative h-10 sm:h-12 overflow-visible">
                       {/* Week grid background */}
                       <div className="absolute inset-0 flex min-w-full">
                         {Array.from({ length: totalWeeks }).map((_, idx) => (
@@ -323,9 +449,9 @@ export default function TimelinePage() {
                             W{item.startWeek}-{item.startWeek + item.duration - 1}
                           </span>
 
-                                 {/* Milestone hover tooltip - anchored to the bar */}
+                                 {/* Milestone hover tooltip with smart positioning to prevent cut-off */}
                                  {isHovered && (() => {
-                                   const position = getTooltipPosition(
+                                   const position = getMilestoneTooltipPosition(
                                      ((item.startWeek - 1) / totalWeeks) * 100,
                                      (item.duration / totalWeeks) * 100,
                                      320
@@ -337,8 +463,12 @@ export default function TimelinePage() {
                                             transform: position.transform,
                                             bottom: '100%',
                                             marginBottom: '16px',
-                                            minWidth: '320px',
-                                            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.2)'
+                                            minWidth: '300px',
+                                            maxWidth: '400px',
+                                            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.2)',
+                                            // Ensure tooltip stays within container bounds
+                                            position: 'absolute',
+                                            zIndex: 9999
                                           }}>
                                        {/* Enhanced arrow pointing down to the bar */}
                                        <div 
@@ -416,14 +546,22 @@ export default function TimelinePage() {
                   )}
 
                   {isExpanded && item.tasks && (
-                    <div className="bg-black/20 transition-all duration-300 ease-in-out">
-                      <div className="px-3 py-1">
+                    <div className="bg-gradient-to-r from-gray-900/40 to-gray-800/40 border-t border-white/10 transition-all duration-500 ease-in-out" role="region" aria-label="Task details">
+                      <div className="px-2 sm:px-4 py-3 sm:py-4">
                         <div className="flex">
-                          <div className="w-48 sm:w-64 lg:w-80 flex-shrink-0"></div>
+                          <div className="w-48 sm:w-56 md:w-72 lg:w-96 flex-shrink-0"></div>
                           <div className="flex-1">
-                            <h4 className="text-xs font-semibold text-white/90 mb-2" style={{fontFamily: 'Inter'}}>
-                              Detailed Tasks & Timeline
-                            </h4>
+                            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg flex items-center justify-center flex-shrink-0" aria-hidden="true">
+                                <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                                </svg>
+                              </div>
+                              <h3 className="text-base sm:text-lg font-bold text-white" style={{fontFamily: 'Inter'}}>
+                                Detailed Tasks & Timeline
+                              </h3>
+                              <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent" aria-hidden="true"></div>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -436,27 +574,45 @@ export default function TimelinePage() {
   return (
                           <div
                             key={taskIdx}
-                            className="flex items-center border-t border-white/5 hover:bg-white/5 transition-all duration-200 group min-h-[35px] relative"
+                            className="flex items-center border-t border-white/5 hover:bg-gradient-to-r hover:from-white/5 hover:to-transparent transition-all duration-300 group min-h-[50px] relative"
                             onMouseEnter={() => setHoveredTask(taskId)}
                             onMouseLeave={() => setHoveredTask(null)}
+                            role="listitem"
+                            aria-label={`${task.name}, ${completionStatus.text} (${completion}%)`}
                           >
-                            {/* Left sidebar - Task name with completion status */}
-                            <div className="w-48 sm:w-64 lg:w-80 flex-shrink-0 px-6 py-1 border-r border-white/10">
-                              <div className="flex items-center gap-2">
-                                <div className={`w-1.5 h-1.5 rounded-full ${getTaskColor(task.name)}`} />
-                                <span className="text-xs text-white/80 group-hover:text-white transition-colors" style={{fontFamily: 'Inter'}}>
-                                  {task.name}
-                                </span>
-                                <div className={`w-1.5 h-1.5 rounded-full ${completionStatus.color} ml-auto`} title={completionStatus.text} />
+                            {/* Left sidebar - Enhanced task name with completion status */}
+                            <div className="w-48 sm:w-56 md:w-72 lg:w-96 flex-shrink-0 px-3 sm:px-6 py-2 sm:py-3 border-r border-white/10 bg-gray-800/20">
+                              <div className="flex items-center gap-2 sm:gap-3">
+                                <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+                                  <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${getTaskColor(task.name)} shadow-lg`} />
+                                  <div className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full ${completionStatus.color} shadow-lg`} title={completionStatus.text} />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <span className="text-xs sm:text-sm font-medium text-white group-hover:text-cyan-300 transition-colors leading-tight block" style={{fontFamily: 'Inter'}}>
+                                    {task.name}
+                                  </span>
+                                  <div className="flex items-center gap-1 sm:gap-2 mt-1 flex-wrap">
+                                    <span className={`text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-full ${completionStatus.color} text-white`}>
+                                      {completionStatus.text}
+                                    </span>
+                                    <span className="text-xs text-white/60" style={{fontFamily: 'Inter'}}>
+                                      {completion}%
+                                    </span>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                             
-                            {/* Timeline grid area for task with Gantt chart */}
-                            <div className="flex-1 relative h-6 overflow-visible">
-                              {/* Week grid background */}
-                              <div className="absolute inset-0 flex">
+                            {/* Timeline grid area for task with enhanced Gantt chart */}
+                            <div className="flex-1 relative h-12 overflow-hidden py-2">
+                              {/* Week grid background with enhanced styling */}
+                              <div className="absolute inset-0 flex bg-gray-900/30 rounded-lg min-w-full">
                                 {Array.from({ length: totalWeeks }).map((_, idx) => (
-                                  <div key={idx} className="flex-1 border-l border-white/5 first:border-l-0 min-w-[30px]" />
+                                  <div 
+                                    key={idx} 
+                                    className="flex-1 border-l border-white/10 first:border-l-0 min-w-[30px] hover:bg-white/5 transition-colors"
+                                    style={{ flex: 1 }}
+                                  />
                                 ))}
                               </div>
                               
@@ -470,27 +626,50 @@ export default function TimelinePage() {
                                 />
                               )}
                               
-                              {/* Task bar with completion percentage */}
-                              <div className="absolute inset-y-0 flex items-center justify-between px-1 w-full">
-                                <div className="flex items-center">
+                              {/* Enhanced task bar with completion percentage */}
+                              <div className="absolute inset-y-0 flex items-center justify-between px-2 w-full">
+                                <div className="flex items-center w-full">
                                   <div
-                                    className={`h-4 ${getTaskColor(task.name)} rounded-full shadow-sm transition-all duration-300 group-hover:shadow-md hover:shadow-lg hover:scale-105 cursor-pointer relative overflow-visible ${
-                                      hoveredTask === taskId ? 'shadow-xl scale-110' : ''
+                                    className={`h-6 ${getTaskColor(task.name)} rounded-lg shadow-lg transition-all duration-300 group-hover:shadow-xl hover:shadow-2xl hover:scale-105 cursor-pointer relative overflow-visible border border-white/20 ${
+                                      hoveredTask === taskId ? 'shadow-2xl scale-110 ring-2 ring-cyan-400/50' : ''
                                     }`}
                                     style={{
                                       marginLeft: `${((task.startWeek - 1) / totalWeeks) * 100}%`,
                                       width: `${(task.duration / totalWeeks) * 100}%`,
+                                      minWidth: '8px', // Ensure minimum visibility
+                                      maxWidth: '100%', // Prevent overflow
                                     }}
                                     onMouseEnter={() => setHoveredTask(taskId)}
                                     onMouseLeave={() => setHoveredTask(null)}
                                   >
-                                    {/* Completion progress bar inside task bar */}
+                                    {/* Background progress track */}
+                                    <div className="absolute inset-0 bg-gray-600/30 rounded-lg"></div>
+                                    
+                                    {/* Enhanced completion progress bar with proper horizontal filling */}
                                     <div
-                                      className={`h-full ${completionStatus.color} rounded-full transition-all duration-500`}
+                                      className={`h-full ${completionStatus.color} rounded-lg transition-all duration-500 relative overflow-hidden`}
                                       style={{
-                                        width: `${completion}%`,
+                                        width: `${Math.max(completion, 2)}%`, // Minimum 2% width for visibility
+                                        minWidth: completion > 0 ? '12px' : '0px', // Ensure minimum visible width
+                                        maxWidth: '100%', // Prevent overflow
                                       }}
-                                    />
+                                    >
+                                      {/* Progress bar without percentage text to avoid duplication */}
+                                      
+                                      {/* Animated shimmer effect for in-progress tasks */}
+                                      {completion > 0 && completion < 100 && (
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
+                                      )}
+                                      
+                                      {/* Completion checkmark for 100% tasks */}
+                                      {completion === 100 && (
+                                        <div className="absolute inset-0 flex items-center justify-center">
+                                          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                          </svg>
+                                        </div>
+                                      )}
+                                    </div>
 
                                     {/* Task hover tooltip - anchored to the bar */}
                                     {hoveredTask === taskId && (() => {
@@ -501,73 +680,105 @@ export default function TimelinePage() {
                                       )
                                       return (
                                         <div 
-                                          className="absolute z-50 bg-gray-900/98 backdrop-blur-md border border-white/20 rounded-xl p-5 shadow-2xl max-w-sm pointer-events-none animate-in fade-in-0 zoom-in-95 duration-200"
+                                          className="absolute z-50 bg-gradient-to-br from-gray-900/98 to-gray-800/98 backdrop-blur-md border border-white/30 rounded-2xl p-6 shadow-2xl max-w-md pointer-events-none animate-in fade-in-0 zoom-in-95 duration-300"
                                           style={{
                                             left: position.left,
                                             transform: position.transform,
                                             bottom: '100%',
-                                            marginBottom: '16px',
-                                            minWidth: '300px',
-                                            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.2)'
+                                            marginBottom: '20px',
+                                            minWidth: '320px',
+                                            maxWidth: '400px',
+                                            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.3)',
+                                            zIndex: 9999
                                           }}
                                         >
                                           {/* Enhanced arrow pointing down to the bar */}
                                           <div 
-                                            className="absolute top-full w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-transparent"
+                                            className="absolute top-full w-0 h-0 border-l-[8px] border-r-[8px] border-t-[8px] border-transparent"
                                             style={{
-                                              left: position.arrowPosition === 'left' ? '24px' : 
-                                                    position.arrowPosition === 'right' ? 'calc(100% - 24px)' : 
+                                              left: position.arrowPosition === 'left' ? '32px' : 
+                                                    position.arrowPosition === 'right' ? 'calc(100% - 32px)' : 
                                                     '50%',
                                               transform: position.arrowPosition === 'center' ? 'translateX(-50%)' : 'none',
                                               borderTopColor: 'rgba(17, 24, 39, 0.98)'
                                             }}
                                           ></div>
                                         
-                                        <h4 className="text-white font-semibold mb-3 text-sm" style={{fontFamily: 'Inter'}}>
-                                          {task.name}
-                                        </h4>
-                                        <div className="space-y-3">
-                                          {/* Progress bar in tooltip */}
-                                          <div className="flex items-center gap-3">
-                                            <span className="text-white/70 text-xs font-medium" style={{fontFamily: 'Inter'}}>Progress:</span>
-                                            <div className="flex-1 bg-gray-700 rounded-full h-2 overflow-hidden">
-                                              <div 
-                                                className={`h-full ${completionStatus.color} rounded-full transition-all duration-500`}
-                                                style={{ width: `${completion}%` }}
-                                              />
+                                        <div className="flex items-center gap-3 mb-4">
+                                          <div className={`w-3 h-3 rounded-full ${getTaskColor(task.name)} shadow-lg`}></div>
+                                          <h4 className="text-white font-bold text-base" style={{fontFamily: 'Inter'}}>
+                                            {task.name}
+                                          </h4>
+                                          {completion === 100 && (
+                                            <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
+                                              <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                              </svg>
                                             </div>
-                                            <span className="text-white text-xs font-bold" style={{fontFamily: 'Inter'}}>
-                                              {completion}%
-                                            </span>
+                                          )}
+                                        </div>
+                                        <div className="space-y-4">
+                                          {/* Enhanced progress section */}
+                                          <div className="bg-gray-800/50 rounded-lg p-4">
+                                            <div className="flex items-center justify-between mb-3">
+                                              <span className="text-white/80 text-sm font-semibold" style={{fontFamily: 'Inter'}}>Progress Status</span>
+                                              <span className={`text-sm font-bold px-3 py-1 rounded-full ${completionStatus.color} text-white shadow-lg`}>
+                                                {completionStatus.text} ({completion}%)
+                                              </span>
+                                            </div>
+                                            <div className="bg-gray-700 rounded-full h-4 overflow-hidden shadow-inner">
+                                              <div 
+                                                className={`h-full ${completionStatus.color} rounded-full transition-all duration-500 relative`}
+                                                style={{ width: `${completion}%` }}
+                                              >
+                                                {completion > 0 && completion < 100 && (
+                                                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse" />
+                                                )}
+                                              </div>
+                                            </div>
                                           </div>
                                           
-                                          <div className="grid grid-cols-2 gap-3 text-xs">
-                                            <div className="flex justify-between items-center">
-                                              <span className="text-white/70" style={{fontFamily: 'Inter'}}>Status:</span>
-                                              <span className={`font-semibold ${completionStatus.color.replace('bg-', 'text-')}`} style={{fontFamily: 'Inter'}}>
-                                                {completionStatus.text}
-                                              </span>
-                                            </div>
-                                            <div className="flex justify-between items-center">
-                                              <span className="text-white/70" style={{fontFamily: 'Inter'}}>Duration:</span>
-                                              <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
-                                                {task.duration} weeks
-                                              </span>
-                                            </div>
-                                            <div className="flex justify-between items-center col-span-2">
-                                              <span className="text-white/70" style={{fontFamily: 'Inter'}}>Timeline:</span>
-                                              <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
-                                                W{task.startWeek}-{task.startWeek + task.duration - 1}
-                                              </span>
+                                          <div className="bg-gray-800/30 rounded-lg p-4">
+                                            <h5 className="text-white/90 text-sm font-semibold mb-3" style={{fontFamily: 'Inter'}}>Task Details</h5>
+                                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                              <div className="space-y-2">
+                                                <div className="flex justify-between items-center">
+                                                  <span className="text-white/70" style={{fontFamily: 'Inter'}}>Status:</span>
+                                                  <span className={`font-semibold ${completionStatus.color.replace('bg-', 'text-')}`} style={{fontFamily: 'Inter'}}>
+                                                    {completionStatus.text}
+                                                  </span>
+                                                </div>
+                                                <div className="flex justify-between items-center">
+                                                  <span className="text-white/70" style={{fontFamily: 'Inter'}}>Duration:</span>
+                                                  <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
+                                                    {task.duration} weeks
+                                                  </span>
+                                                </div>
+                                              </div>
+                                              <div className="space-y-2">
+                                                <div className="flex justify-between items-center">
+                                                  <span className="text-white/70" style={{fontFamily: 'Inter'}}>Start Week:</span>
+                                                  <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
+                                                    W{task.startWeek}
+                                                  </span>
+                                                </div>
+                                                <div className="flex justify-between items-center">
+                                                  <span className="text-white/70" style={{fontFamily: 'Inter'}}>End Week:</span>
+                                                  <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
+                                                    W{task.startWeek + task.duration - 1}
+                                                  </span>
+                                                </div>
+                                              </div>
                                             </div>
                                           </div>
                                           
                                           {isInCurrentWeek && (
-                                            <div className="flex items-center gap-2 mt-2 p-2 bg-red-500/20 rounded-md">
-                                              <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                                              <span className="text-red-400 text-xs font-semibold" style={{fontFamily: 'Inter'}}>
-                                                Current Week
+                                            <div className="flex items-center gap-3 mt-3 p-3 bg-gradient-to-r from-red-500/20 to-orange-500/20 rounded-lg border border-red-500/30">
+                                              <div className="w-3 h-3 rounded-full bg-red-500 animate-pulse shadow-lg"></div>
+                                              <span className="text-red-300 text-sm font-bold" style={{fontFamily: 'Inter'}}>
+                                                🚀 Currently Active
                                               </span>
+                                              <div className="flex-1 h-px bg-gradient-to-r from-red-500/30 to-transparent"></div>
                                             </div>
                                           )}
                                         </div>
@@ -576,23 +787,10 @@ export default function TimelinePage() {
                                     })()}
                                   </div>
                                   
-                                  {/* Percentage text beside the bar */}
-                                  <div className="ml-3 flex items-center gap-2">
-                                    <span className="text-xs font-semibold text-white" style={{fontFamily: 'Inter'}}>
-                                      {completion}% In Progress
-                                    </span>
-                                  </div>
+                                
                                 </div>
                                 
-                                {/* Week range and status - right aligned */}
-                                <div className="flex items-center gap-3">
-                                  <span className="text-xs text-white/60" style={{fontFamily: 'Inter'}}>
-                                    W{task.startWeek}-{task.startWeek + task.duration - 1}
-                                  </span>
-                                  <span className={`text-xs font-semibold ${completionStatus.color.replace('bg-', 'text-')}`} style={{fontFamily: 'Inter'}}>
-                                    {completionStatus.text}
-                                  </span>
-                                </div>
+                               
                               </div>
         </div>
 
@@ -602,12 +800,12 @@ export default function TimelinePage() {
                     </div>
                   )}
 
-                </div>
+                </article>
               )
             })}
           </div>
-        </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
