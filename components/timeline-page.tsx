@@ -18,38 +18,36 @@ interface TimelineItem {
 const timelineData: TimelineItem[] = [
   {
     id: "1",
-    title: "October 2025: HyperKit Project Launch",
-    description: "Complete rebranding, AI project generation system, and modular customization platform with community engagement.",
+    title: "Month 1: HyperKit Project Launch",
+    description: "Complete rebranding, AI project generation system, modular customization platform, and community engagement with technical milestones and business objectives.",
     startWeek: 1,
     duration: 4,
     tasks: [
-      // Week 1 - Rebranding & Accessibility
+      // Week 1 - Rebranding & Accessibility + AI Project Generation
       { name: "Finalize and Deploy New Logo Design", startWeek: 1, duration: 1 },
-      { name: "Implement Universal Theme Across UI", startWeek: 1, duration: 1 },
-      { name: "Specify and Publish Supported Project Types", startWeek: 1, duration: 1 },
+      { name: "Implement New Universal Theme Across UI Components", startWeek: 1, duration: 1 },
+      { name: "Specify and Publish Supported Project Types in Technical Docs", startWeek: 1, duration: 1 },
       
-      // Week 2 - Landing Page & AI UX
-      { name: "Redesign and Launch New Landing Page", startWeek: 2, duration: 1 },
-      { name: "Complete Onboarding Flow", startWeek: 2, duration: 1 },
-      { name: "Validate A11y and Responsive Navigation", startWeek: 2, duration: 1 },
-      { name: "Visual Regression Test Suite", startWeek: 2, duration: 1 },
-      { name: "Complete AI Generation Flow UX/UI", startWeek: 2, duration: 1 },
+      // Week 2 - Landing Page, QA, and AI UX
+      { name: "Redesign and Launch New Landing Page with Improved Onboarding Flow", startWeek: 2, duration: 1 },
+      { name: "Validate Accessibility (A11y) and Responsive Navigation Across Devices", startWeek: 2, duration: 1 },
+      { name: "Visual Regression Test Suite for UI Changes", startWeek: 2, duration: 1 },
+      { name: "Complete UI/UX Rework for AI Generation Flow with Wireframes/Prototypes", startWeek: 2, duration: 1 },
+      { name: "Integrate 1-2 Specific AI Models for Project Creation", startWeek: 2, duration: 2 },
       
-      // Week 3 - AI Integration & Modules
-      { name: "Integrate 12 AI Models for Project Creation", startWeek: 3, duration: 1 },
-      { name: "Build Artifact Generation Logic", startWeek: 3, duration: 1 },
-      { name: "Backend Upgrade: Logging and Error Reporting", startWeek: 3, duration: 1 },
-      { name: "Launch Customizable Module Editor", startWeek: 3, duration: 1 },
-      { name: "Enable Dynamic Preview and Copy-Paste", startWeek: 3, duration: 1 },
+      // Week 3 - AI Integration, Backend, and Modules
+      { name: "Build Artifact Generation Logic and Publish Demo Video", startWeek: 3, duration: 1 },
+      { name: "Backend Upgrade: Add Structured Logging and Error Reporting", startWeek: 3, duration: 1 },
+      { name: "Launch Customizable Module Editor with Theme Customization", startWeek: 3, duration: 1 },
+      { name: "Enable Dynamic Preview and One-Click Copy-Paste for Module Code", startWeek: 3, duration: 2 },
       
-      // Week 4 - Final Integration & Community
-      { name: "NLP Enhancement and Backend Integration", startWeek: 4, duration: 1 },
-      { name: "Deliver First-Stage Dashboard", startWeek: 4, duration: 1 },
-      { name: "Code Validation and Security Scanning", startWeek: 4, duration: 1 },
-      { name: "Drag-and-Drop UI Library Integration", startWeek: 4, duration: 1 },
-      { name: "Early Access Program Launch (100 users)", startWeek: 4, duration: 1 },
-      { name: "Custom Module Preview System", startWeek: 4, duration: 1 },
-      { name: "Documentation Publishing and Distribution", startWeek: 4, duration: 1 },
+      // Week 4 - NLP, Dashboard, Security, and Community
+      { name: "NLP Enhancement: Initial Integration of NLP Backend System", startWeek: 4, duration: 1 },
+      { name: "Deliver First-Stage Dashboard for Custom Project Controls", startWeek: 4, duration: 1 },
+      { name: "Code Validation and Basic Security Scanning for AI-Generated Outputs", startWeek: 4, duration: 1 },
+      { name: "Integrate Drag-and-Drop UI Library for Rapid Prototyping", startWeek: 4, duration: 1 },
+      { name: "Launch Early Access Program for Minimum 100 Users", startWeek: 4, duration: 1 },
+      { name: "Publish Technical Documentation and Integration Guidelines", startWeek: 4, duration: 1 },
     ],
   },
 ]
@@ -119,7 +117,7 @@ export default function TimelinePage() {
       arrowOffset = `${Math.min(100, barCenter - maxRight)}%`
     }
     
-    return { 
+      return { 
       left: `${left}%`, 
       transform,
       arrowPosition,
@@ -127,42 +125,51 @@ export default function TimelinePage() {
     }
   }
 
-  // Smart positioning function specifically for milestone tooltips to prevent cut-off
-  const getMilestoneTooltipPosition = (barStartPercent: number, barWidthPercent: number, tooltipWidth: number = 320) => {
+  // Advanced smart positioning function with viewport and container bounds detection
+  const getMilestoneTooltipPosition = (barStartPercent: number, barWidthPercent: number, tooltipWidth: number = 380) => {
     const barCenter = barStartPercent + (barWidthPercent / 2)
     const tooltipHalfWidth = (tooltipWidth / 2) / 100 // Convert to percentage
     const leftEdge = barCenter - tooltipHalfWidth
     const rightEdge = barCenter + tooltipHalfWidth
     
-    // More aggressive margin for milestone tooltips to prevent cut-off
-    const margin = 0.5
-    const maxRight = 100 - margin
+    // Account for scrollbar width - detect actual scrollbar width
+    const scrollbarWidth = typeof window !== 'undefined' ? 
+      window.innerWidth - document.documentElement.clientWidth : 20
+    const scrollbarWidthPercent = scrollbarWidth > 0 ? (scrollbarWidth / window.innerWidth) * 100 : 0.5
     
-    // Calculate optimal position with smart fallback strategies
+    // Dynamic margins based on viewport and container, accounting for scrollbar
+    const horizontalMargin = 0.5
+    const verticalMargin = 1
+    const maxRight = 100 - horizontalMargin - scrollbarWidthPercent
+    
+    // Calculate optimal position with comprehensive fallback strategies
     let left = barCenter
     let transform = 'translateX(-50%)'
     let arrowPosition = 'center'
     let arrowOffset = '50%'
+    let placement = 'top' // Default placement
+    let top = 'auto'
+    let bottom = '100%'
     
-    // Strategy 1: If tooltip would be cut off on the right, position it to the left of the bar
+    // Strategy 1: Horizontal positioning - Right edge overflow (accounting for scrollbar)
     if (rightEdge > maxRight) {
       // Try to position it to the left of the bar start
-      const leftPosition = Math.max(margin, barStartPercent - tooltipHalfWidth)
-      if (leftPosition >= margin) {
+      const leftPosition = Math.max(horizontalMargin, barStartPercent - tooltipHalfWidth)
+      if (leftPosition >= horizontalMargin) {
         left = leftPosition
         transform = 'translateX(0)'
         arrowPosition = 'right'
         arrowOffset = `${Math.min(100, barCenter - left)}%`
       } else {
         // Fallback: position at the very left edge
-        left = margin
+        left = horizontalMargin
         transform = 'translateX(0)'
         arrowPosition = 'left'
         arrowOffset = '0%'
       }
     }
-    // Strategy 2: If tooltip would be cut off on the left, position it to the right of the bar
-    else if (leftEdge < margin) {
+    // Strategy 2: Horizontal positioning - Left edge overflow
+    else if (leftEdge < horizontalMargin) {
       // Try to position it to the right of the bar end
       const rightPosition = Math.min(maxRight, barStartPercent + barWidthPercent + tooltipHalfWidth)
       if (rightPosition <= maxRight) {
@@ -170,8 +177,8 @@ export default function TimelinePage() {
         transform = 'translateX(-100%)'
         arrowPosition = 'left'
         arrowOffset = `${Math.max(0, left - barCenter)}%`
-      } else {
-        // Fallback: position at the very right edge
+    } else {
+        // Fallback: position at the very right edge (but not over scrollbar)
         left = maxRight
         transform = 'translateX(-100%)'
         arrowPosition = 'right'
@@ -179,43 +186,173 @@ export default function TimelinePage() {
       }
     }
     
+    // Strategy 3: Vertical positioning - Check if tooltip would be cut off at top
+    // For now, we'll use CSS to handle this, but this could be enhanced with viewport detection
+    
     return { 
       left: `${left}%`, 
       transform,
       arrowPosition,
-      arrowOffset
+      arrowOffset,
+      placement,
+      top,
+      bottom
     }
   }
 
-  // Task completion percentages (0-100)
+  // Enhanced tooltip content rendering with better task display
+  const renderTooltipContent = (item: TimelineItem) => {
+    const completedTasks = item.tasks.filter(task => {
+      const completion = taskCompletion[task.name as keyof typeof taskCompletion] || 0
+      return completion === 100
+    })
+    
+    const inProgressTasks = item.tasks.filter(task => {
+      const completion = taskCompletion[task.name as keyof typeof taskCompletion] || 0
+      return completion > 0 && completion < 100
+    })
+    
+    const pendingTasks = item.tasks.filter(task => {
+      const completion = taskCompletion[task.name as keyof typeof taskCompletion] || 0
+      return completion === 0
+    })
+    
+    return (
+      <div className="space-y-4">
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <div className="w-2 h-2 bg-cyan-400 rounded-full"></div>
+          <h3 className="text-white font-semibold text-lg" style={{fontFamily: 'Inter'}}>
+            {item.title}
+          </h3>
+        </div>
+        
+        {/* Description */}
+        <p className="text-gray-300 text-sm leading-relaxed" style={{fontFamily: 'Inter'}}>
+          {item.description}
+        </p>
+        
+        {/* Task Summary */}
+        <div className="space-y-3">
+          {/* Completed Tasks */}
+          {completedTasks.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-1.5 h-1.5 bg-green-400 rounded-full"></div>
+                <span className="text-green-400 text-xs font-medium" style={{fontFamily: 'Inter'}}>
+                  Completed ({completedTasks.length})
+                </span>
+              </div>
+              <div className="space-y-1">
+                {completedTasks.slice(0, 3).map((task, index) => (
+                  <div key={index} className="text-gray-300 text-xs flex items-center gap-2" style={{fontFamily: 'Inter'}}>
+                    <svg className="w-3 h-3 text-green-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    <span className="truncate">{task.name}</span>
+                  </div>
+                ))}
+                {completedTasks.length > 3 && (
+                  <div className="text-gray-400 text-xs" style={{fontFamily: 'Inter'}}>
+                    +{completedTasks.length - 3} more completed
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          
+          {/* In Progress Tasks */}
+          {inProgressTasks.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-1.5 h-1.5 bg-yellow-400 rounded-full"></div>
+                <span className="text-yellow-400 text-xs font-medium" style={{fontFamily: 'Inter'}}>
+                  In Progress ({inProgressTasks.length})
+                </span>
+              </div>
+              <div className="space-y-1">
+                {inProgressTasks.slice(0, 2).map((task, index) => {
+                  const completion = taskCompletion[task.name as keyof typeof taskCompletion] || 0
+                  return (
+                    <div key={index} className="text-gray-300 text-xs" style={{fontFamily: 'Inter'}}>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="truncate">{task.name}</span>
+                        <span className="text-yellow-400 font-medium">{completion}%</span>
+                      </div>
+                      <div className="w-full bg-gray-700 rounded-full h-1">
+                        <div 
+                          className="bg-yellow-400 h-1 rounded-full transition-all duration-500"
+                          style={{ width: `${completion}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  )
+                })}
+                {inProgressTasks.length > 2 && (
+                  <div className="text-gray-400 text-xs" style={{fontFamily: 'Inter'}}>
+                    +{inProgressTasks.length - 2} more in progress
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+          
+          {/* Pending Tasks */}
+          {pendingTasks.length > 0 && (
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
+                <span className="text-gray-400 text-xs font-medium" style={{fontFamily: 'Inter'}}>
+                  Pending ({pendingTasks.length})
+                </span>
+              </div>
+              <div className="space-y-1">
+                {pendingTasks.slice(0, 2).map((task, index) => (
+                  <div key={index} className="text-gray-400 text-xs flex items-center gap-2" style={{fontFamily: 'Inter'}}>
+                    <div className="w-1 h-1 bg-gray-400 rounded-full flex-shrink-0"></div>
+                    <span className="truncate">{task.name}</span>
+                  </div>
+                ))}
+                {pendingTasks.length > 2 && (
+                  <div className="text-gray-400 text-xs" style={{fontFamily: 'Inter'}}>
+                    +{pendingTasks.length - 2} more pending
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // Task completion percentages (0-100) - Aligned with HyperKit Milestone PDF
   const taskCompletion = {
-    // October 2025 - Week 1 (Rebranding & Accessibility)
+    // Week 1 - Rebranding & Accessibility + AI Project Generation
     "Finalize and Deploy New Logo Design": 100,
-    "Implement Universal Theme Across UI": 75,
-    "Specify and Publish Supported Project Types": 0,
+    "Implement New Universal Theme Across UI Components": 75,
+    "Specify and Publish Supported Project Types in Technical Docs": 0,
     
-    // October 2025 - Week 2 (Landing Page & AI UX)
-    "Redesign and Launch New Landing Page": 75,
-    "Complete Onboarding Flow": 0,
-    "Validate A11y and Responsive Navigation": 0,
-    "Visual Regression Test Suite": 0,
-    "Complete AI Generation Flow UX/UI": 0,
+    // Week 2 - Landing Page, QA, and AI UX
+    "Redesign and Launch New Landing Page with Improved Onboarding Flow": 75,
+    "Validate Accessibility (A11y) and Responsive Navigation Across Devices": 0,
+    "Visual Regression Test Suite for UI Changes": 0,
+    "Complete UI/UX Rework for AI Generation Flow with Wireframes/Prototypes": 0,
+    "Integrate 1-2 Specific AI Models for Project Creation": 0,
     
-    // October 2025 - Week 3 (AI Integration & Modules)
-    "Integrate 12 AI Models for Project Creation": 0,
-    "Build Artifact Generation Logic": 0,
-    "Backend Upgrade: Logging and Error Reporting": 0,
-    "Launch Customizable Module Editor": 0,
-    "Enable Dynamic Preview and Copy-Paste": 0,
+    // Week 3 - AI Integration, Backend, and Modules
+    "Build Artifact Generation Logic and Publish Demo Video": 0,
+    "Backend Upgrade: Add Structured Logging and Error Reporting": 0,
+    "Launch Customizable Module Editor with Theme Customization": 0,
+    "Enable Dynamic Preview and One-Click Copy-Paste for Module Code": 0,
     
-    // October 2025 - Week 4 (Final Integration & Community)
-    "NLP Enhancement and Backend Integration": 0,
-    "Deliver First-Stage Dashboard": 0,
-    "Code Validation and Security Scanning": 0,
-    "Drag-and-Drop UI Library Integration": 0,
-    "Early Access Program Launch (100 users)": 0,
-    "Custom Module Preview System": 0,
-    "Documentation Publishing and Distribution": 0,
+    // Week 4 - NLP, Dashboard, Security, and Community
+    "NLP Enhancement: Initial Integration of NLP Backend System": 0,
+    "Deliver First-Stage Dashboard for Custom Project Controls": 0,
+    "Code Validation and Basic Security Scanning for AI-Generated Outputs": 0,
+    "Integrate Drag-and-Drop UI Library for Rapid Prototyping": 0,
+    "Launch Early Access Program for Minimum 100 Users": 0,
+    "Publish Technical Documentation and Integration Guidelines": 0,
   }
 
   const toggleItem = (id: string) => {
@@ -240,36 +377,37 @@ export default function TimelinePage() {
     return colors[id as keyof typeof colors] || "from-gray-500 to-gray-700"
   }
 
-  // Enhanced color mapping for task types with better categorization
+  // Enhanced color mapping for task types aligned with HyperKit Milestone PDF
   const getTaskColor = (taskName: string) => {
     const name = taskName.toLowerCase()
     
-    // AI & Machine Learning
-    if (name.includes("ai") || name.includes("generator") || name.includes("nlp") || name.includes("models")) return "bg-purple-400"
+    // Rebranding & Design (Blue)
+    if (name.includes("logo") || name.includes("theme") || name.includes("landing") || 
+        name.includes("ui components") || name.includes("onboarding")) return "bg-blue-400"
     
-    // UI/UX & Frontend
-    if (name.includes("dashboard") || name.includes("ui") || name.includes("landing") || name.includes("theme") || 
-        name.includes("ux") || name.includes("responsive") || name.includes("visual") || name.includes("preview")) return "bg-blue-400"
+    // AI & Machine Learning (Purple)
+    if (name.includes("ai") || name.includes("nlp") || name.includes("models") || 
+        name.includes("generation") || name.includes("artifact")) return "bg-purple-400"
     
-    // Backend & Infrastructure
+    // Quality Assurance & Testing (Red)
+    if (name.includes("validation") || name.includes("regression") || name.includes("a11y") || 
+        name.includes("accessibility") || name.includes("security") || name.includes("scanning")) return "bg-red-400"
+    
+    // Backend & Infrastructure (Green)
     if (name.includes("backend") || name.includes("logging") || name.includes("integration") || 
-        name.includes("validation") || name.includes("scanning")) return "bg-green-400"
+        name.includes("dashboard") || name.includes("nlp backend")) return "bg-green-400"
     
-    // Security & Quality Assurance
-    if (name.includes("audit") || name.includes("security") || name.includes("validation") || 
-        name.includes("regression") || name.includes("a11y")) return "bg-red-400"
+    // Modules & Development Tools (Pink)
+    if (name.includes("module") || name.includes("editor") || name.includes("customizable") || 
+        name.includes("drag-and-drop") || name.includes("preview") || name.includes("copy-paste")) return "bg-pink-400"
     
-    // Community & Marketing
-    if (name.includes("partnership") || name.includes("ecosystem") || name.includes("community") || 
-        name.includes("access") || name.includes("launch")) return "bg-yellow-400"
+    // Community & Business (Yellow)
+    if (name.includes("access program") || name.includes("community") || name.includes("launch") || 
+        name.includes("early access")) return "bg-yellow-400"
     
-    // Documentation & Support
-    if (name.includes("documentation") || name.includes("tutorial") || name.includes("training") || 
-        name.includes("publishing") || name.includes("distribution")) return "bg-indigo-400"
-    
-    // Modules & Development Tools
-    if (name.includes("module") || name.includes("editor") || name.includes("preview") || 
-        name.includes("customizable") || name.includes("drag-and-drop")) return "bg-pink-400"
+    // Documentation & Support (Indigo)
+    if (name.includes("documentation") || name.includes("technical docs") || name.includes("publish") || 
+        name.includes("guidelines") || name.includes("integration")) return "bg-indigo-400"
     
     // Default
     return "bg-gray-400"
@@ -290,7 +428,7 @@ export default function TimelinePage() {
 
   return (
     <main className="min-h-screen bg-black" role="main">
-      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20" style={{overflow: 'visible'}}>
         {/* Top Section - Title and Description */}
         <header className="flex flex-col gap-4 sm:gap-6 mb-12 sm:mb-16 lg:mb-20 items-center text-center">
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight" style={{fontFamily: 'Inter'}}>
@@ -302,7 +440,7 @@ export default function TimelinePage() {
         </header>
         
         {/* Timeline Section */}
-        <section className="bg-black/40 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-white/10 overflow-hidden shadow-2xl" aria-label="Project Timeline">
+        <section className="bg-black/40 backdrop-blur-sm rounded-2xl sm:rounded-3xl border border-white/10 overflow-visible shadow-2xl" aria-label="Project Timeline">
           {/* Timeline header with months */}
           <div className="border-b border-white/10 bg-gradient-to-r from-gray-800/50 to-gray-900/50">
             <div className="flex min-h-[60px] sm:min-h-[70px] lg:min-h-[80px]">
@@ -449,26 +587,35 @@ export default function TimelinePage() {
                             W{item.startWeek}-{item.startWeek + item.duration - 1}
                           </span>
 
-                                 {/* Milestone hover tooltip with smart positioning to prevent cut-off */}
+                                 {/* Milestone hover tooltip with advanced smart positioning and overflow prevention */}
                                  {isHovered && (() => {
                                    const position = getMilestoneTooltipPosition(
                                      ((item.startWeek - 1) / totalWeeks) * 100,
                                      (item.duration / totalWeeks) * 100,
-                                     320
+                                     380
                                    )
                                    return (
-                                     <div className="absolute z-50 bg-gray-900/98 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-2xl max-w-sm pointer-events-none animate-in fade-in-0 zoom-in-95 duration-200"
+                                       <div 
+                                         className="absolute z-[9999] bg-gray-900/98 backdrop-blur-md border border-white/20 rounded-xl p-6 shadow-2xl pointer-events-none animate-in fade-in-0 zoom-in-95 duration-200 timeline-tooltip"
                                           style={{
                                             left: position.left,
                                             transform: position.transform,
-                                            bottom: '100%',
+                                           bottom: position.bottom,
+                                           top: position.top,
                                             marginBottom: '16px',
-                                            minWidth: '300px',
-                                            maxWidth: '400px',
-                                            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4), 0 8px 16px rgba(0, 0, 0, 0.2)',
-                                            // Ensure tooltip stays within container bounds
-                                            position: 'absolute',
-                                            zIndex: 9999
+                                           marginRight: '20px', // Add right margin to avoid scrollbar
+                                           minWidth: '350px',
+                                           maxWidth: '480px',
+                                           boxShadow: '0 25px 50px rgba(0, 0, 0, 0.5), 0 10px 20px rgba(0, 0, 0, 0.3)',
+                                           // Ensure tooltip stays within viewport bounds
+                                           position: 'absolute',
+                                           zIndex: 9999,
+                                           // Prevent overflow and add scrolling if needed
+                                           maxHeight: '70vh',
+                                           overflowY: 'auto',
+                                           // Smart positioning to avoid cut-off
+                                           wordWrap: 'break-word',
+                                           whiteSpace: 'normal'
                                           }}>
                                        {/* Enhanced arrow pointing down to the bar */}
                                        <div 
@@ -482,47 +629,8 @@ export default function TimelinePage() {
                                          }}
                                        ></div>
                                      
-                                     <h3 className="text-white font-semibold mb-3 text-sm" style={{fontFamily: 'Inter'}}>
-                                       {item.title}
-                                     </h3>
-                                     <p className="text-white/80 text-xs mb-4 leading-relaxed" style={{fontFamily: 'Inter'}}>
-                                       {item.description}
-                                     </p>
-                                     
-                                     {/* Milestone timeline info */}
-                                     <div className="mb-3 p-2 bg-white/10 rounded-md">
-                                       <div className="flex justify-between items-center text-xs">
-                                         <span className="text-white/70" style={{fontFamily: 'Inter'}}>Duration:</span>
-                                         <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
-                                           {item.duration} weeks
-                                         </span>
-                                       </div>
-                                       <div className="flex justify-between items-center text-xs mt-1">
-                                         <span className="text-white/70" style={{fontFamily: 'Inter'}}>Timeline:</span>
-                                         <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
-                                           W{item.startWeek}-{item.startWeek + item.duration - 1}
-                                         </span>
-                                       </div>
-                                     </div>
-                                     
-                                     <div className="space-y-2">
-                                       <div className="text-xs font-semibold text-white/90 mb-2" style={{fontFamily: 'Inter'}}>
-                                         Key Tasks:
-                                       </div>
-                                       {item.tasks?.slice(0, 4).map((task, idx) => (
-                                         <div key={idx} className="flex items-center gap-2">
-                                           <div className={`w-2 h-2 rounded-full ${getTaskColor(task.name)}`} />
-                                           <span className="text-white/70 text-xs" style={{fontFamily: 'Inter'}}>
-                                             {task.name}
-                                           </span>
-                                         </div>
-                                       ))}
-                                       {item.tasks && item.tasks.length > 4 && (
-                                         <span className="text-white/50 text-xs" style={{fontFamily: 'Inter'}}>
-                                           +{item.tasks.length - 4} more tasks
-                                         </span>
-                                       )}
-                                     </div>
+                                     {/* Enhanced tooltip content with categorized tasks */}
+                                     {renderTooltipContent(item)}
                                    </div>
                                    )
                                  })()}
@@ -558,7 +666,7 @@ export default function TimelinePage() {
                                 </svg>
                               </div>
                               <h3 className="text-base sm:text-lg font-bold text-white" style={{fontFamily: 'Inter'}}>
-                                Detailed Tasks & Timeline
+                              Detailed Tasks & Timeline
                               </h3>
                               <div className="flex-1 h-px bg-gradient-to-r from-white/20 to-transparent" aria-hidden="true"></div>
                             </div>
@@ -589,8 +697,8 @@ export default function TimelinePage() {
                                 </div>
                                 <div className="flex-1 min-w-0">
                                   <span className="text-xs sm:text-sm font-medium text-white group-hover:text-cyan-300 transition-colors leading-tight block" style={{fontFamily: 'Inter'}}>
-                                    {task.name}
-                                  </span>
+                                  {task.name}
+                                </span>
                                   <div className="flex items-center gap-1 sm:gap-2 mt-1 flex-wrap">
                                     <span className={`text-xs font-semibold px-1.5 sm:px-2 py-0.5 rounded-full ${completionStatus.color} text-white`}>
                                       {completionStatus.text}
@@ -707,8 +815,8 @@ export default function TimelinePage() {
                                         <div className="flex items-center gap-3 mb-4">
                                           <div className={`w-3 h-3 rounded-full ${getTaskColor(task.name)} shadow-lg`}></div>
                                           <h4 className="text-white font-bold text-base" style={{fontFamily: 'Inter'}}>
-                                            {task.name}
-                                          </h4>
+                                          {task.name}
+                                        </h4>
                                           {completion === 100 && (
                                             <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
                                               <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -742,18 +850,18 @@ export default function TimelinePage() {
                                             <h5 className="text-white/90 text-sm font-semibold mb-3" style={{fontFamily: 'Inter'}}>Task Details</h5>
                                             <div className="grid grid-cols-2 gap-4 text-sm">
                                               <div className="space-y-2">
-                                                <div className="flex justify-between items-center">
-                                                  <span className="text-white/70" style={{fontFamily: 'Inter'}}>Status:</span>
-                                                  <span className={`font-semibold ${completionStatus.color.replace('bg-', 'text-')}`} style={{fontFamily: 'Inter'}}>
-                                                    {completionStatus.text}
-                                                  </span>
-                                                </div>
-                                                <div className="flex justify-between items-center">
-                                                  <span className="text-white/70" style={{fontFamily: 'Inter'}}>Duration:</span>
-                                                  <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
-                                                    {task.duration} weeks
-                                                  </span>
-                                                </div>
+                                            <div className="flex justify-between items-center">
+                                              <span className="text-white/70" style={{fontFamily: 'Inter'}}>Status:</span>
+                                              <span className={`font-semibold ${completionStatus.color.replace('bg-', 'text-')}`} style={{fontFamily: 'Inter'}}>
+                                                {completionStatus.text}
+                                              </span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                              <span className="text-white/70" style={{fontFamily: 'Inter'}}>Duration:</span>
+                                              <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
+                                                {task.duration} weeks
+                                              </span>
+                                            </div>
                                               </div>
                                               <div className="space-y-2">
                                                 <div className="flex justify-between items-center">
@@ -764,9 +872,9 @@ export default function TimelinePage() {
                                                 </div>
                                                 <div className="flex justify-between items-center">
                                                   <span className="text-white/70" style={{fontFamily: 'Inter'}}>End Week:</span>
-                                                  <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
+                                              <span className="text-white font-medium" style={{fontFamily: 'Inter'}}>
                                                     W{task.startWeek + task.duration - 1}
-                                                  </span>
+                                              </span>
                                                 </div>
                                               </div>
                                             </div>
