@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { OptimizedImage, OptimizedIcon } from '@/components/ui/optimized-image';
 
 export default function HeroPage() {
   const [isDemoPlaying, setIsDemoPlaying] = useState(false);
@@ -66,9 +67,11 @@ export default function HeroPage() {
         <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2 sm:gap-3 mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 sm:gap-3 bg-gray-800 px-3 sm:px-4 py-2 rounded-lg">
             <span className="text-white font-bold text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Built on and backed by</span>
-            <img 
+            <OptimizedImage 
               src="/logo/brand/metis/metis-blue-white-horizontal.svg" 
               alt="METIS" 
+              width={120}
+              height={32}
               className="h-6 sm:h-8 w-auto"
             />
           </div>
@@ -89,9 +92,11 @@ export default function HeroPage() {
               style={{fontFamily: 'Inter'}}
             >
               {isDemoPlaying ? 'Playing Demo...' : 'Play Demo'}
-              <img 
+              <OptimizedIcon 
                 src="/icons/demo/play.png" 
                 alt="Play" 
+                width={32}
+                height={32}
                 className={`w-6 h-6 sm:w-8 sm:h-8 ${isDemoPlaying ? 'animate-pulse' : ''}`} 
               />
             </button>

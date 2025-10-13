@@ -1,38 +1,21 @@
-import React from 'react'
+'use client';
 
-const FoundationHeroPage = () => {
+import React from 'react';
+import { OptimizedImage, OptimizedIcon } from '@/components/ui/optimized-image';
+
+export default function ProductsHeroPage() {
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-8">
-      <div className="w-full max-w-6xl">
-        {/* Top Header Bars */}
-        <div className="flex mb-2">
-          <div className="w-96 h-14 bg-sky-400"></div>
-          <div className="w-28 h-14 bg-cyan-300"></div>
-        </div>
-        
-        {/* Main Content - Two Column Grid */}
-        <div className="grid grid-cols-2 gap-1">
-          {/* Left Column */}
-          <div className="bg-cyan-300 rounded-bl-3xl">
-            <div className="h-96"></div>
-            <div className="bg-blue-500 p-6">
-              <div className="w-8 h-8 bg-blue-700 mb-3"></div>
-              <div className="w-44 h-8 bg-cyan-200"></div>
-            </div>
-          </div>
-          
-          {/* Right Column */}
-          <div className="bg-cyan-300 rounded-br-3xl">
-            <div className="h-96"></div>
-            <div className="bg-blue-500 p-6">
-              <div className="w-8 h-8 bg-blue-700 mb-3"></div>
-              <div className="w-44 h-8 bg-cyan-200"></div>
-            </div>
-          </div>
-        </div>
+    <section className="mb-6">
+      <div className="max-w-7xl mx-auto px-8 py-8">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-left text-white" style={{fontFamily: 'Be Vietnam Pro'}}>
+          Integrate today.{" "}
+          <span className="text-purple-500">Build smarter.</span>
+        </h1>
+        <p className="text-sm opacity-80 mt-3 mb-4 max-w-2xl text-gray-300" style={{fontFamily: 'Inter'}}>
+          A simple, powerful toolkit to help you create decentralized apps quickly and efficiently. 
+          No complex setup, just clean code and powerful features.
+        </p>
       </div>
-    </div>
-  )
+    </section>
+  );
 }
-
-export default FoundationHeroPage
