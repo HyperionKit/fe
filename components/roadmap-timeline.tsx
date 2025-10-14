@@ -128,46 +128,43 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Finalize new logo and themes. Outline supported blockchain project types.
           </p>
-          {/* 2x2 Grid - Image Placeholders for Rebranding & Planning */}
+          {/* 2x2 Grid - Hyperkit Branding Assets */}
           <div className="grid grid-cols-2 gap-4">
-            {/* Top Left - Logo Design Image */}
-            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
-                }}></div>
-              </div>
+            {/* Top Left - Hyperkit Abstract Logo */}
+            <div className="rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
               <div className="relative z-10 flex items-center justify-center h-full">
-                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+                <img 
+                  src="/logo/brand/hyperkit/Hyperkit Abstract.svg" 
+                  alt="Hyperkit Abstract Logo" 
+                  className="w-full h-full object-contain"
+                />
               </div>
             </div>
             
-            {/* Top Right - Theme Setup Image */}
-            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
-                }}></div>
-              </div>
+            {/* Top Right - Hyperkit Header Black */}
+            <div className="rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
               <div className="relative z-10 flex items-center justify-center h-full">
-                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+                <img 
+                  src="/logo/brand/hyperkit/Hyperkit Header Black.svg" 
+                  alt="Hyperkit Header Black" 
+                  className="w-full h-full object-contain"
+                />
               </div>
             </div>
             
-            {/* Bottom Left - Project Types Image */}
-            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
-                }}></div>
-              </div>
+            {/* Bottom Left - Hyperkit Header White */}
+            <div className="rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
               <div className="relative z-10 flex items-center justify-center h-full">
-                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+                <img 
+                  src="/logo/brand/hyperkit/Hyperkit Header White.svg" 
+                  alt="Hyperkit Header White" 
+                  className="w-full h-full object-contain"
+                />
               </div>
             </div>
             
-            {/* Bottom Right - Planning Docs Image */}
-            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
+            {/* Bottom Right - Empty Loader */}
+            <div className="rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
               <div className="absolute inset-0 opacity-10">
                 <div className="absolute inset-0" style={{
                   backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
@@ -194,53 +191,49 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Launch redesigned landing page and onboarding flow. Validate accessibility. Create wireframes/prototypes for AI project generation.
           </p>
-          {/* 2x2 Grid - Image Placeholders for UI/UX & Landing Page */}
+          {/* 2x2 Grid - Page Design Mockups */}
           <div className="grid grid-cols-2 gap-4">
-            {/* Top Left - Landing Page Image */}
-            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
-                }}></div>
-              </div>
-              <div className="relative z-10 flex items-center justify-center h-full">
-                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
-              </div>
-            </div>
-            
-            {/* Top Right - Onboarding Image */}
-            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
-                }}></div>
-              </div>
-              <div className="relative z-10 flex items-center justify-center h-full">
-                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+            {/* Top Left - Product Page Mockup */}
+            <div className="rounded-lg p-2 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 w-full h-full">
+                <img 
+                  src="/UI/Design/Product Page.png" 
+                  alt="Product Page Design" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
             </div>
             
-            {/* Bottom Left - Accessibility Image */}
-            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
-                }}></div>
-              </div>
-              <div className="relative z-10 flex items-center justify-center h-full">
-                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+            {/* Top Right - Launch App Page Mockup */}
+            <div className="rounded-lg p-2 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 w-full h-full">
+                <img 
+                  src="/UI/Design/Launch App Page.png" 
+                  alt="Launch App Page Design" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
             </div>
             
-            {/* Bottom Right - Wireframes Image */}
-            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
-                }}></div>
+            {/* Bottom Left - Landing Page Mockup */}
+            <div className="rounded-lg p-2 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 w-full h-full">
+                <img 
+                  src="/UI/Design/Landing page.png" 
+                  alt="Landing Page Design" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
-              <div className="relative z-10 flex items-center justify-center h-full">
-                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+            </div>
+            
+            {/* Bottom Right - Build Page Mockup */}
+            <div className="rounded-lg p-2 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 w-full h-full">
+                <img 
+                  src="/UI/Design/Build page.png" 
+                  alt="Build Page Design" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
               </div>
             </div>
           </div>
