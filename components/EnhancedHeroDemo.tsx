@@ -894,7 +894,7 @@ export const EnhancedHeroDemo: React.FC = () => {
   }, []);
 
   const navItems = ["Wallet", "Swap", "Bridge", "Staking", "Faucet"];
-  const rightNavItems = ["Docs", "AI docs"];
+  const rightNavItems = ["AI docs"];
 
   const renderTabContent = () => {
     // If playground mode is active, show AI Playground
