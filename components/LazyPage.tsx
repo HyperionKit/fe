@@ -17,7 +17,7 @@ const LoadingSpinner: React.FC<{ isLowPower?: boolean }> = ({ isLowPower = false
     <div className={`${isLowPower ? 'w-8 h-8' : 'w-12 h-12'} border-2 border-purple-500 border-t-transparent rounded-full animate-spin`} />
   </div>
 );
-
+  
 // Performance-aware page wrapper
 const LazyPageWrapper: React.FC<{ 
   children: React.ReactNode; 
