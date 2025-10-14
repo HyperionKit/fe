@@ -8,6 +8,13 @@ export default function LaunchAppPage() {
       {/* Header */}
       <div className="bg-blue-900 h-16 flex items-center px-6">
         <div className="flex items-center space-x-4">
+          {/* Hyperkit Logo */}
+          <img 
+            src="/logo/brand/hyperkit/Hyperkit Abstract.svg" 
+            alt="Hyperkit" 
+            className="w-8 h-8"
+          />
+          
           {/* Show UI Button */}
           <button className="bg-blue-800 text-white px-4 py-2 rounded-lg text-sm font-medium">
             Show UI
