@@ -57,7 +57,7 @@ export default function HeroPage() {
       <div className="max-w-6xl mx-auto">
         {/* Main Title */}
         <div className="mb-6 sm:mb-8">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight text-center lg:text-left" style={{fontFamily: 'Inter'}}>
+          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight text-center lg:text-left" style={{fontFamily: 'Inter'}}>
             Build DeFi, Bridge Chains,<br className="hidden sm:block" />
             Thrive in <span className="text-[#D68CFF]">Hyperion</span>
           </h1>
