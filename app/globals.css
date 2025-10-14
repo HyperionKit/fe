@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+/* Smooth scrolling for entire application */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Smooth scrolling for all elements */
+* {
+  scroll-behavior: smooth;
+}
+
 /* Custom animations */
 @keyframes fadeIn {
   from {
