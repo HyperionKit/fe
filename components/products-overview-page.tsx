@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useAnimation, useInView } from 'framer-motion';
 import { OptimizedImage, OptimizedIcon } from '@/components/ui/optimized-image';
 import Orb from './libraries/Orb';
 import OrbInput from './libraries/OrbInput';
@@ -14,6 +15,101 @@ export default function ProductsOverviewPage() {
   const { connected, address, balance, connect, disconnect } = useDemoWallet();
   const { status, txHash, sendTransaction, reset: resetTransaction } = useDemoTransaction();
   const { user, authenticate, logout } = useDemoAuth();
+
+  // Animation variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2
+      }
+    }
+  };
+
+  const cardVariants = {
+    hidden: { 
+      opacity: 0, 
+      y: 50,
+      scale: 0.95
+    },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      scale: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    },
+    hover: {
+      scale: 1.02,
+      y: -5,
+      transition: {
+        duration: 0.3,
+        ease: "easeInOut"
+      }
+    }
+  };
+
+  const toggleVariants = {
+    off: { 
+      x: 0,
+      backgroundColor: "#374151"
+    },
+    on: { 
+      x: 20,
+      backgroundColor: "#7C3AED",
+      transition: {
+        duration: 0.3,
+        ease: "easeInOut"
+      }
+    }
+  };
+
+  const slideVariants = {
+    hidden: { 
+      opacity: 0, 
+      x: -20,
+      height: 0
+    },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      height: "auto",
+      transition: {
+        duration: 0.4,
+        ease: "easeOut"
+      }
+    },
+    exit: {
+      opacity: 0,
+      x: -20,
+      height: 0,
+      transition: {
+        duration: 0.3,
+        ease: "easeIn"
+      }
+    }
+  };
+
+  const demoVariants = {
+    hidden: { 
+      opacity: 0, 
+      scale: 0.9,
+      y: 20
+    },
+    visible: { 
+      opacity: 1, 
+      scale: 1,
+      y: 0,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut"
+      }
+    }
+  };
 
   // State for toggle switches
   const [authSettings, setAuthSettings] = useState({
@@ -186,11 +282,19 @@ export default hyperkit;`;
 
 
   return (
-    <div className="max-w-7xl mx-auto px-8 py-0">
+    <motion.div 
+      className="max-w-7xl mx-auto px-8 py-0"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Core Feature Cards Row */}
-      <div className="flex flex-wrap lg:flex-nowrap gap-8 mb-50">
+      <motion.div 
+        className="flex flex-wrap lg:flex-nowrap gap-8 mb-50"
+        variants={containerVariants}
+      >
         {featureCards.map((card, i) => (
-          <div
+          <motion.div
             key={i}
             className="
               flex-1 min-w-[300px] max-w-xl 
@@ -198,8 +302,10 @@ export default hyperkit;`;
               rounded-[1.4rem]
               shadow-2xl 
               overflow-hidden flex flex-col
-              relative"
+              relative cursor-pointer"
             style={{ height: "500px" }}
+            variants={cardVariants}
+            whileHover="hover"
           >
             {/* Card Top: Placeholder or Orb + OrbInput */}
             <div className="flex-1 flex flex-col items-center justify-center bg-black relative p-6">
@@ -264,9 +370,15 @@ export default hyperkit;`;
           Our tools make wallet integration simple and secure.
         </p>
 
-        <div className="flex flex-col lg:flex-row gap-10 items-start">
+        <motion.div 
+          className="flex flex-col lg:flex-row gap-10 items-start"
+          variants={containerVariants}
+        >
           {/* Left Panel - Configuration Options */}
-          <div className="w-full lg:w-80 bg-gray-100 rounded-2xl shadow-lg p-6 border border-gray-200">
+          <motion.div 
+            className="w-full lg:w-80 bg-gray-100 rounded-2xl shadow-lg p-6 border border-gray-200"
+            variants={cardVariants}
+          >
             <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
               Authentication
             </h3>
@@ -282,16 +394,19 @@ export default hyperkit;`;
                   />
                   <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Email</span>
                 </div>
-                <button 
+                <motion.button 
                   onClick={() => toggleAuth('email')}
-                  className={`w-10 h-6 rounded-full relative transition-colors ${
-                    authSettings.email ? 'bg-purple-600' : 'bg-gray-300'
-                  }`}
+                  className="w-10 h-6 rounded-full relative"
+                  variants={toggleVariants}
+                  animate={authSettings.email ? "on" : "off"}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
-                    authSettings.email ? 'translate-x-5' : 'translate-x-1'
-                  }`}></div>
-                </button>
+                  <motion.div 
+                    className="w-4 h-4 bg-white rounded-full absolute top-1"
+                    layout
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                </motion.button>
               </div>
               <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
@@ -305,16 +420,19 @@ export default hyperkit;`;
                   <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>SMS</span>
                   <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Beta</span>
                 </div>
-                <button 
+                <motion.button 
                   onClick={() => toggleAuth('sms')}
-                  className={`w-10 h-6 rounded-full relative transition-colors ${
-                    authSettings.sms ? 'bg-purple-600' : 'bg-gray-300'
-                  }`}
+                  className="w-10 h-6 rounded-full relative"
+                  variants={toggleVariants}
+                  animate={authSettings.sms ? "on" : "off"}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
-                    authSettings.sms ? 'translate-x-5' : 'translate-x-1'
-                  }`}></div>
-                </button>
+                  <motion.div 
+                    className="w-4 h-4 bg-white rounded-full absolute top-1"
+                    layout
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                </motion.button>
               </div>
               <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
@@ -331,16 +449,19 @@ export default hyperkit;`;
                     <OptimizedIcon src="/icons/products/imgi_8_twitter.png" alt="Twitter" width={16} height={16} className="w-4 h-4" />
                   </div>
                 </div>
-                <button 
+                <motion.button 
                   onClick={() => toggleAuth('social')}
-                  className={`w-10 h-6 rounded-full relative transition-colors ${
-                    authSettings.social ? 'bg-purple-600' : 'bg-gray-300'
-                  }`}
+                  className="w-10 h-6 rounded-full relative"
+                  variants={toggleVariants}
+                  animate={authSettings.social ? "on" : "off"}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
-                    authSettings.social ? 'translate-x-5' : 'translate-x-1'
-                  }`}></div>
-                </button>
+                  <motion.div 
+                    className="w-4 h-4 bg-white rounded-full absolute top-1"
+                    layout
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                </motion.button>
               </div>
               <div className="p-2 rounded-lg hover:bg-gray-50 transition-colors space-y-2">
                 <div className="flex items-center justify-between">
@@ -354,29 +475,35 @@ export default hyperkit;`;
                     />
                     <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Passkey</span>
                   </div>
-                  <button 
+                  <motion.button 
                     onClick={() => toggleAuth('passkey')}
-                    className={`w-10 h-6 rounded-full relative transition-colors ${
-                      authSettings.passkey ? 'bg-purple-600' : 'bg-gray-300'
-                    }`}
+                    className="w-10 h-6 rounded-full relative"
+                    variants={toggleVariants}
+                    animate={authSettings.passkey ? "on" : "off"}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
-                      authSettings.passkey ? 'translate-x-5' : 'translate-x-1'
-                    }`}></div>
-                  </button>
+                    <motion.div 
+                      className="w-4 h-4 bg-white rounded-full absolute top-1"
+                      layout
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  </motion.button>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500 ml-8" style={{fontFamily: 'Inter'}}>add passkey after sign-up</span>
-                  <button 
+                  <motion.button 
                     onClick={() => toggleAuth('passkeyAfterSignup')}
-                    className={`w-10 h-6 rounded-full relative transition-colors ${
-                      authSettings.passkeyAfterSignup ? 'bg-purple-600' : 'bg-gray-300'
-                    }`}
+                    className="w-10 h-6 rounded-full relative"
+                    variants={toggleVariants}
+                    animate={authSettings.passkeyAfterSignup ? "on" : "off"}
+                    whileTap={{ scale: 0.95 }}
                   >
-                    <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
-                      authSettings.passkeyAfterSignup ? 'translate-x-5' : 'translate-x-1'
-                    }`}></div>
-                  </button>
+                    <motion.div 
+                      className="w-4 h-4 bg-white rounded-full absolute top-1"
+                      layout
+                      transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                    />
+                  </motion.button>
                 </div>
               </div>
             </div>
@@ -396,16 +523,19 @@ export default hyperkit;`;
                   />
                   <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>External Wallets</span>
                 </div>
-                <button 
+                <motion.button 
                   onClick={() => toggleAuth('externalWallets')}
-                  className={`w-10 h-6 rounded-full relative transition-colors ${
-                    authSettings.externalWallets ? 'bg-purple-600' : 'bg-gray-300'
-                  }`}
+                  className="w-10 h-6 rounded-full relative"
+                  variants={toggleVariants}
+                  animate={authSettings.externalWallets ? "on" : "off"}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
-                    authSettings.externalWallets ? 'translate-x-5' : 'translate-x-1'
-                  }`}></div>
-                </button>
+                  <motion.div 
+                    className="w-4 h-4 bg-white rounded-full absolute top-1"
+                    layout
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                </motion.button>
               </div>
             </div>
             
@@ -578,27 +708,41 @@ export default hyperkit;`;
             </div>
             
            {/* Right Panel - Sign In Modal Demo */}
-            <div className="flex-1 bg-white rounded-2xl shadow-2xl flex flex-col justify-center items-center p-12 relative h-[840px]">
+            <motion.div 
+              className="flex-1 bg-white rounded-2xl shadow-2xl flex flex-col justify-center items-center p-12 relative h-[840px]"
+              variants={demoVariants}
+            >
               {/* Code Preview Badge with Toggle */}
               <div className="absolute top-4 right-4 flex items-center gap-2">
                 <div className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium shadow">
                   Code Preview
                 </div>
-                <button 
+                <motion.button 
                   onClick={toggleCodePreview}
-                  className={`w-10 h-6 rounded-full relative transition-colors ${
-                    codePreview ? 'bg-purple-600' : 'bg-gray-300'
-                  }`}
+                  className="w-10 h-6 rounded-full relative"
+                  variants={toggleVariants}
+                  animate={codePreview ? "on" : "off"}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
-                    codePreview ? 'translate-x-5' : 'translate-x-1'
-                  }`}></div>
-                </button>
+                  <motion.div 
+                    className="w-4 h-4 bg-white rounded-full absolute top-1"
+                    layout
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                </motion.button>
             </div>
             
              {/* Code Preview or Sign In Modal Content */}
-             {codePreview ? (
-               <div className="bg-gray-900 rounded-2xl w-full max-w-4xl h-[600px] flex flex-col">
+             <AnimatePresence mode="wait">
+               {codePreview ? (
+                 <motion.div 
+                   key="code-preview"
+                   className="bg-gray-900 rounded-2xl w-full max-w-4xl h-[600px] flex flex-col"
+                   initial={{ opacity: 0, scale: 0.95 }}
+                   animate={{ opacity: 1, scale: 1 }}
+                   exit={{ opacity: 0, scale: 0.95 }}
+                   transition={{ duration: 0.3, ease: "easeInOut" }}
+                 >
                  <div className="flex items-center gap-2 p-6 pb-4 border-b border-gray-700">
                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
@@ -612,13 +756,21 @@ export default hyperkit;`;
                  </div>
                </div>
              ) : (
-               <div className={`border border-gray-200 rounded-2xl shadow-xl w-[480px] min-h-[200px] flex flex-col items-center justify-center text-center px-10 py-10 transition-all duration-300 ${
-                 brandingSettings.theme === 'dark' ? 'bg-gray-900 border-gray-700' : 'bg-white'
-               }`} style={{
-                 borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
-                             brandingSettings.cornerRadius === 'Small' ? '8px' :
-                             brandingSettings.cornerRadius === 'Medium' ? '16px' : '24px'
-               }}>
+               <motion.div 
+                 key="signin-modal"
+                 className={`border border-gray-200 rounded-2xl shadow-xl w-[480px] min-h-[200px] flex flex-col items-center justify-center text-center px-10 py-10 transition-all duration-300 ${
+                   brandingSettings.theme === 'dark' ? 'bg-gray-900 border-gray-700' : 'bg-white'
+                 }`} 
+                 style={{
+                   borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                               brandingSettings.cornerRadius === 'Small' ? '8px' :
+                               brandingSettings.cornerRadius === 'Medium' ? '16px' : '24px'
+                 }}
+                 initial={{ opacity: 0, scale: 0.95 }}
+                 animate={{ opacity: 1, scale: 1 }}
+                 exit={{ opacity: 0, scale: 0.95 }}
+                 transition={{ duration: 0.3, ease: "easeInOut" }}
+               >
                  <div className="w-full max-w-sm">
                    <div className="flex items-center justify-center mb-8">
                      <h3 className={`text-2xl font-bold ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
@@ -629,8 +781,15 @@ export default hyperkit;`;
                    {/* Dynamic Authentication Components Based on Toggle States */}
                    <div className="space-y-6">
                      {/* Email Authentication */}
-                     {authSettings.email && (
-                       <div className="space-y-4">
+                     <AnimatePresence>
+                       {authSettings.email && (
+                         <motion.div 
+                           className="space-y-4"
+                           initial={{ opacity: 0, height: 0, y: -20 }}
+                           animate={{ opacity: 1, height: "auto", y: 0 }}
+                           exit={{ opacity: 0, height: 0, y: -20 }}
+                           transition={{ duration: 0.3, ease: "easeInOut" }}
+                         >
                          <div className="text-center">
                            <label className={`block text-sm font-semibold mb-3 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                              Email Address
@@ -664,12 +823,20 @@ export default hyperkit;`;
                          >
                            Continue with Email
                          </button>
-                       </div>
-                     )}
+                         </div>
+                       )}
+                     </AnimatePresence>
 
                      {/* SMS Authentication */}
-                     {authSettings.sms && (
-                       <div className="space-y-4">
+                     <AnimatePresence>
+                       {authSettings.sms && (
+                         <motion.div 
+                           className="space-y-4"
+                           initial={{ opacity: 0, height: 0, y: -20 }}
+                           animate={{ opacity: 1, height: "auto", y: 0 }}
+                           exit={{ opacity: 0, height: 0, y: -20 }}
+                           transition={{ duration: 0.3, ease: "easeInOut" }}
+                         >
                          <div className="text-center">
                            <label className={`block text-sm font-semibold mb-3 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                              Phone Number
@@ -703,23 +870,33 @@ export default hyperkit;`;
                          >
                            Send Verification Code
                          </button>
-                       </div>
-                     )}
+                         </div>
+                       )}
+                     </AnimatePresence>
 
                      {/* Social Authentication */}
-                     {authSettings.social && (
-                       <div className="space-y-4">
+                     <AnimatePresence>
+                       {authSettings.social && (
+                         <motion.div 
+                           className="space-y-4"
+                           initial={{ opacity: 0, height: 0, y: -20 }}
+                           animate={{ opacity: 1, height: "auto", y: 0 }}
+                           exit={{ opacity: 0, height: 0, y: -20 }}
+                           transition={{ duration: 0.3, ease: "easeInOut" }}
+                         >
                          <div className="text-center">
                            <label className={`block text-sm font-semibold mb-4 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                              Continue with Social
                            </label>
                            <div className="flex gap-4 justify-center">
-                             <button
+                             <motion.button
                                className={`w-14 h-14 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
                                  brandingSettings.theme === 'dark'
                                    ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
                                    : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
                                }`}
+                               whileHover={{ scale: 1.05, y: -2 }}
+                               whileTap={{ scale: 0.95 }}
                                style={{
                                  borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                              brandingSettings.cornerRadius === 'Small' ? '8px' :
@@ -735,12 +912,14 @@ export default hyperkit;`;
                                  }`} 
                                />
                              </button>
-                             <button
+                             <motion.button
                                className={`w-14 h-14 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
                                  brandingSettings.theme === 'dark'
                                    ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
                                    : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
                                }`}
+                               whileHover={{ scale: 1.05, y: -2 }}
+                               whileTap={{ scale: 0.95 }}
                                style={{
                                  borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                              brandingSettings.cornerRadius === 'Small' ? '8px' :
@@ -758,12 +937,20 @@ export default hyperkit;`;
                              </button>
                            </div>
                          </div>
-                       </div>
-                     )}
+                         </div>
+                       )}
+                     </AnimatePresence>
 
                      {/* Passkey Authentication */}
-                     {authSettings.passkey && (
-                       <div className="space-y-4">
+                     <AnimatePresence>
+                       {authSettings.passkey && (
+                         <motion.div 
+                           className="space-y-4"
+                           initial={{ opacity: 0, height: 0, y: -20 }}
+                           animate={{ opacity: 1, height: "auto", y: 0 }}
+                           exit={{ opacity: 0, height: 0, y: -20 }}
+                           transition={{ duration: 0.3, ease: "easeInOut" }}
+                         >
                          <div className="text-center">
                            <label className={`block text-sm font-semibold mb-4 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                              Biometric Authentication
@@ -786,12 +973,20 @@ export default hyperkit;`;
                              Use Passkey
                            </button>
                          </div>
-                       </div>
-                     )}
+                         </div>
+                       )}
+                     </AnimatePresence>
 
                      {/* External Wallets */}
-                     {authSettings.externalWallets && (
-                       <div className="space-y-4">
+                     <AnimatePresence>
+                       {authSettings.externalWallets && (
+                         <motion.div 
+                           className="space-y-4"
+                           initial={{ opacity: 0, height: 0, y: -20 }}
+                           animate={{ opacity: 1, height: "auto", y: 0 }}
+                           exit={{ opacity: 0, height: 0, y: -20 }}
+                           transition={{ duration: 0.3, ease: "easeInOut" }}
+                         >
                          <div className="text-center">
                            <label className={`block text-sm font-semibold mb-4 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                              Connect Wallet
@@ -799,12 +994,14 @@ export default hyperkit;`;
                            <div className="space-y-4">
                              {/* Primary Wallet - MetaMask */}
                              <div className="flex justify-center">
-                               <button
+                               <motion.button
                                  className={`w-20 h-20 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-lg hover:shadow-xl ${
                                    brandingSettings.theme === 'dark'
                                      ? 'bg-orange-600 hover:bg-orange-700'
                                      : 'bg-orange-600 hover:bg-orange-700'
                                  }`}
+                                 whileHover={{ scale: 1.05, y: -2 }}
+                                 whileTap={{ scale: 0.95 }}
                                  style={{
                                    borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                                brandingSettings.cornerRadius === 'Small' ? '8px' :
@@ -831,12 +1028,14 @@ export default hyperkit;`;
                                </div>
                                
                                <div className="flex flex-wrap gap-3 justify-center">
-                                 <button
+                                 <motion.button
                                    className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
                                      brandingSettings.theme === 'dark'
                                        ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
                                        : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
                                    }`}
+                                   whileHover={{ scale: 1.05, y: -2 }}
+                                   whileTap={{ scale: 0.95 }}
                                    style={{
                                      borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                                  brandingSettings.cornerRadius === 'Small' ? '8px' :
@@ -851,7 +1050,7 @@ export default hyperkit;`;
                                    />
                                  </button>
 
-                                 <button
+                                 <motion.button
                                    className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
                                      brandingSettings.theme === 'dark'
                                        ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
@@ -863,6 +1062,8 @@ export default hyperkit;`;
                                                  brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
                                    }}
                                    title="OKX"
+                                   whileHover={{ scale: 1.05, y: -2 }}
+                                   whileTap={{ scale: 0.95 }}
                                  >
                                    <img 
                                      src="/logo/brand/wallets/okx-logo-brandlogo.svg" 
@@ -873,7 +1074,7 @@ export default hyperkit;`;
                                    />
                                  </button>
 
-                                 <button
+                                 <motion.button
                                    className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
                                      brandingSettings.theme === 'dark'
                                        ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
@@ -885,6 +1086,8 @@ export default hyperkit;`;
                                                  brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
                                    }}
                                    title="Phantom"
+                                   whileHover={{ scale: 1.05, y: -2 }}
+                                   whileTap={{ scale: 0.95 }}
                                  >
                                    <img 
                                      src="/logo/brand/wallets/Phantom_Logo.svg" 
@@ -893,7 +1096,7 @@ export default hyperkit;`;
                                    />
                                  </button>
 
-                                 <button
+                                 <motion.button
                                    className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
                                      brandingSettings.theme === 'dark'
                                        ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
@@ -905,6 +1108,8 @@ export default hyperkit;`;
                                                  brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
                                    }}
                                    title="WalletConnect"
+                                   whileHover={{ scale: 1.05, y: -2 }}
+                                   whileTap={{ scale: 0.95 }}
                                  >
                                    <img 
                                      src="/logo/brand/wallets/walletconnect-logo.svg" 
@@ -916,12 +1121,20 @@ export default hyperkit;`;
                              </div>
                            </div>
                          </div>
-                       </div>
-                     )}
+                         </div>
+                       )}
+                     </AnimatePresence>
 
                      {/* Show message when no auth methods are enabled */}
-                     {!authSettings.email && !authSettings.sms && !authSettings.social && !authSettings.passkey && !authSettings.externalWallets && (
-                       <div className="text-center py-16">
+                     <AnimatePresence>
+                       {!authSettings.email && !authSettings.sms && !authSettings.social && !authSettings.passkey && !authSettings.externalWallets && (
+                         <motion.div 
+                           className="text-center py-16"
+                           initial={{ opacity: 0, scale: 0.9 }}
+                           animate={{ opacity: 1, scale: 1 }}
+                           exit={{ opacity: 0, scale: 0.9 }}
+                           transition={{ duration: 0.3, ease: "easeInOut" }}
+                         >
                          <div className={`w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center ${
                            brandingSettings.theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'
                          }`}>
@@ -934,8 +1147,9 @@ export default hyperkit;`;
                          <h4 className={`text-xl font-bold mb-3 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                            Choose Authentication Method
                          </h4>
-                       </div>
-                     )}
+                         </div>
+                       )}
+                     </AnimatePresence>
                    </div>
 
                    {/* Terms and Conditions */}
@@ -948,11 +1162,12 @@ export default hyperkit;`;
                      </p>
                    </div>
                  </div>
-               </div>
+               </motion.div>
              )}
-           </div>
-        </div>
+             </AnimatePresence>
+           </motion.div>
+        </motion.div>
       </section>
-    </div>
+    </motion.div>
   );
 }
