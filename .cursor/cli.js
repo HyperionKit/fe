@@ -191,7 +191,8 @@ class CursorCLI {
   async runRule(rule, files) {
     const matchingFiles = files.filter(file => {
       if (!rule.globs) return true;
-      return rule.globs.some(glob => {
+      const globs = Array.isArray(rule.globs) ? rule.globs : [rule.globs];
+      return globs.some(glob => {
         const pattern = glob.replace(/\*\*/g, '.*').replace(/\*/g, '[^/]*');
         const regex = new RegExp(pattern);
         return regex.test(file);
@@ -199,7 +200,8 @@ class CursorCLI {
     });
 
     if (matchingFiles.length === 0) {
-      console.log(`   ⏭️  No files match pattern: ${rule.globs?.join(', ') || 'all'}`);
+      const globs = Array.isArray(rule.globs) ? rule.globs : [rule.globs];
+      console.log(`   ⏭️  No files match pattern: ${globs.join(', ') || 'all'}`);
       return;
     }
 
