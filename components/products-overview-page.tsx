@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { OptimizedImage, OptimizedIcon } from '@/components/ui/optimized-image';
 import Orb from './libraries/Orb';
 import OrbInput from './libraries/OrbInput';
@@ -48,17 +48,27 @@ export default function ProductsOverviewPage() {
 
   // Toggle functions with demo simulation
   const toggleAuth = (key: keyof typeof authSettings) => {
+    const newValue = !authSettings[key];
     setAuthSettings(prev => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: newValue
     }));
     
-    // Simulate demo when toggling auth methods
-    if (key === 'email' && !authSettings.email) {
+    // Trigger demo simulation when enabling any auth method
+    if (newValue) {
       setShowDemo(true);
       setDemoStep(0);
-      // Simulate email authentication
-      setTimeout(() => authenticate('email'), 1000);
+      // Simulate authentication based on the method
+      setTimeout(() => {
+        if (key === 'email') authenticate('email');
+        else if (key === 'social') authenticate('google');
+        else if (key === 'passkey') authenticate('passkey');
+        else authenticate('email'); // default
+      }, 500);
+    } else {
+      // Reset demo when disabling
+      setShowDemo(false);
+      setDemoStep(0);
     }
   };
 
@@ -94,6 +104,22 @@ export default function ProductsOverviewPage() {
       setDemoStep(0);
     }
   };
+
+  // Auto-advance demo steps
+  useEffect(() => {
+    if (showDemo) {
+      const timer = setTimeout(() => {
+        if (demoStep < 3) {
+          setDemoStep(prev => prev + 1);
+        } else {
+          setShowDemo(false);
+          setDemoStep(0);
+        }
+      }, demoStep === 3 ? 3000 : 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [showDemo, demoStep]);
 
   return (
     <div className="max-w-7xl mx-auto px-8 py-0">
@@ -540,12 +566,7 @@ export default hyperkitConfig;`}
                          <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
                            Smart wallet address: {address?.slice(0, 6)}...{address?.slice(-4)}
                          </p>
-                         <button
-                           onClick={nextDemoStep}
-                           className="px-4 py-1 bg-purple-600 text-white rounded text-xs hover:bg-purple-700 transition-colors"
-                         >
-                           Continue
-                         </button>
+                         <div className="text-xs text-green-400">✓ Gasless transactions enabled</div>
                        </div>
                      )}
                      {demoStep === 2 && (
@@ -556,12 +577,7 @@ export default hyperkitConfig;`}
                          <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
                            Balance: ${balance} USDC
                          </p>
-                         <button
-                           onClick={nextDemoStep}
-                           className="px-4 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700 transition-colors"
-                         >
-                           Start Demo
-                         </button>
+                         <div className="text-xs text-blue-400">✓ All enabled auth methods active</div>
                        </div>
                      )}
                      {demoStep === 3 && (
@@ -570,14 +586,9 @@ export default hyperkitConfig;`}
                            Demo Complete! 🎉
                          </h3>
                          <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
-                           You've experienced the full Hyperkit flow
+                           Configuration saved and ready to use
                          </p>
-                         <button
-                           onClick={() => setShowDemo(false)}
-                           className="px-4 py-1 bg-gray-600 text-white rounded text-xs hover:bg-gray-700 transition-colors"
-                         >
-                           Reset
-                         </button>
+                         <div className="text-xs text-purple-400">✓ Live preview updated</div>
                        </div>
                      )}
                    </div>
@@ -622,13 +633,6 @@ export default hyperkitConfig;`}
                        )}
                      </div>
                      
-                     {/* Demo Button */}
-                     <button
-                       onClick={startDemo}
-                       className="mt-3 px-4 py-1 bg-purple-600 text-white rounded text-xs hover:bg-purple-700 transition-colors"
-                     >
-                       Try Interactive Demo
-                     </button>
                    </div>
                  )}
                </div>
