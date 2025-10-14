@@ -2,22 +2,10 @@
 
 import { useState } from 'react';
 import { OptimizedImage, OptimizedIcon } from '@/components/ui/optimized-image';
+import EnhancedHeroDemo from './EnhancedHeroDemo';
 
 export default function HeroPage() {
-  const [isDemoPlaying, setIsDemoPlaying] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
-
-  const handlePlayDemo = () => {
-    setIsDemoPlaying(true);
-    // Here you can add logic to start the actual demo
-    // For now, we'll just show a placeholder
-    console.log('Starting demo...');
-    
-    // Simulate demo completion after 3 seconds
-    setTimeout(() => {
-      setIsDemoPlaying(false);
-    }, 3000);
-  };
 
   const handleCopyCommand = async () => {
     try {
@@ -77,30 +65,9 @@ export default function HeroPage() {
           </div>
         </div>
 
-        {/* Main Hero Section */}
-        <div className="bg-sky-400 rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 xl:p-20 mb-8 sm:mb-12 relative shadow-2xl shadow-white/40 h-[700px] flex items-center justify-center">
-          {/* Play Demo Button in center */}
-          <div className="flex items-center justify-center">
-            <button 
-              onClick={handlePlayDemo}
-              disabled={isDemoPlaying}
-              className={`flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full sm:rounded-[40px] font-semibold transition-all duration-300 text-sm sm:text-base ${
-                isDemoPlaying 
-                  ? 'bg-gray-600 text-gray-300 cursor-not-allowed' 
-                  : 'bg-black text-white hover:bg-gray-800 hover:scale-105'
-              }`} 
-              style={{fontFamily: 'Inter'}}
-            >
-              {isDemoPlaying ? 'Playing Demo...' : 'Play Demo'}
-              <OptimizedIcon 
-                src="/icons/demo/play.png" 
-                alt="Play" 
-                width={32}
-                height={32}
-                className={`w-6 h-6 sm:w-8 sm:h-8 ${isDemoPlaying ? 'animate-pulse' : ''}`} 
-              />
-            </button>
-          </div>
+        {/* Enhanced Interactive Demo Section */}
+        <div className="mb-8 sm:mb-12">
+          <EnhancedHeroDemo />
         </div>
 
         {/* Bottom Section */}
