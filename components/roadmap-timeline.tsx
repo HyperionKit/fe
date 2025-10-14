@@ -163,15 +163,14 @@ const RoadmapTimeline = () => {
               </div>
             </div>
             
-            {/* Bottom Right - Empty Loader */}
+            {/* Bottom Right - Hyperkit Abstract p-b */}
             <div className="rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute inset-0" style={{
-                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
-                }}></div>
-              </div>
               <div className="relative z-10 flex items-center justify-center h-full">
-                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+                <img 
+                  src="/logo/brand/hyperkit/Hyperkit Abstract p-b.svg" 
+                  alt="Hyperkit Abstract p-b" 
+                  className="w-full h-full object-contain"
+                />
               </div>
             </div>
           </div>
