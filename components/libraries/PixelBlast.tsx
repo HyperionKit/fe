@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { EffectComposer, EffectPass, RenderPass, Effect } from 'postprocessing';
+import { usePerformance } from '@/contexts/PerformanceContext';
 import './PixelBlast.css';
 
 type PixelBlastVariant = 'square' | 'circle' | 'triangle' | 'diamond';
@@ -354,6 +355,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
   const containerRef = useRef<HTMLDivElement | null>(null);
   const visibilityRef = useRef({ visible: true });
   const speedRef = useRef(speed);
+  const { config, isLowPower } = usePerformance();
 
   const threeRef = useRef<{
     renderer: THREE.WebGLRenderer;
@@ -391,9 +393,17 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
-    speedRef.current = speed;
+    
+    // Performance optimizations based on device capabilities
+    const effectiveAntialias = config.enableWebGL ? antialias : false;
+    const effectiveLiquid = config.enableWebGL && config.enableAnimations ? liquid : false;
+    const effectiveNoiseAmount = config.enableWebGL ? noiseAmount : 0;
+    const effectivePixelSize = isLowPower ? pixelSize * 2 : pixelSize;
+    const effectiveSpeed = isLowPower ? speed * 0.5 : speed;
+    
+    speedRef.current = effectiveSpeed;
     const needsReinitKeys = ['antialias', 'liquid', 'noiseAmount'];
-    const cfg = { antialias, liquid, noiseAmount };
+    const cfg = { antialias: effectiveAntialias, liquid: effectiveLiquid, noiseAmount: effectiveNoiseAmount };
     let mustReinit = false;
     if (!threeRef.current) mustReinit = true;
     else if (prevConfigRef.current) {
@@ -426,7 +436,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
       });
       renderer.domElement.style.width = '100%';
       renderer.domElement.style.height = '100%';
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+      renderer.setPixelRatio(Math.min(config.devicePixelRatio, 2));
       container.appendChild(renderer.domElement);
       const uniforms = {
         uResolution: { value: new THREE.Vector2(0, 0) },
@@ -437,7 +447,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
         },
         uClickTimes: { value: new Float32Array(MAX_CLICKS) },
         uShapeType: { value: SHAPE_MAP[variant] ?? 0 },
-        uPixelSize: { value: pixelSize * renderer.getPixelRatio() },
+        uPixelSize: { value: effectivePixelSize * renderer.getPixelRatio() },
         uScale: { value: patternScale },
         uDensity: { value: patternDensity },
         uPixelJitter: { value: pixelSizeJitter },
@@ -469,7 +479,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
         uniforms.uResolution.value.set(renderer.domElement.width, renderer.domElement.height);
         if (threeRef.current?.composer)
           threeRef.current.composer.setSize(renderer.domElement.width, renderer.domElement.height);
-        uniforms.uPixelSize.value = pixelSize * renderer.getPixelRatio();
+        uniforms.uPixelSize.value = effectivePixelSize * renderer.getPixelRatio();
       };
       setSize();
       const ro = new ResizeObserver(setSize);
@@ -486,7 +496,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
       let composer: EffectComposer | undefined;
       let touch: ReturnType<typeof createTouchTexture> | undefined;
       let liquidEffect: Effect | undefined;
-      if (liquid) {
+      if (effectiveLiquid) {
         touch = createTouchTexture();
         touch.radiusScale = liquidRadius;
         composer = new EffectComposer(renderer);
@@ -500,7 +510,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
         composer.addPass(renderPass);
         composer.addPass(effectPass);
       }
-      if (noiseAmount > 0) {
+      if (effectiveNoiseAmount > 0) {
         if (!composer) {
           composer = new EffectComposer(renderer);
           composer.addPass(new RenderPass(scene, camera));
@@ -511,7 +521,7 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
           {
             uniforms: new Map<string, THREE.Uniform>([
               ['uTime', new THREE.Uniform(0)],
-              ['uAmount', new THREE.Uniform(noiseAmount)]
+              ['uAmount', new THREE.Uniform(effectiveNoiseAmount)]
             ])
           }
         );
@@ -553,11 +563,23 @@ const PixelBlast: React.FC<PixelBlastProps> = ({
         passive: true
       });
       let raf = 0;
-      const animate = () => {
+      let lastFrameTime = 0;
+      const targetFPS = config.maxFPS;
+      const frameInterval = 1000 / targetFPS;
+      
+      const animate = (currentTime: number) => {
         if (autoPauseOffscreen && !visibilityRef.current.visible) {
           raf = requestAnimationFrame(animate);
           return;
         }
+        
+        // Throttle FPS based on performance config
+        if (currentTime - lastFrameTime < frameInterval) {
+          raf = requestAnimationFrame(animate);
+          return;
+        }
+        lastFrameTime = currentTime;
+        
         uniforms.uTime.value = timeOffset + clock.getElapsedTime() * speedRef.current;
         if (liquidEffect) (liquidEffect as any).uniforms.get('uTime').value = uniforms.uTime.value;
         if (composer) {
