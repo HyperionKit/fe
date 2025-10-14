@@ -32,8 +32,6 @@ export default function ProductsOverviewPage() {
   });
 
   const [codePreview, setCodePreview] = useState(false);
-  const [showDemo, setShowDemo] = useState(false);
-  const [demoStep, setDemoStep] = useState(0);
 
   const featureCards = [
     {
@@ -46,30 +44,12 @@ export default function ProductsOverviewPage() {
     }
   ];
 
-  // Toggle functions with demo simulation
+  // Toggle functions
   const toggleAuth = (key: keyof typeof authSettings) => {
-    const newValue = !authSettings[key];
     setAuthSettings(prev => ({
       ...prev,
-      [key]: newValue
+      [key]: !prev[key]
     }));
-    
-    // Trigger demo simulation when enabling any auth method
-    if (newValue) {
-      setShowDemo(true);
-      setDemoStep(0);
-      // Simulate authentication based on the method
-      setTimeout(() => {
-        if (key === 'email') authenticate('email');
-        else if (key === 'social') authenticate('google');
-        else if (key === 'passkey') authenticate('passkey');
-        else authenticate('email'); // default
-      }, 500);
-    } else {
-      // Reset demo when disabling
-      setShowDemo(false);
-      setDemoStep(0);
-    }
   };
 
   const toggleCodePreview = () => {
@@ -90,36 +70,6 @@ export default function ProductsOverviewPage() {
     }));
   };
 
-  const startDemo = () => {
-    setShowDemo(true);
-    setDemoStep(0);
-    connect();
-  };
-
-  const nextDemoStep = () => {
-    if (demoStep < 3) {
-      setDemoStep(prev => prev + 1);
-    } else {
-      setShowDemo(false);
-      setDemoStep(0);
-    }
-  };
-
-  // Auto-advance demo steps
-  useEffect(() => {
-    if (showDemo) {
-      const timer = setTimeout(() => {
-        if (demoStep < 3) {
-          setDemoStep(prev => prev + 1);
-        } else {
-          setShowDemo(false);
-          setDemoStep(0);
-        }
-      }, demoStep === 3 ? 3000 : 2000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [showDemo, demoStep]);
 
   return (
     <div className="max-w-7xl mx-auto px-8 py-0">
@@ -545,96 +495,193 @@ export default hyperkitConfig;`}
                              brandingSettings.cornerRadius === 'Small' ? '8px' :
                              brandingSettings.cornerRadius === 'Medium' ? '16px' : '24px'
                }}>
-                 {showDemo ? (
-                   <div className="w-full">
-                     {demoStep === 0 && (
-                       <div className="text-center">
-                         <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
-                           Connecting...
-                         </h3>
-                         <div className="animate-spin w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full mx-auto mb-2"></div>
-                         <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                           Authenticating with {user?.method || 'email'}...
-                         </p>
+                 <div className="w-full">
+                   <h3 className={`text-lg font-bold mb-4 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
+                     Sign in
+                   </h3>
+                   
+                   {/* Dynamic Authentication Components Based on Toggle States */}
+                   <div className="space-y-4">
+                     {/* Email Authentication */}
+                     {authSettings.email && (
+                       <div className="space-y-2">
+                         <label className={`block text-sm font-medium ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                           Email Address
+                         </label>
+                         <input
+                           type="email"
+                           placeholder="Enter your email"
+                           className={`w-full px-3 py-2 border rounded-lg text-sm ${
+                             brandingSettings.theme === 'dark' 
+                               ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                           }`}
+                           style={{
+                             borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
+                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
+                           }}
+                         />
+                         <button
+                           className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                             brandingSettings.theme === 'dark'
+                               ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                               : 'bg-purple-600 hover:bg-purple-700 text-white'
+                           }`}
+                           style={{
+                             borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
+                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
+                           }}
+                         >
+                           Continue with Email
+                         </button>
                        </div>
                      )}
-                     {demoStep === 1 && (
-                       <div className="text-center">
-                         <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
-                           Wallet Created!
-                         </h3>
-                         <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
-                           Smart wallet address: {address?.slice(0, 6)}...{address?.slice(-4)}
-                         </p>
-                         <div className="text-xs text-green-400">✓ Gasless transactions enabled</div>
+
+                     {/* SMS Authentication */}
+                     {authSettings.sms && (
+                       <div className="space-y-2">
+                         <label className={`block text-sm font-medium ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                           Phone Number
+                         </label>
+                         <input
+                           type="tel"
+                           placeholder="+1 (555) 000-0000"
+                           className={`w-full px-3 py-2 border rounded-lg text-sm ${
+                             brandingSettings.theme === 'dark' 
+                               ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                           }`}
+                           style={{
+                             borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
+                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
+                           }}
+                         />
+                         <button
+                           className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                             brandingSettings.theme === 'dark'
+                               ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                               : 'bg-blue-600 hover:bg-blue-700 text-white'
+                           }`}
+                           style={{
+                             borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
+                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
+                           }}
+                         >
+                           Send SMS Code
+                         </button>
                        </div>
                      )}
-                     {demoStep === 2 && (
-                       <div className="text-center">
-                         <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
-                           Ready to Transact!
-                         </h3>
-                         <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
-                           Balance: ${balance} USDC
-                         </p>
-                         <div className="text-xs text-blue-400">✓ All enabled auth methods active</div>
+
+                     {/* Social Authentication */}
+                     {authSettings.social && (
+                       <div className="space-y-2">
+                         <label className={`block text-sm font-medium ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                           Social Login
+                         </label>
+                         <div className="grid grid-cols-2 gap-2">
+                           <button
+                             className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                               brandingSettings.theme === 'dark'
+                                 ? 'bg-gray-700 hover:bg-gray-600 text-white border border-gray-600'
+                                 : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300'
+                             }`}
+                             style={{
+                               borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                           brandingSettings.cornerRadius === 'Small' ? '4px' :
+                                           brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
+                             }}
+                           >
+                             <span className="text-blue-500">G</span>
+                             Google
+                           </button>
+                           <button
+                             className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                               brandingSettings.theme === 'dark'
+                                 ? 'bg-gray-700 hover:bg-gray-600 text-white border border-gray-600'
+                                 : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300'
+                             }`}
+                             style={{
+                               borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                           brandingSettings.cornerRadius === 'Small' ? '4px' :
+                                           brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
+                             }}
+                           >
+                             <span className="text-blue-400">X</span>
+                             Twitter
+                           </button>
+                         </div>
                        </div>
                      )}
-                     {demoStep === 3 && (
-                       <div className="text-center">
-                         <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
-                           Demo Complete! 🎉
-                         </h3>
-                         <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
-                           Configuration saved and ready to use
+
+                     {/* Passkey Authentication */}
+                     {authSettings.passkey && (
+                       <div className="space-y-2">
+                         <button
+                           className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                             brandingSettings.theme === 'dark'
+                               ? 'bg-gray-700 hover:bg-gray-600 text-white border border-gray-600'
+                               : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300'
+                           }`}
+                           style={{
+                             borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
+                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
+                           }}
+                         >
+                           <span className="text-yellow-500">🔑</span>
+                           Use Passkey
+                         </button>
+                       </div>
+                     )}
+
+                     {/* External Wallets */}
+                     {authSettings.externalWallets && (
+                       <div className="space-y-2">
+                         <label className={`block text-sm font-medium ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                           Connect Wallet
+                         </label>
+                         <button
+                           className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
+                             brandingSettings.theme === 'dark'
+                               ? 'bg-gray-700 hover:bg-gray-600 text-white border border-gray-600'
+                               : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300'
+                           }`}
+                           style={{
+                             borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
+                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
+                           }}
+                         >
+                           <span className="text-purple-500">🦊</span>
+                           MetaMask
+                         </button>
+                       </div>
+                     )}
+
+                     {/* Show message when no auth methods are enabled */}
+                     {!authSettings.email && !authSettings.sms && !authSettings.social && !authSettings.passkey && !authSettings.externalWallets && (
+                       <div className="text-center py-8">
+                         <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                           Enable authentication methods to see the sign-in form
                          </p>
-                         <div className="text-xs text-purple-400">✓ Live preview updated</div>
                        </div>
                      )}
                    </div>
-                 ) : (
-                   <div className="w-full">
-                     <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
-                       Sign in
-                     </h3>
-                     <p className={`text-sm leading-relaxed ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} style={{fontFamily: 'Inter'}}>
+
+                   {/* Terms and Conditions */}
+                   <div className="mt-4 pt-4 border-t border-gray-200">
+                     <p className={`text-xs leading-relaxed ${brandingSettings.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} style={{fontFamily: 'Inter'}}>
                        By signing in, you agree to the{' '}
                        <span className={`font-medium ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Terms of Service</span>{' '}
                        protected by{' '}
                        <span className={`font-medium ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Hyperkit</span>
                      </p>
-                     
-                     {/* Show enabled authentication methods */}
-                     <div className="mt-3 flex flex-wrap gap-2 justify-center">
-                       {authSettings.email && (
-                         <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
-                           Email
-                         </span>
-                       )}
-                       {authSettings.sms && (
-                         <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                           SMS
-                         </span>
-                       )}
-                       {authSettings.social && (
-                         <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                           Social
-                         </span>
-                       )}
-                       {authSettings.passkey && (
-                         <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
-                           Passkey
-                         </span>
-                       )}
-                       {authSettings.externalWallets && (
-                         <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">
-                           Wallets
-                         </span>
-                       )}
-                     </div>
-                     
                    </div>
-                 )}
+                 </div>
                </div>
              )}
            </div>
