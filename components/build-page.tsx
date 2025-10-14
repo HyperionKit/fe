@@ -9,16 +9,6 @@ export default function BuildPage() {
     <div className="min-h-screen bg-black text-white flex">
       {/* Left Sidebar - Black Background with Navigation */}
       <div className="w-64 bg-black p-6 flex flex-col">
-        {/* Hyperkit Logo */}
-        <div className="mb-6 flex items-center">
-          <img 
-            src="/logo/brand/hyperkit/Hyperkit Abstract.svg" 
-            alt="Hyperkit" 
-            className="w-8 h-8 mr-3"
-          />
-          <span className="text-white font-bold text-lg" style={{fontFamily: 'Inter'}}>Hyperkit</span>
-        </div>
-        
         {/* Navigation Links */}
         <div className="space-y-1 flex-1">
           {/* Introduction + */}
