@@ -113,6 +113,11 @@ export class PerformanceMonitor {
   }
 
   private startMonitoring(): void {
+    // Check if we're in browser environment
+    if (typeof window === 'undefined' || typeof requestAnimationFrame === 'undefined') {
+      return;
+    }
+
     const monitor = (currentTime: number) => {
       this.frameCount++;
       

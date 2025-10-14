@@ -353,9 +353,9 @@ export default hyperkit;`;
                 Learn more
               </a>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
       
       {/* Builder Wallet Section */}
       <section className="mb-20 pt-8">
