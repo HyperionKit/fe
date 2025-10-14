@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { OptimizedImage, OptimizedIcon } from '@/components/ui/optimized-image';
 import Orb from './libraries/Orb';
 import OrbInput from './libraries/OrbInput';
@@ -8,6 +8,24 @@ import { Compare } from './libraries/Compare';
 import ConnectWallet from './libraries/ConnectWallet';
 
 export default function ProductsOverviewPage() {
+  // State for toggle switches
+  const [authSettings, setAuthSettings] = useState({
+    email: false,
+    sms: false,
+    social: false,
+    passkey: false,
+    passkeyAfterSignup: false,
+    externalWallets: false
+  });
+
+  const [brandingSettings, setBrandingSettings] = useState({
+    theme: 'dark', // 'light' or 'dark'
+    color: '#7C3AED',
+    cornerRadius: 'Large'
+  });
+
+  const [codePreview, setCodePreview] = useState(false);
+
   const featureCards = [
     {
       title: "Import your web3 assets in minutes",
@@ -18,6 +36,32 @@ export default function ProductsOverviewPage() {
       description: "AI-powered tools that generate, optimize, and deploy your DeFi applications automatically."
     }
   ];
+
+  // Toggle functions
+  const toggleAuth = (key: keyof typeof authSettings) => {
+    setAuthSettings(prev => ({
+      ...prev,
+      [key]: !prev[key]
+    }));
+  };
+
+  const toggleCodePreview = () => {
+    setCodePreview(prev => !prev);
+  };
+
+  const setTheme = (theme: 'light' | 'dark') => {
+    setBrandingSettings(prev => ({
+      ...prev,
+      theme
+    }));
+  };
+
+  const setCornerRadius = (radius: string) => {
+    setBrandingSettings(prev => ({
+      ...prev,
+      cornerRadius: radius
+    }));
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-8 py-0">
@@ -116,9 +160,16 @@ export default function ProductsOverviewPage() {
                   />
                   <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Email</span>
                 </div>
-                <div className="w-10 h-6 bg-gray-300 rounded-full relative">
-                  <div className="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform"></div>
-                </div>
+                <button 
+                  onClick={() => toggleAuth('email')}
+                  className={`w-10 h-6 rounded-full relative transition-colors ${
+                    authSettings.email ? 'bg-purple-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
+                    authSettings.email ? 'translate-x-5' : 'translate-x-1'
+                  }`}></div>
+                </button>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
@@ -132,9 +183,16 @@ export default function ProductsOverviewPage() {
                   <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>SMS</span>
                   <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">Beta</span>
                 </div>
-                <div className="w-10 h-6 bg-gray-300 rounded-full relative">
-                  <div className="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform"></div>
-                </div>
+                <button 
+                  onClick={() => toggleAuth('sms')}
+                  className={`w-10 h-6 rounded-full relative transition-colors ${
+                    authSettings.sms ? 'bg-purple-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
+                    authSettings.sms ? 'translate-x-5' : 'translate-x-1'
+                  }`}></div>
+                </button>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
@@ -152,9 +210,16 @@ export default function ProductsOverviewPage() {
                     <OptimizedIcon src="/icons/products/imgi_10_facebook.png" alt="Facebook" width={16} height={16} className="w-4 h-4" />
                   </div>
                 </div>
-                <div className="w-10 h-6 bg-gray-300 rounded-full relative">
-                  <div className="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform"></div>
-                </div>
+                <button 
+                  onClick={() => toggleAuth('social')}
+                  className={`w-10 h-6 rounded-full relative transition-colors ${
+                    authSettings.social ? 'bg-purple-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
+                    authSettings.social ? 'translate-x-5' : 'translate-x-1'
+                  }`}></div>
+                </button>
               </div>
               <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors space-y-2">
                 <div className="flex items-center justify-between">
@@ -168,15 +233,29 @@ export default function ProductsOverviewPage() {
                     />
                     <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Passkey</span>
                   </div>
-                  <div className="w-10 h-6 bg-gray-300 rounded-full relative">
-                    <div className="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform"></div>
-                  </div>
+                  <button 
+                    onClick={() => toggleAuth('passkey')}
+                    className={`w-10 h-6 rounded-full relative transition-colors ${
+                      authSettings.passkey ? 'bg-purple-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
+                      authSettings.passkey ? 'translate-x-5' : 'translate-x-1'
+                    }`}></div>
+                  </button>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-gray-500 ml-8" style={{fontFamily: 'Inter'}}>add passkey after sign-up</span>
-                  <div className="w-10 h-6 bg-gray-300 rounded-full relative">
-                    <div className="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform"></div>
-                  </div>
+                  <button 
+                    onClick={() => toggleAuth('passkeyAfterSignup')}
+                    className={`w-10 h-6 rounded-full relative transition-colors ${
+                      authSettings.passkeyAfterSignup ? 'bg-purple-600' : 'bg-gray-300'
+                    }`}
+                  >
+                    <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
+                      authSettings.passkeyAfterSignup ? 'translate-x-5' : 'translate-x-1'
+                    }`}></div>
+                  </button>
                 </div>
               </div>
             </div>
@@ -196,9 +275,16 @@ export default function ProductsOverviewPage() {
                   />
                   <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>External Wallets</span>
                 </div>
-                <div className="w-10 h-6 bg-gray-300 rounded-full relative">
-                  <div className="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform"></div>
-                </div>
+                <button 
+                  onClick={() => toggleAuth('externalWallets')}
+                  className={`w-10 h-6 rounded-full relative transition-colors ${
+                    authSettings.externalWallets ? 'bg-purple-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
+                    authSettings.externalWallets ? 'translate-x-5' : 'translate-x-1'
+                  }`}></div>
+                </button>
               </div>
             </div>
 
@@ -232,8 +318,38 @@ export default function ProductsOverviewPage() {
                   <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Theme</span>
                 </div>
                 <div className="flex gap-2">
-                  <OptimizedIcon src="/icons/products/imgi_17_sun.png" alt="Light" width={20} height={20} className="w-5 h-5 text-gray-400" />
-                  <OptimizedIcon src="/icons/products/imgi_18_moon.png" alt="Dark" width={20} height={20} className="w-5 h-5 text-gray-900" />
+                  <button 
+                    onClick={() => setTheme('light')}
+                    className={`p-1 rounded transition-colors ${
+                      brandingSettings.theme === 'light' ? 'bg-purple-100' : 'hover:bg-gray-100'
+                    }`}
+                  >
+                    <OptimizedIcon 
+                      src="/icons/products/imgi_17_sun.png" 
+                      alt="Light" 
+                      width={20} 
+                      height={20} 
+                      className={`w-5 h-5 ${
+                        brandingSettings.theme === 'light' ? 'text-purple-600' : 'text-gray-400'
+                      }`} 
+                    />
+                  </button>
+                  <button 
+                    onClick={() => setTheme('dark')}
+                    className={`p-1 rounded transition-colors ${
+                      brandingSettings.theme === 'dark' ? 'bg-purple-100' : 'hover:bg-gray-100'
+                    }`}
+                  >
+                    <OptimizedIcon 
+                      src="/icons/products/imgi_18_moon.png" 
+                      alt="Dark" 
+                      width={20} 
+                      height={20} 
+                      className={`w-5 h-5 ${
+                        brandingSettings.theme === 'dark' ? 'text-purple-600' : 'text-gray-900'
+                      }`} 
+                    />
+                  </button>
                 </div>
               </div>
               <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
@@ -276,8 +392,9 @@ export default function ProductsOverviewPage() {
               {['None', 'Small', 'Medium', 'Large'].map((size, index) => (
                 <button
                   key={size}
+                  onClick={() => setCornerRadius(size)}
                   className={`px-3 py-1 text-xs rounded transition-colors ${
-                    size === 'Large' 
+                    brandingSettings.cornerRadius === size
                       ? 'bg-purple-600 text-white' 
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                   }`}
@@ -321,23 +438,95 @@ export default function ProductsOverviewPage() {
                 <div className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium shadow">
                   Code Preview
                 </div>
-                <div className="w-10 h-6 bg-gray-300 rounded-full relative">
-                  <div className="w-4 h-4 bg-white rounded-full absolute top-1 left-1 transition-transform"></div>
-                </div>
+                <button 
+                  onClick={toggleCodePreview}
+                  className={`w-10 h-6 rounded-full relative transition-colors ${
+                    codePreview ? 'bg-purple-600' : 'bg-gray-300'
+                  }`}
+                >
+                  <div className={`w-4 h-4 bg-white rounded-full absolute top-1 transition-transform ${
+                    codePreview ? 'translate-x-5' : 'translate-x-1'
+                  }`}></div>
+                </button>
               </div>
              
-             {/* Sign In Modal Content - Static Demo */}
-             <div className="bg-white border border-gray-100 rounded-2xl shadow-lg w-[400px] h-[120px] flex flex-col items-center justify-center text-center px-8">
-               <h3 className="text-lg font-bold text-gray-900 mb-2" style={{fontFamily: 'Inter'}}>
-                 Sign in
-               </h3>
-               <p className="text-sm text-gray-600 leading-relaxed" style={{fontFamily: 'Inter'}}>
-                 By signing in, you agree to the{' '}
-                 <span className="text-gray-800 font-medium">Terms of Service</span>{' '}
-                 protected by{' '}
-                 <span className="text-gray-800 font-medium">Hyperkit</span>
-               </p>
-             </div>
+             {/* Code Preview or Sign In Modal Content */}
+             {codePreview ? (
+               <div className="bg-gray-900 rounded-2xl p-6 w-full max-w-2xl">
+                 <div className="flex items-center gap-2 mb-4">
+                   <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                   <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                   <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                   <span className="text-gray-400 text-sm ml-4">hyperkit-config.js</span>
+                 </div>
+                 <pre className="text-green-400 text-sm font-mono overflow-x-auto">
+{`const hyperkitConfig = {
+  authentication: {
+    email: ${authSettings.email},
+    sms: ${authSettings.sms},
+    social: ${authSettings.social},
+    passkey: ${authSettings.passkey},
+    passkeyAfterSignup: ${authSettings.passkeyAfterSignup},
+    externalWallets: ${authSettings.externalWallets}
+  },
+  branding: {
+    theme: '${brandingSettings.theme}',
+    color: '${brandingSettings.color}',
+    cornerRadius: '${brandingSettings.cornerRadius}'
+  }
+};
+
+export default hyperkitConfig;`}
+                 </pre>
+               </div>
+             ) : (
+               <div className={`border border-gray-100 rounded-2xl shadow-lg w-[400px] h-[120px] flex flex-col items-center justify-center text-center px-8 transition-all duration-300 ${
+                 brandingSettings.theme === 'dark' ? 'bg-gray-900' : 'bg-white'
+               }`} style={{
+                 borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                             brandingSettings.cornerRadius === 'Small' ? '8px' :
+                             brandingSettings.cornerRadius === 'Medium' ? '16px' : '24px'
+               }}>
+                 <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
+                   Sign in
+                 </h3>
+                 <p className={`text-sm leading-relaxed ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} style={{fontFamily: 'Inter'}}>
+                   By signing in, you agree to the{' '}
+                   <span className={`font-medium ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Terms of Service</span>{' '}
+                   protected by{' '}
+                   <span className={`font-medium ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Hyperkit</span>
+                 </p>
+                 
+                 {/* Show enabled authentication methods */}
+                 <div className="mt-3 flex flex-wrap gap-2 justify-center">
+                   {authSettings.email && (
+                     <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                       Email
+                     </span>
+                   )}
+                   {authSettings.sms && (
+                     <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                       SMS
+                     </span>
+                   )}
+                   {authSettings.social && (
+                     <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                       Social
+                     </span>
+                   )}
+                   {authSettings.passkey && (
+                     <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                       Passkey
+                     </span>
+                   )}
+                   {authSettings.externalWallets && (
+                     <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">
+                       Wallets
+                     </span>
+                   )}
+                 </div>
+               </div>
+             )}
            </div>
         </div>
       </section>
