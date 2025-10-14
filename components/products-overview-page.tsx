@@ -6,8 +6,15 @@ import Orb from './libraries/Orb';
 import OrbInput from './libraries/OrbInput';
 import { Compare } from './libraries/Compare';
 import ConnectWallet from './libraries/ConnectWallet';
+import { useDemoWallet, useDemoTransaction, useDemoAuth } from './static/useDemoHooks';
+import { smartWalletDemo } from '@/foundation/products-demo';
 
 export default function ProductsOverviewPage() {
+  // Demo hooks for simulation
+  const { connected, address, balance, connect, disconnect } = useDemoWallet();
+  const { status, txHash, sendTransaction, reset: resetTransaction } = useDemoTransaction();
+  const { user, authenticate, logout } = useDemoAuth();
+
   // State for toggle switches
   const [authSettings, setAuthSettings] = useState({
     email: false,
@@ -25,6 +32,8 @@ export default function ProductsOverviewPage() {
   });
 
   const [codePreview, setCodePreview] = useState(false);
+  const [showDemo, setShowDemo] = useState(false);
+  const [demoStep, setDemoStep] = useState(0);
 
   const featureCards = [
     {
@@ -37,12 +46,20 @@ export default function ProductsOverviewPage() {
     }
   ];
 
-  // Toggle functions
+  // Toggle functions with demo simulation
   const toggleAuth = (key: keyof typeof authSettings) => {
     setAuthSettings(prev => ({
       ...prev,
       [key]: !prev[key]
     }));
+    
+    // Simulate demo when toggling auth methods
+    if (key === 'email' && !authSettings.email) {
+      setShowDemo(true);
+      setDemoStep(0);
+      // Simulate email authentication
+      setTimeout(() => authenticate('email'), 1000);
+    }
   };
 
   const toggleCodePreview = () => {
@@ -61,6 +78,21 @@ export default function ProductsOverviewPage() {
       ...prev,
       cornerRadius: radius
     }));
+  };
+
+  const startDemo = () => {
+    setShowDemo(true);
+    setDemoStep(0);
+    connect();
+  };
+
+  const nextDemoStep = () => {
+    if (demoStep < 3) {
+      setDemoStep(prev => prev + 1);
+    } else {
+      setShowDemo(false);
+      setDemoStep(0);
+    }
   };
 
   return (
@@ -487,44 +519,118 @@ export default hyperkitConfig;`}
                              brandingSettings.cornerRadius === 'Small' ? '8px' :
                              brandingSettings.cornerRadius === 'Medium' ? '16px' : '24px'
                }}>
-                 <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
-                   Sign in
-                 </h3>
-                 <p className={`text-sm leading-relaxed ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} style={{fontFamily: 'Inter'}}>
-                   By signing in, you agree to the{' '}
-                   <span className={`font-medium ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Terms of Service</span>{' '}
-                   protected by{' '}
-                   <span className={`font-medium ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Hyperkit</span>
-                 </p>
-                 
-                 {/* Show enabled authentication methods */}
-                 <div className="mt-3 flex flex-wrap gap-2 justify-center">
-                   {authSettings.email && (
-                     <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
-                       Email
-                     </span>
-                   )}
-                   {authSettings.sms && (
-                     <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
-                       SMS
-                     </span>
-                   )}
-                   {authSettings.social && (
-                     <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                       Social
-                     </span>
-                   )}
-                   {authSettings.passkey && (
-                     <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
-                       Passkey
-                     </span>
-                   )}
-                   {authSettings.externalWallets && (
-                     <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">
-                       Wallets
-                     </span>
-                   )}
-                 </div>
+                 {showDemo ? (
+                   <div className="w-full">
+                     {demoStep === 0 && (
+                       <div className="text-center">
+                         <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
+                           Connecting...
+                         </h3>
+                         <div className="animate-spin w-6 h-6 border-2 border-purple-600 border-t-transparent rounded-full mx-auto mb-2"></div>
+                         <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                           Authenticating with {user?.method || 'email'}...
+                         </p>
+                       </div>
+                     )}
+                     {demoStep === 1 && (
+                       <div className="text-center">
+                         <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
+                           Wallet Created!
+                         </h3>
+                         <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+                           Smart wallet address: {address?.slice(0, 6)}...{address?.slice(-4)}
+                         </p>
+                         <button
+                           onClick={nextDemoStep}
+                           className="px-4 py-1 bg-purple-600 text-white rounded text-xs hover:bg-purple-700 transition-colors"
+                         >
+                           Continue
+                         </button>
+                       </div>
+                     )}
+                     {demoStep === 2 && (
+                       <div className="text-center">
+                         <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
+                           Ready to Transact!
+                         </h3>
+                         <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+                           Balance: ${balance} USDC
+                         </p>
+                         <button
+                           onClick={nextDemoStep}
+                           className="px-4 py-1 bg-green-600 text-white rounded text-xs hover:bg-green-700 transition-colors"
+                         >
+                           Start Demo
+                         </button>
+                       </div>
+                     )}
+                     {demoStep === 3 && (
+                       <div className="text-center">
+                         <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
+                           Demo Complete! 🎉
+                         </h3>
+                         <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'} mb-2`}>
+                           You've experienced the full Hyperkit flow
+                         </p>
+                         <button
+                           onClick={() => setShowDemo(false)}
+                           className="px-4 py-1 bg-gray-600 text-white rounded text-xs hover:bg-gray-700 transition-colors"
+                         >
+                           Reset
+                         </button>
+                       </div>
+                     )}
+                   </div>
+                 ) : (
+                   <div className="w-full">
+                     <h3 className={`text-lg font-bold mb-2 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
+                       Sign in
+                     </h3>
+                     <p className={`text-sm leading-relaxed ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`} style={{fontFamily: 'Inter'}}>
+                       By signing in, you agree to the{' '}
+                       <span className={`font-medium ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Terms of Service</span>{' '}
+                       protected by{' '}
+                       <span className={`font-medium ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Hyperkit</span>
+                     </p>
+                     
+                     {/* Show enabled authentication methods */}
+                     <div className="mt-3 flex flex-wrap gap-2 justify-center">
+                       {authSettings.email && (
+                         <span className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded-full">
+                           Email
+                         </span>
+                       )}
+                       {authSettings.sms && (
+                         <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                           SMS
+                         </span>
+                       )}
+                       {authSettings.social && (
+                         <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                           Social
+                         </span>
+                       )}
+                       {authSettings.passkey && (
+                         <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
+                           Passkey
+                         </span>
+                       )}
+                       {authSettings.externalWallets && (
+                         <span className="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full">
+                           Wallets
+                         </span>
+                       )}
+                     </div>
+                     
+                     {/* Demo Button */}
+                     <button
+                       onClick={startDemo}
+                       className="mt-3 px-4 py-1 bg-purple-600 text-white rounded text-xs hover:bg-purple-700 transition-colors"
+                     >
+                       Try Interactive Demo
+                     </button>
+                   </div>
+                 )}
                </div>
              )}
            </div>
