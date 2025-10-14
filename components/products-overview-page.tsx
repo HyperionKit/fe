@@ -705,9 +705,9 @@ export default hyperkit;`;
             <div className="text-xs text-gray-500 text-center pt-4 border-t border-gray-200">
               © 2025 Hyperkit. All rights reserved.
             </div>
-            </div>
+          </motion.div>
             
-           {/* Right Panel - Sign In Modal Demo */}
+          {/* Right Panel - Sign In Modal Demo */}
             <motion.div 
               className="flex-1 bg-white rounded-2xl shadow-2xl flex flex-col justify-center items-center p-12 relative h-[840px]"
               variants={demoVariants}
