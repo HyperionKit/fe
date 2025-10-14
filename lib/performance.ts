@@ -28,6 +28,17 @@ export class PerformanceMonitor {
     return PerformanceMonitor.instance;
   }
 
+  private getDefaultConfig(): PerformanceConfig {
+    return {
+      enableWebGL: false,
+      enableAnimations: false,
+      enableParticles: false,
+      maxFPS: 30,
+      devicePixelRatio: 1,
+      quality: 'low'
+    };
+  }
+
   private detectOptimalConfig(): PerformanceConfig {
     // Check if we're in browser environment
     if (typeof window === 'undefined') {
