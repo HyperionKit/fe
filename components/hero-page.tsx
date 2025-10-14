@@ -43,15 +43,6 @@ export default function HeroPage() {
   return (
     <div className="min-h-screen p-4 sm:p-6 lg:p-8">
       <div className="max-w-6xl mx-auto">
-        {/* Hyperkit Logo */}
-        <div className="mb-6 sm:mb-8 flex justify-center lg:justify-start">
-          <img 
-            src="/logo/brand/hyperkit/Hyperkit Abstract.svg" 
-            alt="Hyperkit" 
-            className="w-16 h-16 md:w-20 md:h-20"
-          />
-        </div>
-        
         {/* Main Title */}
         <div className="mb-6 sm:mb-8">
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight text-center lg:text-left" style={{fontFamily: 'Inter'}}>
