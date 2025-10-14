@@ -303,21 +303,6 @@ export default hyperkit;`;
 
   return (
     <div className="max-w-7xl mx-auto px-8 py-0">
-      {/* Hyperkit Logo Header */}
-      <div className="text-center mb-12">
-        <img 
-          src="/logo/brand/hyperkit/Hyperkit Abstract.svg" 
-          alt="Hyperkit" 
-          className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4"
-        />
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4" style={{fontFamily: 'Inter'}}>
-          Smart Wallet SDK
-        </h1>
-        <p className="text-xl text-gray-300 max-w-3xl mx-auto" style={{fontFamily: 'Inter'}}>
-          Build seamless DeFi experiences with our modular smart wallet infrastructure
-        </p>
-      </div>
-      
       {/* Core Feature Cards Row */}
       <div className="flex flex-wrap lg:flex-nowrap gap-8 mb-50">
         {featureCards.map((card, i) => (
