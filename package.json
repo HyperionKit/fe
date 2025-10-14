@@ -13,7 +13,9 @@
     "cursor:performance-audit": "node .cursor/cli.js command performance-audit",
     "cursor:fix-docs": "node .cursor/cli.js command fix-docs",
     "cursor:demo": "node .cursor/cli.js command onboard-wallet-demo",
-    "cursor:help": "node .cursor/cli.js help"
+    "cursor:help": "node .cursor/cli.js help",
+    "update-changelog": "node scripts/update-changelog.js",
+    "changelog": "node scripts/update-changelog.js"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.20.0",
