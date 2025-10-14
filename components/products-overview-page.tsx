@@ -32,6 +32,7 @@ export default function ProductsOverviewPage() {
   });
 
   const [codePreview, setCodePreview] = useState(false);
+  const [showMoreOptions, setShowMoreOptions] = useState(false);
 
   const featureCards = [
     {
@@ -68,6 +69,119 @@ export default function ProductsOverviewPage() {
       ...prev,
       cornerRadius: radius
     }));
+  };
+
+  // Generate dynamic code preview based on enabled settings
+  const generateCodePreview = () => {
+    const enabledAuthMethods = [];
+    if (authSettings.email) enabledAuthMethods.push('email');
+    if (authSettings.sms) enabledAuthMethods.push('sms');
+    if (authSettings.social) enabledAuthMethods.push('social');
+    if (authSettings.passkey) enabledAuthMethods.push('passkey');
+    if (authSettings.externalWallets) enabledAuthMethods.push('externalWallets');
+
+    // Check if any authentication methods are enabled
+    const hasAuthMethods = enabledAuthMethods.length > 0;
+    
+    // Check if any branding settings are customized (not default)
+    const hasCustomBranding = brandingSettings.theme !== 'dark' || 
+                             brandingSettings.color !== '#7C3AED' || 
+                             brandingSettings.cornerRadius !== 'Large';
+
+    let configSections = [];
+
+    // Add authentication section if any methods are enabled
+    if (hasAuthMethods) {
+      const authConfig = enabledAuthMethods.map(method => {
+        switch (method) {
+          case 'email':
+            return `    email: {
+      enabled: true,
+      verificationRequired: true,
+      allowSignup: true
+    }`;
+          case 'sms':
+            return `    sms: {
+      enabled: true,
+      verificationRequired: true,
+      allowSignup: true
+    }`;
+          case 'social':
+            return `    social: {
+      enabled: true,
+      providers: ["google", "twitter"],
+      allowSignup: true
+    }`;
+          case 'passkey':
+            return `    passkey: {
+      enabled: true,
+      allowSignup: true,
+      fallbackToPassword: false
+    }`;
+          case 'externalWallets':
+            return `    externalWallets: {
+      enabled: true,
+      providers: ["metamask", "coinbase", "okx", "phantom", "walletconnect"],
+      allowSignup: true
+    }`;
+          default:
+            return '';
+        }
+      }).join(',\n');
+
+      configSections.push(`  // Authentication Methods
+  authentication: {
+${authConfig}
+  }`);
+    }
+
+    // Add branding section if customized
+    if (hasCustomBranding) {
+      configSections.push(`  // UI Branding Configuration
+  branding: {
+    theme: '${brandingSettings.theme}',
+    primaryColor: '${brandingSettings.color}',
+    borderRadius: '${brandingSettings.cornerRadius.toLowerCase()}',
+    logo: '/logo/hyperkit-logo.svg',
+    customCSS: null
+  }`);
+    }
+
+    // Always add SDK and Security sections
+    configSections.push(`  // SDK Configuration
+  sdk: {
+    apiKey: process.env.HYPERKIT_API_KEY,
+    environment: 'production',
+    features: {
+      gasless: true,
+      batchTransactions: true,
+      socialRecovery: true,
+      accountAbstraction: true
+    },
+    network: {
+      chainId: 1, // Ethereum Mainnet
+      rpcUrl: process.env.RPC_URL
+    }
+  }`);
+
+    configSections.push(`  // Security Settings
+  security: {
+    sessionTimeout: 3600, // 1 hour
+    maxLoginAttempts: 5,
+    requireMFA: false
+  }`);
+
+    const configBody = configSections.length > 0 ? `{\n${configSections.join(',\n\n')}\n}` : '{}';
+
+    return `// hyperkit-config.js
+import { Hyperkit } from '@hyperkit/sdk';
+
+const hyperkitConfig = ${configBody};
+
+// Initialize Hyperkit SDK
+const hyperkit = new Hyperkit(hyperkitConfig);
+
+export default hyperkit;`;
   };
 
 
@@ -136,7 +250,7 @@ export default function ProductsOverviewPage() {
           </div>
         ))}
       </div>
-
+      
       {/* Builder Wallet Section */}
       <section className="mb-20 pt-8">
         <h2 className="text-3xl font-bold text-center mb-2 text-white" style={{fontFamily: 'Be Vietnam Pro'}}>
@@ -153,11 +267,11 @@ export default function ProductsOverviewPage() {
         <div className="flex flex-col lg:flex-row gap-10 items-start">
           {/* Left Panel - Configuration Options */}
           <div className="w-full lg:w-80 bg-gray-100 rounded-2xl shadow-lg p-6 border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-900 mb-6" style={{fontFamily: 'Inter'}}>
+            <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
               Authentication
             </h3>
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
                   <OptimizedIcon
                     src="/icons/products/imgi_4_email.png"
@@ -179,7 +293,7 @@ export default function ProductsOverviewPage() {
                   }`}></div>
                 </button>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
                   <OptimizedIcon
                     src="/icons/products/imgi_5_sms.png"
@@ -202,7 +316,7 @@ export default function ProductsOverviewPage() {
                   }`}></div>
                 </button>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
                   <OptimizedIcon
                     src="/icons/products/imgi_6_social.png"
@@ -215,7 +329,6 @@ export default function ProductsOverviewPage() {
                   <div className="flex gap-1 ml-2">
                     <OptimizedIcon src="/icons/products/imgi_7_google.png" alt="Google" width={16} height={16} className="w-4 h-4" />
                     <OptimizedIcon src="/icons/products/imgi_8_twitter.png" alt="Twitter" width={16} height={16} className="w-4 h-4" />
-                    <OptimizedIcon src="/icons/products/imgi_10_facebook.png" alt="Facebook" width={16} height={16} className="w-4 h-4" />
                   </div>
                 </div>
                 <button 
@@ -229,7 +342,7 @@ export default function ProductsOverviewPage() {
                   }`}></div>
                 </button>
               </div>
-              <div className="p-3 rounded-lg hover:bg-gray-50 transition-colors space-y-2">
+              <div className="p-2 rounded-lg hover:bg-gray-50 transition-colors space-y-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <OptimizedIcon
@@ -267,12 +380,12 @@ export default function ProductsOverviewPage() {
                 </div>
               </div>
             </div>
-
+            
             <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
               Connect
             </h3>
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
                   <OptimizedIcon
                     src="/icons/products/imgi_13_wallet.png"
@@ -295,11 +408,11 @@ export default function ProductsOverviewPage() {
                 </button>
               </div>
             </div>
-
+            
             <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
               Configuration
             </h3>
-            <div className="space-y-4 mb-8">
+            <div className="space-y-3 mb-6">
               <div className="flex items-center justify-between p-3 rounded-lg bg-purple-50 border border-purple-200">
                 <div className="flex items-center gap-3">
                   <OptimizedIcon
@@ -316,16 +429,16 @@ export default function ProductsOverviewPage() {
                 </div>
               </div>
             </div>
-
+            
             <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
               Branding
             </h3>
-            <div className="space-y-4 mb-8">
-              <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+            <div className="space-y-3 mb-6">
+              <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
                   <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Theme</span>
                 </div>
-                <div className="flex gap-2">
+            <div className="flex gap-2">
                   <button 
                     onClick={() => setTheme('light')}
                     className={`p-1 rounded transition-colors ${
@@ -360,7 +473,7 @@ export default function ProductsOverviewPage() {
                   </button>
                 </div>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
+              <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
                 <div className="flex items-center gap-3">
                   <OptimizedIcon
                     src="/icons/products/imgi_15_brand.png"
@@ -376,71 +489,96 @@ export default function ProductsOverviewPage() {
                   <span className="text-xs text-gray-500">#7C3AED</span>
                 </div>
               </div>
-              <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                <div className="flex items-center gap-3">
-                  <OptimizedIcon
-                    src="/icons/products/imgi_16_upload.png"
-                    alt="Upload"
-                    width={20}
-                    height={20}
-                    className="w-5 h-5"
-                  />
-                  <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Logo (optional)</span>
-                </div>
-                <button className="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 transition-colors">
-                  Upload
-                </button>
-              </div>
             </div>
 
-            <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
-              Corner Radius
-            </h3>
-            <div className="flex gap-2 mb-8">
-              {['None', 'Small', 'Medium', 'Large'].map((size, index) => (
-                <button
-                  key={size}
-                  onClick={() => setCornerRadius(size)}
-                  className={`px-3 py-1 text-xs rounded transition-colors ${
-                    brandingSettings.cornerRadius === size
-                      ? 'bg-purple-600 text-white' 
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                  }`}
-                >
-                  {size}
-                </button>
-              ))}
-            </div>
-
-            <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
-              Illustration Style
-            </h3>
-            <div className="flex gap-2 mb-8">
-              {Array.from({length: 4}).map((_, index) => (
-                <div key={index} className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                  <span className="text-xs text-gray-600">@</span>
-                </div>
-              ))}
-            </div>
-
+            {/* Show More Button */}
             <div className="mb-4">
-              <label className="block text-sm text-gray-900 mb-2" style={{fontFamily: 'Inter'}}>
-                Support URL (optional)
-              </label>
-              <input 
-                type="text" 
-                placeholder="https://support.example.com"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-              />
+              <button 
+                onClick={() => setShowMoreOptions(!showMoreOptions)}
+                className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors border border-gray-200"
+              >
+                <span className="text-gray-900 text-sm font-medium" style={{fontFamily: 'Inter'}}>
+                  Show More
+                </span>
+                <OptimizedIcon
+                  src="/icons/products/imgi_19_chevron.png"
+                  alt="Chevron"
+                  width={16}
+                  height={16}
+                  className={`w-4 h-4 transition-transform ${showMoreOptions ? 'rotate-180' : ''}`}
+                />
+              </button>
             </div>
 
+            {/* Show More Options */}
+            {showMoreOptions && (
+              <div className="space-y-4 mb-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
+                  Corner Radius
+                </h3>
+                <div className="flex gap-2 mb-4">
+                  {['None', 'Small', 'Medium', 'Large'].map((size, index) => (
+                    <button
+                      key={size}
+                      onClick={() => setCornerRadius(size)}
+                      className={`px-3 py-1 text-xs rounded transition-colors ${
+                        brandingSettings.cornerRadius === size
+                          ? 'bg-purple-600 text-white' 
+                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+
+                <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
+                  Illustration Style
+                </h3>
+                <div className="flex gap-2 mb-4">
+                  {Array.from({length: 4}).map((_, index) => (
+                    <div key={index} className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
+                      <span className="text-xs text-gray-600">@</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-sm text-gray-900 mb-2" style={{fontFamily: 'Inter'}}>
+                    Support URL (optional)
+                  </label>
+                  <input 
+                    type="text" 
+                    placeholder="https://support.example.com"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                  <div className="flex items-center gap-3">
+                    <OptimizedIcon
+                      src="/icons/products/imgi_16_upload.png"
+                      alt="Upload"
+                      width={20}
+                      height={20}
+                      className="w-5 h-5"
+                    />
+                    <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Logo (optional)</span>
+                  </div>
+                  <button className="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 transition-colors">
+                    Upload
+                  </button>
+                </div>
+              </div>
+            )}
+            
             <div className="text-xs text-gray-500 text-center pt-4 border-t border-gray-200">
               © 2025 Hyperkit. All rights reserved.
             </div>
-          </div>
-
+            </div>
+            
            {/* Right Panel - Sign In Modal Demo */}
-            <div className="flex-1 min-h-[1240px] bg-white rounded-2xl shadow-2xl flex flex-col justify-center items-center p-12 relative">
+            <div className="flex-1 bg-white rounded-2xl shadow-2xl flex flex-col justify-center items-center p-12 relative h-[840px]">
               {/* Code Preview Badge with Toggle */}
               <div className="absolute top-4 right-4 flex items-center gap-2">
                 <div className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium shadow">
@@ -456,82 +594,72 @@ export default function ProductsOverviewPage() {
                     codePreview ? 'translate-x-5' : 'translate-x-1'
                   }`}></div>
                 </button>
-              </div>
-             
+            </div>
+            
              {/* Code Preview or Sign In Modal Content */}
              {codePreview ? (
-               <div className="bg-gray-900 rounded-2xl p-6 w-full max-w-2xl">
-                 <div className="flex items-center gap-2 mb-4">
+               <div className="bg-gray-900 rounded-2xl w-full max-w-4xl h-[600px] flex flex-col">
+                 <div className="flex items-center gap-2 p-6 pb-4 border-b border-gray-700">
                    <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                    <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                   <span className="text-gray-400 text-sm ml-4">hyperkit-config.js</span>
+                   <span className="text-gray-400 text-sm ml-4 font-semibold">hyperkit-config.js</span>
                  </div>
-                 <pre className="text-green-400 text-sm font-mono overflow-x-auto">
-{`const hyperkitConfig = {
-  authentication: {
-    email: ${authSettings.email},
-    sms: ${authSettings.sms},
-    social: ${authSettings.social},
-    passkey: ${authSettings.passkey},
-    passkeyAfterSignup: ${authSettings.passkeyAfterSignup},
-    externalWallets: ${authSettings.externalWallets}
-  },
-  branding: {
-    theme: '${brandingSettings.theme}',
-    color: '${brandingSettings.color}',
-    cornerRadius: '${brandingSettings.cornerRadius}'
-  }
-};
-
-export default hyperkitConfig;`}
-                 </pre>
+                 <div className="flex-1 overflow-y-auto">
+                   <pre className="text-green-400 text-sm font-mono p-6 leading-relaxed">
+{generateCodePreview()}
+                   </pre>
+                 </div>
                </div>
              ) : (
-               <div className={`border border-gray-100 rounded-2xl shadow-lg w-[400px] h-[120px] flex flex-col items-center justify-center text-center px-8 transition-all duration-300 ${
-                 brandingSettings.theme === 'dark' ? 'bg-gray-900' : 'bg-white'
+               <div className={`border border-gray-200 rounded-2xl shadow-xl w-[480px] min-h-[200px] flex flex-col items-center justify-center text-center px-10 py-10 transition-all duration-300 ${
+                 brandingSettings.theme === 'dark' ? 'bg-gray-900 border-gray-700' : 'bg-white'
                }`} style={{
                  borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                              brandingSettings.cornerRadius === 'Small' ? '8px' :
                              brandingSettings.cornerRadius === 'Medium' ? '16px' : '24px'
                }}>
-                 <div className="w-full">
-                   <h3 className={`text-lg font-bold mb-4 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
-                     Sign in
-                   </h3>
-                   
+                 <div className="w-full max-w-sm">
+                   <div className="flex items-center justify-center mb-8">
+                     <h3 className={`text-2xl font-bold ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
+                       Sign in
+                     </h3>
+                   </div>
+            
                    {/* Dynamic Authentication Components Based on Toggle States */}
-                   <div className="space-y-4">
+                   <div className="space-y-6">
                      {/* Email Authentication */}
                      {authSettings.email && (
-                       <div className="space-y-2">
-                         <label className={`block text-sm font-medium ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                           Email Address
-                         </label>
-                         <input
-                           type="email"
-                           placeholder="Enter your email"
-                           className={`w-full px-3 py-2 border rounded-lg text-sm ${
-                             brandingSettings.theme === 'dark' 
-                               ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                           }`}
-                           style={{
-                             borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
-                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
-                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
-                           }}
-                         />
+                       <div className="space-y-4">
+                         <div className="text-center">
+                           <label className={`block text-sm font-semibold mb-3 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                             Email Address
+                           </label>
+                           <input
+                             type="email"
+                             placeholder="Enter your email address"
+                             className={`w-full px-4 py-4 border rounded-xl text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${
+                               brandingSettings.theme === 'dark' 
+                                 ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400' 
+                                 : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                             }`}
+                             style={{
+                               borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                           brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                           brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                             }}
+                           />
+                         </div>
                          <button
-                           className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                           className={`w-full py-4 px-6 rounded-xl text-sm font-bold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
                              brandingSettings.theme === 'dark'
-                               ? 'bg-purple-600 hover:bg-purple-700 text-white'
-                               : 'bg-purple-600 hover:bg-purple-700 text-white'
+                               ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-purple-500/25'
+                               : 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-purple-500/25'
                            }`}
                            style={{
                              borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
-                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
-                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
+                                         brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                         brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
                            }}
                          >
                            Continue with Email
@@ -541,133 +669,271 @@ export default hyperkitConfig;`}
 
                      {/* SMS Authentication */}
                      {authSettings.sms && (
-                       <div className="space-y-2">
-                         <label className={`block text-sm font-medium ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                           Phone Number
-                         </label>
-                         <input
-                           type="tel"
-                           placeholder="+1 (555) 000-0000"
-                           className={`w-full px-3 py-2 border rounded-lg text-sm ${
-                             brandingSettings.theme === 'dark' 
-                               ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                               : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                           }`}
-                           style={{
-                             borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
-                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
-                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
-                           }}
-                         />
+                       <div className="space-y-4">
+                         <div className="text-center">
+                           <label className={`block text-sm font-semibold mb-3 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                             Phone Number
+                           </label>
+                           <input
+                             type="tel"
+                             placeholder="+1 (555) 123-4567"
+                             className={`w-full px-4 py-4 border rounded-xl text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                               brandingSettings.theme === 'dark' 
+                                 ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400' 
+                                 : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                             }`}
+                             style={{
+                               borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                           brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                           brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                             }}
+                           />
+                         </div>
                          <button
-                           className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors ${
+                           className={`w-full py-4 px-6 rounded-xl text-sm font-bold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
                              brandingSettings.theme === 'dark'
-                               ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                               : 'bg-blue-600 hover:bg-blue-700 text-white'
+                               ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-blue-500/25'
+                               : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-blue-500/25'
                            }`}
                            style={{
                              borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
-                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
-                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
+                                         brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                         brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
                            }}
                          >
-                           Send SMS Code
+                           Send Verification Code
                          </button>
                        </div>
                      )}
 
                      {/* Social Authentication */}
                      {authSettings.social && (
-                       <div className="space-y-2">
-                         <label className={`block text-sm font-medium ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                           Social Login
-                         </label>
-                         <div className="grid grid-cols-2 gap-2">
-                           <button
-                             className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
-                               brandingSettings.theme === 'dark'
-                                 ? 'bg-gray-700 hover:bg-gray-600 text-white border border-gray-600'
-                                 : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300'
-                             }`}
-                             style={{
-                               borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
-                                           brandingSettings.cornerRadius === 'Small' ? '4px' :
-                                           brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
-                             }}
-                           >
-                             <span className="text-blue-500">G</span>
-                             Google
-                           </button>
-                           <button
-                             className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
-                               brandingSettings.theme === 'dark'
-                                 ? 'bg-gray-700 hover:bg-gray-600 text-white border border-gray-600'
-                                 : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300'
-                             }`}
-                             style={{
-                               borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
-                                           brandingSettings.cornerRadius === 'Small' ? '4px' :
-                                           brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
-                             }}
-                           >
-                             <span className="text-blue-400">X</span>
-                             Twitter
-                           </button>
+                       <div className="space-y-4">
+                         <div className="text-center">
+                           <label className={`block text-sm font-semibold mb-4 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                             Continue with Social
+                           </label>
+                           <div className="flex gap-4 justify-center">
+                             <button
+                               className={`w-14 h-14 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
+                                 brandingSettings.theme === 'dark'
+                                   ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
+                                   : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
+                               }`}
+                               style={{
+                                 borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                             brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                             brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                               }}
+                               title="Google"
+                             >
+                               <img 
+                                 src="/logo/brand/wallets/google-logo.svg" 
+                                 alt="Google" 
+                                 className={`w-7 h-7 ${
+                                   brandingSettings.theme === 'dark' ? 'brightness-0 invert' : ''
+                                 }`} 
+                               />
+                             </button>
+                             <button
+                               className={`w-14 h-14 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
+                                 brandingSettings.theme === 'dark'
+                                   ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
+                                   : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
+                               }`}
+                               style={{
+                                 borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                             brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                             brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                               }}
+                               title="X (Twitter)"
+                             >
+                               <img 
+                                 src="/logo/brand/wallets/x-twitter-logo.svg" 
+                                 alt="X (Twitter)" 
+                                 className={`w-7 h-7 ${
+                                   brandingSettings.theme === 'dark' ? 'brightness-0 invert' : ''
+                                 }`} 
+                               />
+                             </button>
+                           </div>
                          </div>
                        </div>
                      )}
 
                      {/* Passkey Authentication */}
                      {authSettings.passkey && (
-                       <div className="space-y-2">
-                         <button
-                           className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
-                             brandingSettings.theme === 'dark'
-                               ? 'bg-gray-700 hover:bg-gray-600 text-white border border-gray-600'
-                               : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300'
-                           }`}
-                           style={{
-                             borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
-                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
-                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
-                           }}
-                         >
-                           <span className="text-yellow-500">🔑</span>
-                           Use Passkey
-                         </button>
+                       <div className="space-y-4">
+                         <div className="text-center">
+                           <label className={`block text-sm font-semibold mb-4 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                             Biometric Authentication
+                           </label>
+                           <button
+                             className={`w-full py-4 px-6 rounded-xl text-sm font-bold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 shadow-md hover:shadow-lg ${
+                               brandingSettings.theme === 'dark'
+                                 ? 'bg-gray-800 hover:bg-gray-700 text-white border border-gray-600 hover:border-gray-500'
+                                 : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 hover:border-gray-400'
+                             }`}
+                             style={{
+                               borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                           brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                           brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                             }}
+                           >
+                             <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center">
+                               <span className="text-white text-sm">🔑</span>
+                             </div>
+                             Use Passkey
+                           </button>
+                         </div>
                        </div>
                      )}
 
                      {/* External Wallets */}
                      {authSettings.externalWallets && (
-                       <div className="space-y-2">
-                         <label className={`block text-sm font-medium ${brandingSettings.theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-                           Connect Wallet
-                         </label>
-                         <button
-                           className={`w-full py-2 px-4 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
-                             brandingSettings.theme === 'dark'
-                               ? 'bg-gray-700 hover:bg-gray-600 text-white border border-gray-600'
-                               : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300'
-                           }`}
-                           style={{
-                             borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
-                                         brandingSettings.cornerRadius === 'Small' ? '4px' :
-                                         brandingSettings.cornerRadius === 'Medium' ? '8px' : '12px'
-                           }}
-                         >
-                           <span className="text-purple-500">🦊</span>
-                           MetaMask
-                         </button>
+                       <div className="space-y-4">
+                         <div className="text-center">
+                           <label className={`block text-sm font-semibold mb-4 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
+                             Connect Wallet
+                           </label>
+                           <div className="space-y-4">
+                             {/* Primary Wallet - MetaMask */}
+                             <div className="flex justify-center">
+                               <button
+                                 className={`w-20 h-20 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-lg hover:shadow-xl ${
+                                   brandingSettings.theme === 'dark'
+                                     ? 'bg-orange-600 hover:bg-orange-700'
+                                     : 'bg-orange-600 hover:bg-orange-700'
+                                 }`}
+                                 style={{
+                                   borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                               brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                               brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                                 }}
+                                 title="MetaMask"
+                               >
+                                 <img 
+                                   src="/logo/brand/wallets/metamask-icon-fox.svg" 
+                                   alt="MetaMask" 
+                                   className="w-10 h-10"
+                                 />
+                               </button>
+                             </div>
+
+                             {/* More Wallets Section */}
+                             <div className="space-y-3">
+                               <div className="flex items-center justify-center">
+                                 <div className={`flex-1 h-px ${brandingSettings.theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
+                                 <span className={`px-4 text-xs font-semibold ${brandingSettings.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                                   More wallets
+                                 </span>
+                                 <div className={`flex-1 h-px ${brandingSettings.theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
+                               </div>
+                               
+                               <div className="flex flex-wrap gap-3 justify-center">
+                                 <button
+                                   className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
+                                     brandingSettings.theme === 'dark'
+                                       ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
+                                       : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
+                                   }`}
+                                   style={{
+                                     borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                                 brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                                 brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                                   }}
+                                   title="Coinbase"
+                                 >
+                                   <img 
+                                     src="/logo/brand/wallets/coinbase-logo.svg" 
+                                     alt="Coinbase" 
+                                     className="w-6 h-6"
+                                   />
+                                 </button>
+
+                                 <button
+                                   className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
+                                     brandingSettings.theme === 'dark'
+                                       ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
+                                       : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
+                                   }`}
+                                   style={{
+                                     borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                                 brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                                 brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                                   }}
+                                   title="OKX"
+                                 >
+                                   <img 
+                                     src="/logo/brand/wallets/okx-logo-brandlogo.svg" 
+                                     alt="OKX" 
+                                     className={`w-6 h-6 ${
+                                       brandingSettings.theme === 'dark' ? 'brightness-0 invert' : ''
+                                     }`} 
+                                   />
+                                 </button>
+
+                                 <button
+                                   className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
+                                     brandingSettings.theme === 'dark'
+                                       ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
+                                       : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
+                                   }`}
+                                   style={{
+                                     borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                                 brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                                 brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                                   }}
+                                   title="Phantom"
+                                 >
+                                   <img 
+                                     src="/logo/brand/wallets/Phantom_Logo.svg" 
+                                     alt="Phantom" 
+                                     className="w-6 h-6 rounded-full"
+                                   />
+                                 </button>
+
+                                 <button
+                                   className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
+                                     brandingSettings.theme === 'dark'
+                                       ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
+                                       : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
+                                   }`}
+                                   style={{
+                                     borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                                 brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                                 brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                                   }}
+                                   title="WalletConnect"
+                                 >
+                                   <img 
+                                     src="/logo/brand/wallets/walletconnect-logo.svg" 
+                                     alt="WalletConnect" 
+                                     className="w-6 h-6"
+                                   />
+                                 </button>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
                        </div>
                      )}
 
                      {/* Show message when no auth methods are enabled */}
                      {!authSettings.email && !authSettings.sms && !authSettings.social && !authSettings.passkey && !authSettings.externalWallets && (
-                       <div className="text-center py-8">
-                         <p className={`text-sm ${brandingSettings.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                           Enable authentication methods to see the sign-in form
-                         </p>
+                       <div className="text-center py-16">
+                         <div className={`w-20 h-20 mx-auto mb-6 rounded-full flex items-center justify-center ${
+                           brandingSettings.theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100'
+                         }`}>
+                           <img 
+                             src="/logo/brand/hyperkit/Hyperkit Abstract.svg" 
+                             alt="Hyperkit" 
+                             className="w-auto h-30"
+                           />
+                         </div>
+                         <h4 className={`text-xl font-bold mb-3 ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                           Choose Authentication Method
+                         </h4>
                        </div>
                      )}
                    </div>
