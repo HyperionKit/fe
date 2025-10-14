@@ -6,7 +6,14 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "cursor:lint": "node .cursor/cli.js lint",
+    "cursor:audit": "node .cursor/cli.js audit",
+    "cursor:wallet-audit": "node .cursor/cli.js command audit-wallets",
+    "cursor:performance-audit": "node .cursor/cli.js command performance-audit",
+    "cursor:fix-docs": "node .cursor/cli.js command fix-docs",
+    "cursor:demo": "node .cursor/cli.js command onboard-wallet-demo",
+    "cursor:help": "node .cursor/cli.js help"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.20.0",
