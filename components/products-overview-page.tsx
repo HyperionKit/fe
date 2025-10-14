@@ -28,20 +28,51 @@ export default function ProductsOverviewPage() {
   const [brandingSettings, setBrandingSettings] = useState({
     theme: 'dark', // 'light' or 'dark'
     color: '#7C3AED',
-    cornerRadius: 'Large'
+    cornerRadius: 'Large',
+    illustrationStyle: 'modern' as 'modern' | 'minimal' | 'playful' | 'corporate',
+    supportUrl: '',
+    logo: null as File | null
   });
 
   const [codePreview, setCodePreview] = useState(false);
   const [showMoreOptions, setShowMoreOptions] = useState(false);
+  const [showCornerRadius, setShowCornerRadius] = useState(false);
+  const [showIllustrationStyle, setShowIllustrationStyle] = useState(false);
+  const [showSupportUrl, setShowSupportUrl] = useState(false);
+  const [showLogoUpload, setShowLogoUpload] = useState(false);
+
+  // Close tooltip when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (showMoreOptions) {
+        const target = event.target as HTMLElement;
+        const tooltip = document.querySelector('[data-tooltip="show-more"]');
+        const button = document.querySelector('[data-button="show-more"]');
+        
+        if (tooltip && !tooltip.contains(target) && !button?.contains(target)) {
+          setShowMoreOptions(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showMoreOptions]);
 
   const featureCards = [
     {
       title: "Import your web3 assets in minutes",
-      description: "Seamlessly integrate with existing web3 infrastructure using our simple API."
+      description: "Seamlessly integrate with existing web3 infrastructure using our simple API.",
+      img: null,
+      link: "#"
     },
     {
       title: "Unlock the power of automation",
-      description: "AI-powered tools that generate, optimize, and deploy your DeFi applications automatically."
+      description: "AI-powered tools that generate, optimize, and deploy your DeFi applications automatically.",
+      img: null,
+      link: "#"
     }
   ];
 
@@ -71,6 +102,68 @@ export default function ProductsOverviewPage() {
     }));
   };
 
+  const setIllustrationStyle = (style: string) => {
+    setBrandingSettings(prev => ({
+      ...prev,
+      illustrationStyle: style as 'modern' | 'minimal' | 'playful' | 'corporate'
+    }));
+  };
+
+  const setSupportUrl = (url: string) => {
+    setBrandingSettings(prev => ({
+      ...prev,
+      supportUrl: url
+    }));
+  };
+
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setBrandingSettings(prev => ({
+        ...prev,
+        logo: file
+      }));
+    }
+  };
+
+  // Get icon style based on illustration style
+  const getIconStyle = () => {
+    switch (brandingSettings.illustrationStyle) {
+      case 'minimal':
+        return {
+          borderRadius: '4px',
+          padding: '8px',
+          background: brandingSettings.theme === 'dark' ? '#374151' : '#f9fafb',
+          border: '1px solid #e5e7eb'
+        };
+      case 'playful':
+        return {
+          borderRadius: '50%',
+          padding: '12px',
+          background: `linear-gradient(135deg, ${brandingSettings.color}20, ${brandingSettings.color}40)`,
+          border: '2px solid transparent',
+          transform: 'scale(1.1)'
+        };
+      case 'corporate':
+        return {
+          borderRadius: '2px',
+          padding: '6px',
+          background: brandingSettings.theme === 'dark' ? '#1f2937' : '#ffffff',
+          border: '2px solid #d1d5db',
+          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        };
+      case 'modern':
+      default:
+        return {
+          borderRadius: '12px',
+          padding: '10px',
+          background: brandingSettings.theme === 'dark' ? '#374151' : '#ffffff',
+          border: '1px solid #e5e7eb',
+          boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
+        };
+    }
+  };
+
   // Generate dynamic code preview based on enabled settings
   const generateCodePreview = () => {
     const enabledAuthMethods = [];
@@ -86,7 +179,10 @@ export default function ProductsOverviewPage() {
     // Check if any branding settings are customized (not default)
     const hasCustomBranding = brandingSettings.theme !== 'dark' || 
                              brandingSettings.color !== '#7C3AED' || 
-                             brandingSettings.cornerRadius !== 'Large';
+                             brandingSettings.cornerRadius !== 'Large' ||
+                             brandingSettings.illustrationStyle !== 'modern' ||
+                             brandingSettings.supportUrl !== '' ||
+                             (brandingSettings.logo !== null && showLogoUpload);
 
     let configSections = [];
 
@@ -137,13 +233,29 @@ ${authConfig}
 
     // Add branding section if customized
     if (hasCustomBranding) {
+      let brandingConfig = [];
+      
+      brandingConfig.push(`    theme: '${brandingSettings.theme}'`);
+      brandingConfig.push(`    primaryColor: '${brandingSettings.color}'`);
+      brandingConfig.push(`    borderRadius: '${brandingSettings.cornerRadius.toLowerCase()}'`);
+      
+      if (brandingSettings.illustrationStyle !== 'modern') {
+        brandingConfig.push(`    illustrationStyle: '${brandingSettings.illustrationStyle}'`);
+      }
+      
+      if (brandingSettings.supportUrl !== '') {
+        brandingConfig.push(`    supportUrl: '${brandingSettings.supportUrl}'`);
+      }
+      
+      if (brandingSettings.logo !== null && showLogoUpload) {
+        brandingConfig.push(`    logo: '${brandingSettings.logo.name}'`);
+      } else {
+        brandingConfig.push(`    logo: '/logo/hyperkit-logo.svg'`);
+      }
+      
       configSections.push(`  // UI Branding Configuration
   branding: {
-    theme: '${brandingSettings.theme}',
-    primaryColor: '${brandingSettings.color}',
-    borderRadius: '${brandingSettings.cornerRadius.toLowerCase()}',
-    logo: '/logo/hyperkit-logo.svg',
-    customCSS: null
+${brandingConfig.join(',\n')}
   }`);
     }
 
@@ -152,23 +264,14 @@ ${authConfig}
   sdk: {
     apiKey: process.env.HYPERKIT_API_KEY,
     environment: 'production',
-    features: {
-      gasless: true,
-      batchTransactions: true,
-      socialRecovery: true,
-      accountAbstraction: true
-    },
-    network: {
-      chainId: 1, // Ethereum Mainnet
-      rpcUrl: process.env.RPC_URL
-    }
+    version: '1.0.0'
   }`);
 
-    configSections.push(`  // Security Settings
+    configSections.push(`  // Security Configuration
   security: {
-    sessionTimeout: 3600, // 1 hour
-    maxLoginAttempts: 5,
-    requireMFA: false
+    encryption: true,
+    auditLogging: true,
+    rateLimiting: true
   }`);
 
     const configBody = configSections.length > 0 ? `{\n${configSections.join(',\n\n')}\n}` : '{}';
@@ -184,6 +287,19 @@ const hyperkit = new Hyperkit(hyperkitConfig);
 export default hyperkit;`;
   };
 
+  // Calculate dynamic spacing based on number of enabled components
+  const getDynamicSpacing = () => {
+    const enabledCount = Object.values(authSettings).filter(Boolean).length;
+    const hasLogo = brandingSettings.logo !== null && showLogoUpload;
+    
+    // Adjust spacing based on number of components and logo presence
+    if (enabledCount === 0) return 'space-y-0';
+    if (enabledCount === 1) return hasLogo ? 'space-y-4' : 'space-y-6';
+    if (enabledCount === 2) return hasLogo ? 'space-y-3' : 'space-y-4';
+    if (enabledCount === 3) return hasLogo ? 'space-y-2' : 'space-y-3';
+    if (enabledCount === 4) return hasLogo ? 'space-y-1' : 'space-y-2';
+    return hasLogo ? 'space-y-1' : 'space-y-1'; // 5+ components
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-8 py-0">
@@ -264,9 +380,9 @@ export default hyperkit;`;
           Our tools make wallet integration simple and secure.
         </p>
 
-        <div className="flex flex-col lg:flex-row gap-10 items-start">
+        <div className="flex flex-col lg:flex-row gap-10 items-start min-h-[900px]">
           {/* Left Panel - Configuration Options */}
-          <div className="w-full lg:w-80 bg-gray-100 rounded-2xl shadow-lg p-6 border border-gray-200">
+          <div className="w-full h-225 lg:w-90 bg-gray-100 rounded-2xl shadow-lg p-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
               Authentication
             </h3>
@@ -461,15 +577,23 @@ export default hyperkit;`;
                       brandingSettings.theme === 'dark' ? 'bg-purple-100' : 'hover:bg-gray-100'
                     }`}
                   >
-                    <OptimizedIcon 
-                      src="/icons/products/imgi_18_moon.png" 
-                      alt="Dark" 
-                      width={20} 
-                      height={20} 
+                    <svg 
+                      width="20" 
+                      height="20" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
                       className={`w-5 h-5 ${
                         brandingSettings.theme === 'dark' ? 'text-purple-600' : 'text-gray-900'
-                      }`} 
-                    />
+                      }`}
+                    >
+                      <path 
+                        d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" 
+                        stroke="currentColor" 
+                        strokeWidth="2" 
+                        strokeLinecap="round" 
+                        strokeLinejoin="round"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -485,92 +609,203 @@ export default hyperkit;`;
                   <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Color</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 bg-purple-600 rounded-full border-2 border-white shadow-sm"></div>
-                  <span className="text-xs text-gray-500">#7C3AED</span>
+                  <input
+                    type="color"
+                    value={brandingSettings.color}
+                    onChange={(e) => setBrandingSettings(prev => ({ ...prev, color: e.target.value }))}
+                    className="w-6 h-6 rounded-full border-2 border-white shadow-sm cursor-pointer"
+                    title="Choose color"
+                  />
+                  <span className="text-xs text-gray-500 font-mono">{brandingSettings.color}</span>
                 </div>
               </div>
             </div>
             
-            {/* Show More Button */}
-            <div className="mb-4">
+            {/* Show More Button with Tooltip */}
+            <div className="mb-4 relative">
               <button 
+                data-button="show-more"
                 onClick={() => setShowMoreOptions(!showMoreOptions)}
                 className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors border border-gray-200"
               >
                 <span className="text-gray-900 text-sm font-medium" style={{fontFamily: 'Inter'}}>
                   Show More
                 </span>
-                <OptimizedIcon
-                  src="/icons/products/imgi_19_chevron.png"
-                  alt="Chevron"
-                  width={16}
-                  height={16}
-                  className={`w-4 h-4 transition-transform ${showMoreOptions ? 'rotate-180' : ''}`}
-                />
-              </button>
-            </div>
-
-            {/* Show More Options */}
-            {showMoreOptions && (
-              <div className="space-y-4 mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
-                  Corner Radius
-                </h3>
-                <div className="flex gap-2 mb-4">
-                  {['None', 'Small', 'Medium', 'Large'].map((size, index) => (
-                    <button
-                      key={size}
-                      onClick={() => setCornerRadius(size)}
-                      className={`px-3 py-1 text-xs rounded transition-colors ${
-                        brandingSettings.cornerRadius === size
-                          ? 'bg-purple-600 text-white' 
-                          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                      }`}
-                    >
-                      {size}
-                    </button>
-                  ))}
-            </div>
-            
-                <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
-                  Illustration Style
-                </h3>
-                <div className="flex gap-2 mb-4">
-                  {Array.from({length: 4}).map((_, index) => (
-                    <div key={index} className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center">
-                      <span className="text-xs text-gray-600">@</span>
-                    </div>
-                  ))}
-            </div>
-            
-                <div className="mb-4">
-                  <label className="block text-sm text-gray-900 mb-2" style={{fontFamily: 'Inter'}}>
-                    Support URL (optional)
-                  </label>
-                  <input 
-                    type="text" 
-                    placeholder="https://support.example.com"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                <svg 
+                  width="16" 
+                  height="16" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  className={`w-4 h-4 text-gray-600 transition-transform ${showMoreOptions ? 'rotate-90' : ''}`}
+                >
+                  <path 
+                    d="M9 18L15 12L9 6" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
                   />
-            </div>
+                </svg>
+              </button>
+
+              {/* Tooltip Popup */}
+              {showMoreOptions && (
+                <div 
+                  data-tooltip="show-more"
+                  className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-4 w-73"
+                >
+                  {/* Tooltip Arrow */}
+                  <div className="absolute -top-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-white border-l border-t border-gray-200 rotate-45"></div>
+                  <div className="space-y-4">
+                    {/* Corner Radius Section */}
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-gray-900" style={{fontFamily: 'Inter'}}>
+                        Corner Radius
+                      </h3>
+                      <button
+                        onClick={() => setShowCornerRadius(!showCornerRadius)}
+                        className={`w-8 h-4 rounded-full transition-colors ${
+                          showCornerRadius ? 'bg-purple-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <div className={`w-3 h-3 bg-white rounded-full transition-transform ${
+                          showCornerRadius ? 'translate-x-4' : 'translate-x-0.5'
+                        }`}></div>
+                      </button>
+                    </div>
+                    {showCornerRadius && (
+                      <div className="flex gap-2 mb-4">
+                        {['None', 'Small', 'Medium', 'Large'].map((size, index) => (
+                          <button
+                            key={size}
+                            onClick={() => setCornerRadius(size)}
+                            className={`px-3 py-1 text-xs rounded transition-colors ${
+                              brandingSettings.cornerRadius === size
+                                ? 'bg-purple-600 text-white' 
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            }`}
+                          >
+                            {size}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Illustration Style Section */}
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-gray-900" style={{fontFamily: 'Inter'}}>
+                        Illustration Style
+                      </h3>
+                      <button
+                        onClick={() => setShowIllustrationStyle(!showIllustrationStyle)}
+                        className={`w-8 h-4 rounded-full transition-colors ${
+                          showIllustrationStyle ? 'bg-purple-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <div className={`w-3 h-3 bg-white rounded-full transition-transform ${
+                          showIllustrationStyle ? 'translate-x-4' : 'translate-x-0.5'
+                        }`}></div>
+                      </button>
+                    </div>
+                    {showIllustrationStyle && (
+                      <div className="flex gap-2 mb-4">
+                        {[
+                          { value: 'modern', label: 'Modern', icon: '🎨' },
+                          { value: 'minimal', label: 'Minimal', icon: '⚪' },
+                          { value: 'playful', label: 'Playful', icon: '🎪' },
+                          { value: 'corporate', label: 'Corporate', icon: '🏢' }
+                        ].map((style) => (
+                          <button
+                            key={style.value}
+                            onClick={() => setIllustrationStyle(style.value)}
+                            className={`w-12 h-12 rounded-lg flex flex-col items-center justify-center text-xs transition-colors ${
+                              brandingSettings.illustrationStyle === style.value
+                                ? 'bg-purple-600 text-white' 
+                                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            }`}
+                            title={style.label}
+                          >
+                            <span className="text-lg">{style.icon}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
             
-                <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div className="flex items-center gap-3">
-                    <OptimizedIcon
-                      src="/icons/products/imgi_16_upload.png"
-                      alt="Upload"
-                      width={20}
-                      height={20}
-                      className="w-5 h-5"
-                    />
-                    <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Logo (optional)</span>
+                    {/* Support URL Section */}
+                    <div className="flex items-center justify-between mb-2">
+                      <label className="text-sm text-gray-900" style={{fontFamily: 'Inter'}}>
+                        Support URL (optional)
+                      </label>
+                      <button
+                        onClick={() => setShowSupportUrl(!showSupportUrl)}
+                        className={`w-8 h-4 rounded-full transition-colors ${
+                          showSupportUrl ? 'bg-purple-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <div className={`w-3 h-3 bg-white rounded-full transition-transform ${
+                          showSupportUrl ? 'translate-x-4' : 'translate-x-0.5'
+                        }`}></div>
+                      </button>
+                    </div>
+                    {showSupportUrl && (
+                      <div className="mb-4">
+                        <input 
+                          type="url" 
+                          value={brandingSettings.supportUrl}
+                          onChange={(e) => setSupportUrl(e.target.value)}
+                          placeholder="https://support.example.com"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        />
+                      </div>
+                    )}
+            
+                    {/* Logo Upload Section */}
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-3">
+                        <OptimizedIcon
+                          src="/icons/products/imgi_16_upload.png"
+                          alt="Upload"
+                          width={20}
+                          height={20}
+                          className="w-5 h-5"
+                        />
+                        <span className="text-gray-900 text-sm" style={{fontFamily: 'Inter'}}>Logo (optional)</span>
+                      </div>
+                      <button
+                        onClick={() => setShowLogoUpload(!showLogoUpload)}
+                        className={`w-8 h-4 rounded-full transition-colors ${
+                          showLogoUpload ? 'bg-purple-600' : 'bg-gray-300'
+                        }`}
+                      >
+                        <div className={`w-3 h-3 bg-white rounded-full transition-transform ${
+                          showLogoUpload ? 'translate-x-4' : 'translate-x-0.5'
+                        }`}></div>
+                      </button>
+                    </div>
+                    {showLogoUpload && (
+                      <div className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 transition-colors">
+                        <div className="flex items-center gap-2">
+                          {brandingSettings.logo && (
+                            <span className="text-xs text-gray-600 truncate max-w-20">
+                              {brandingSettings.logo.name}
+                            </span>
+                          )}
+                          <label className="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 transition-colors cursor-pointer">
+                            {brandingSettings.logo ? 'Change' : 'Upload'}
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={handleLogoUpload}
+                              className="hidden"
+                            />
+                          </label>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <button className="text-xs bg-gray-200 text-gray-700 px-3 py-1 rounded hover:bg-gray-300 transition-colors">
-                    Upload
-                  </button>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
             
             <div className="text-xs text-gray-500 text-center pt-4 border-t border-gray-200">
               © 2025 Hyperkit. All rights reserved.
@@ -578,7 +813,7 @@ export default hyperkit;`;
             </div>
             
            {/* Right Panel - Sign In Modal Demo */}
-            <div className="flex-1 bg-white rounded-2xl shadow-2xl flex flex-col justify-center items-center p-8 relative h-[840px] overflow-hidden">
+            <div className="flex-1 bg-white rounded-2xl shadow-2xl flex flex-col justify-center items-center p-6 relative h-[900px] overflow-hidden">
               {/* Code Preview Badge with Toggle */}
               <div className="absolute top-4 right-4 flex items-center gap-2">
                 <div className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-medium shadow">
@@ -612,22 +847,34 @@ export default hyperkit;`;
                  </div>
                </div>
              ) : (
-               <div className={`border border-gray-200 rounded-2xl shadow-xl w-[420px] max-h-[700px] flex flex-col items-center justify-start text-center px-8 py-8 transition-all duration-300 overflow-y-auto ${
+               <div className={`border border-gray-200 rounded-2xl shadow-xl w-[400px] min-h-[400px] max-h-[680px] flex flex-col items-center justify-start text-center px-6 py-6 transition-all duration-300 ${
                  brandingSettings.theme === 'dark' ? 'bg-gray-900 border-gray-700' : 'bg-white'
                }`} style={{
                  borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                              brandingSettings.cornerRadius === 'Small' ? '8px' :
-                             brandingSettings.cornerRadius === 'Medium' ? '16px' : '24px'
+                             brandingSettings.cornerRadius === 'Medium' ? '16px' : '24px',
+                 borderColor: brandingSettings.color,
+                 boxShadow: `0 25px 50px -12px ${brandingSettings.color}20`
                }}>
                  <div className="w-full max-w-sm">
-                   <div className="flex items-center justify-center mb-8">
-                     <h3 className={`text-2xl font-bold ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
+                   <div className="flex flex-col items-center mb-3">
+                     <h3 className={`text-xl font-bold ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-900'}`} style={{fontFamily: 'Inter'}}>
                        Sign in
                      </h3>
+                     {/* Uploaded Logo Display */}
+                     {brandingSettings.logo && showLogoUpload && (
+                       <div className="mt-2 mb-1 flex justify-center">
+                         <img 
+                           src={URL.createObjectURL(brandingSettings.logo)} 
+                           alt="Brand Logo" 
+                           className="h-16 w-auto object-contain max-w-20"
+                         />
+                       </div>
+                     )}
             </div>
             
                    {/* Dynamic Authentication Components Based on Toggle States */}
-                   <div className="space-y-4 w-full">
+                   <div className={`w-full ${getDynamicSpacing()}`}>
                      {/* Email Authentication */}
                      {authSettings.email && (
                        <div className="space-y-3">
@@ -638,7 +885,7 @@ export default hyperkit;`;
                            <input
                              type="email"
                              placeholder="Enter your email address"
-                             className={`w-full px-3 py-3 border rounded-xl text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${
+                             className={`w-full px-4 py-2.5 border rounded-lg text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 ${
                                brandingSettings.theme === 'dark' 
                                  ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400' 
                                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
@@ -651,12 +898,9 @@ export default hyperkit;`;
                            />
                          </div>
                          <button
-                           className={`w-full py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
-                             brandingSettings.theme === 'dark'
-                               ? 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-purple-500/25'
-                               : 'bg-purple-600 hover:bg-purple-700 text-white shadow-lg hover:shadow-purple-500/25'
-                           }`}
+                           className={`w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] text-white shadow-md hover:shadow-lg`}
                            style={{
+                             backgroundColor: brandingSettings.color,
                              borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                          brandingSettings.cornerRadius === 'Small' ? '8px' :
                                          brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
@@ -677,7 +921,7 @@ export default hyperkit;`;
             <input 
                              type="tel"
                              placeholder="+1 (555) 123-4567"
-                             className={`w-full px-3 py-3 border rounded-xl text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
+                             className={`w-full px-4 py-2.5 border rounded-lg text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 ${
                                brandingSettings.theme === 'dark' 
                                  ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400' 
                                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
@@ -690,12 +934,9 @@ export default hyperkit;`;
                            />
                          </div>
                          <button
-                           className={`w-full py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] ${
-                             brandingSettings.theme === 'dark'
-                               ? 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-blue-500/25'
-                               : 'bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-blue-500/25'
-                           }`}
+                           className={`w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] text-white shadow-md hover:shadow-lg`}
                            style={{
+                             backgroundColor: brandingSettings.color,
                              borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                          brandingSettings.cornerRadius === 'Small' ? '8px' :
                                          brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
@@ -713,14 +954,11 @@ export default hyperkit;`;
                            <label className={`block text-sm font-semibold mb-3 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                              Continue with Social
                            </label>
-                           <div className="flex gap-2 justify-center">
+                           <div className="flex gap-3 justify-center">
                              <button
-                               className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
-                                 brandingSettings.theme === 'dark'
-                                   ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
-                                   : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
-                               }`}
+                               className="transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center"
                                style={{
+                                 ...getIconStyle(),
                                  borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                              brandingSettings.cornerRadius === 'Small' ? '8px' :
                                              brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
@@ -730,18 +968,15 @@ export default hyperkit;`;
                                <img 
                                  src="/logo/brand/wallets/google-logo.svg" 
                                  alt="Google" 
-                                 className={`w-6 h-6 ${
+                                 className={`w-7 h-7 ${
                                    brandingSettings.theme === 'dark' ? 'brightness-0 invert' : ''
                                  }`} 
                                />
                              </button>
                              <button
-                               className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
-                                 brandingSettings.theme === 'dark'
-                                   ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
-                                   : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
-                               }`}
+                               className="transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center"
                                style={{
+                                 ...getIconStyle(),
                                  borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                              brandingSettings.cornerRadius === 'Small' ? '8px' :
                                              brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
@@ -751,7 +986,7 @@ export default hyperkit;`;
                                <img 
                                  src="/logo/brand/wallets/x-twitter-logo.svg" 
                                  alt="X (Twitter)" 
-                                 className={`w-6 h-6 ${
+                                 className={`w-7 h-7 ${
                                    brandingSettings.theme === 'dark' ? 'brightness-0 invert' : ''
                                  }`} 
                                />
@@ -769,7 +1004,7 @@ export default hyperkit;`;
                              Biometric Authentication
                            </label>
                            <button
-                             className={`w-full py-2.5 px-4 rounded-xl text-sm font-bold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 shadow-md hover:shadow-lg ${
+                             className={`w-full py-2.5 px-4 rounded-lg text-sm font-semibold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3 shadow-sm hover:shadow-md ${
                                brandingSettings.theme === 'dark'
                                  ? 'bg-gray-800 hover:bg-gray-700 text-white border border-gray-600 hover:border-gray-500'
                                  : 'bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 hover:border-gray-400'
@@ -796,48 +1031,32 @@ export default hyperkit;`;
                            <label className={`block text-sm font-semibold mb-3 ${brandingSettings.theme === 'dark' ? 'text-gray-200' : 'text-gray-800'}`}>
                              Connect Wallet
                            </label>
-                           <div className="space-y-3">
-                             {/* Primary Wallet - MetaMask */}
-                             <div className="flex justify-center">
-                               <button
-                                 className={`w-16 h-16 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-lg hover:shadow-xl ${
-                                   brandingSettings.theme === 'dark'
-                                     ? 'bg-orange-600 hover:bg-orange-700'
-                                     : 'bg-orange-600 hover:bg-orange-700'
-                                 }`}
-                                 style={{
-                                   borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
-                                               brandingSettings.cornerRadius === 'Small' ? '8px' :
-                                               brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
-                                 }}
-                                 title="MetaMask"
-                               >
-                                 <img 
-                                   src="/logo/brand/wallets/metamask-icon-fox.svg" 
-                                   alt="MetaMask" 
-                                   className="w-8 h-8"
-                                 />
-                               </button>
-                             </div>
-
-                             {/* More Wallets Section */}
-                             <div className="space-y-3">
-                               <div className="flex items-center justify-center">
-                                 <div className={`flex-1 h-px ${brandingSettings.theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
-                                 <span className={`px-4 text-xs font-semibold ${brandingSettings.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                                   More wallets
-                                 </span>
-                                 <div className={`flex-1 h-px ${brandingSettings.theme === 'dark' ? 'bg-gray-700' : 'bg-gray-300'}`}></div>
-                               </div>
-                               
-                               <div className="flex flex-wrap gap-2 justify-center">
+                           <div className="space-y-2">
+                             {/* All Wallets in One Row */}
+                             <div className="flex flex-wrap gap-2 justify-center">
+                                 {/* MetaMask */}
                                  <button
-                                   className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
-                                     brandingSettings.theme === 'dark'
-                                       ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
-                                       : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
-                                   }`}
+                                   className="transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center"
                                    style={{
+                                     ...getIconStyle(),
+                                     borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
+                                                 brandingSettings.cornerRadius === 'Small' ? '8px' :
+                                                 brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
+                                   }}
+                                   title="MetaMask"
+                                 >
+                                   <img 
+                                     src="/logo/brand/wallets/metamask-icon-fox.svg" 
+                                     alt="MetaMask" 
+                                     className="w-6 h-6"
+                                   />
+                                 </button>
+
+                                 {/* Coinbase */}
+                                 <button
+                                   className="transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center"
+                                   style={{
+                                     ...getIconStyle(),
                                      borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                                  brandingSettings.cornerRadius === 'Small' ? '8px' :
                                                  brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
@@ -852,12 +1071,9 @@ export default hyperkit;`;
                                  </button>
 
                                  <button
-                                   className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
-                                     brandingSettings.theme === 'dark'
-                                       ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
-                                       : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
-                                   }`}
+                                   className="transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center"
                                    style={{
+                                     ...getIconStyle(),
                                      borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                                  brandingSettings.cornerRadius === 'Small' ? '8px' :
                                                  brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
@@ -874,12 +1090,9 @@ export default hyperkit;`;
                                  </button>
 
                                  <button
-                                   className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
-                                     brandingSettings.theme === 'dark'
-                                       ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
-                                       : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
-                                   }`}
+                                   className="transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center"
                                    style={{
+                                     ...getIconStyle(),
                                      borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                                  brandingSettings.cornerRadius === 'Small' ? '8px' :
                                                  brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
@@ -894,12 +1107,9 @@ export default hyperkit;`;
                                  </button>
 
                                  <button
-                                   className={`w-12 h-12 rounded-xl transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center shadow-md hover:shadow-lg ${
-                                     brandingSettings.theme === 'dark'
-                                       ? 'bg-gray-800 hover:bg-gray-700 border border-gray-600 hover:border-gray-500'
-                                       : 'bg-white hover:bg-gray-50 border border-gray-300 hover:border-gray-400'
-                                   }`}
+                                   className="transition-all duration-200 transform hover:scale-[1.05] active:scale-[0.95] flex items-center justify-center"
                                    style={{
+                                     ...getIconStyle(),
                                      borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
                                                  brandingSettings.cornerRadius === 'Small' ? '8px' :
                                                  brandingSettings.cornerRadius === 'Medium' ? '12px' : '16px'
@@ -916,7 +1126,6 @@ export default hyperkit;`;
           </div>
         </div>
       </div>
-    </div>
                      )}
 
                      {/* Show message when no auth methods are enabled */}
@@ -939,13 +1148,25 @@ export default hyperkit;`;
                    </div>
 
                    {/* Terms and Conditions */}
-                   <div className="mt-4 pt-4 border-t border-gray-200">
-                     <p className={`text-xs leading-relaxed ${brandingSettings.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} style={{fontFamily: 'Inter'}}>
+                   <div className="mt-6 pt-4 border-t border-gray-200">
+                     <p className={`text-xs leading-relaxed text-center ${brandingSettings.theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} style={{fontFamily: 'Inter'}}>
                        By signing in, you agree to the{' '}
-                       <span className={`font-medium ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Terms of Service</span>{' '}
+                       <span className={`font-semibold ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Terms of Service</span>{' '}
                        protected by{' '}
-                       <span className={`font-medium ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Hyperkit</span>
+                       <span className={`font-semibold ${brandingSettings.theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>Hyperkit</span>
                      </p>
+                     {brandingSettings.supportUrl && (
+                       <div className="mt-2 text-center">
+                         <a 
+                           href={brandingSettings.supportUrl} 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           className={`text-xs underline hover:no-underline ${brandingSettings.theme === 'dark' ? 'text-purple-400 hover:text-purple-300' : 'text-purple-600 hover:text-purple-700'}`}
+                         >
+                           Need help? Contact Support
+                         </a>
+                       </div>
+                     )}
                    </div>
                  </div>
                </div>
@@ -956,3 +1177,4 @@ export default hyperkit;`;
     </div>
   );
 }
+
