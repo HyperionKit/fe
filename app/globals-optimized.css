@@ -1,0 +1,321 @@
+/* Optimized Global CSS for Maximum Performance */
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: #0a0a0a;
+  color: #ffffff;
+  overflow-x: hidden;
+  /* Force hardware acceleration */
+  transform: translateZ(0);
+  will-change: scroll-position;
+}
+
+/* Performance-optimized animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Hardware-accelerated utility classes */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.smooth-transition {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  will-change: transform, opacity;
+}
+
+.optimized-animation {
+  animation-fill-mode: both;
+  animation-timing-function: ease-out;
+  will-change: transform, opacity;
+}
+
+/* Performance-optimized background effects */
+.background-pixelblast {
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(177, 158, 239, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(177, 158, 239, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(177, 158, 239, 0.05) 0%, transparent 50%);
+  background-size: 200px 200px, 150px 150px, 180px 180px;
+  background-position: 0% 0%, 100% 0%, 50% 100%;
+  animation: pixelFloat 8s ease-in-out infinite;
+  transform: translateZ(0);
+  will-change: background-position;
+}
+
+.background-dither {
+  background: 
+    linear-gradient(45deg, rgba(177, 158, 239, 0.1) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(177, 158, 239, 0.1) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(177, 158, 239, 0.1) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(177, 158, 239, 0.1) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  animation: ditherMove 4s linear infinite;
+  transform: translateZ(0);
+  will-change: background-position;
+}
+
+.background-terminal {
+  background: 
+    linear-gradient(90deg, rgba(0, 255, 0, 0.1) 0%, transparent 50%, rgba(0, 255, 0, 0.1) 100%);
+  background-size: 2px 100%;
+  animation: terminalScan 2s linear infinite;
+  transform: translateZ(0);
+  will-change: background-position;
+}
+
+.background-ascii {
+  background: 
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0px, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 2px),
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0px, rgba(255, 255, 255, 0.05) 1px, transparent 1px, transparent 2px);
+  background-size: 20px 20px;
+  animation: asciiWave 3s ease-in-out infinite;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.background-blinds {
+  background: 
+    linear-gradient(90deg, rgba(177, 158, 239, 0.2) 0%, rgba(177, 158, 239, 0.1) 25%, rgba(177, 158, 239, 0.2) 50%, rgba(177, 158, 239, 0.1) 75%, rgba(177, 158, 239, 0.2) 100%);
+  background-size: 100% 20px;
+  animation: blindsMove 4s ease-in-out infinite;
+  transform: translateZ(0);
+  will-change: background-position;
+}
+
+/* Animation keyframes */
+@keyframes pixelFloat {
+  0%, 100% { 
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    opacity: 0.8;
+  }
+  50% { 
+    transform: translate3d(10px, -20px, 0) rotate(180deg) scale(1.1);
+    opacity: 1;
+  }
+}
+
+@keyframes ditherMove {
+  0% { background-position: 0 0, 0 10px, 10px -10px, -10px 0px; }
+  100% { background-position: 20px 20px, 20px 30px, 30px 10px, 10px 20px; }
+}
+
+@keyframes terminalScan {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes asciiWave {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes blindsMove {
+  0%, 100% { background-position: 0 0; }
+  50% { background-position: 0 20px; }
+}
+
+/* Performance-optimized typography */
+.text-optimized {
+  font-display: swap;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Performance-optimized images */
+.img-optimized {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Performance-optimized buttons */
+.btn-optimized {
+  transform: translateZ(0);
+  will-change: transform;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-optimized:hover {
+  transform: translateZ(0) scale(1.05);
+}
+
+.btn-optimized:active {
+  transform: translateZ(0) scale(0.95);
+}
+
+/* Performance-optimized cards */
+.card-optimized {
+  transform: translateZ(0);
+  will-change: transform, box-shadow;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  backface-visibility: hidden;
+}
+
+.card-optimized:hover {
+  transform: translateZ(0) translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Performance-optimized scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(177, 158, 239, 0.5);
+  border-radius: 4px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(177, 158, 239, 0.8);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .background-pixelblast,
+  .background-dither,
+  .background-terminal,
+  .background-ascii,
+  .background-blinds {
+    animation: none;
+    background: 
+      radial-gradient(circle at 50% 50%, rgba(177, 158, 239, 0.1), transparent 60%);
+  }
+}
+
+/* Low power mode optimizations */
+@media (max-width: 768px) {
+  .background-pixelblast,
+  .background-dither,
+  .background-terminal,
+  .background-ascii,
+  .background-blinds {
+    background-size: 100px 100px, 75px 75px, 90px 90px;
+    animation-duration: 12s;
+  }
+}
+
+/* High DPI display optimizations */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .img-optimized {
+    image-rendering: -webkit-optimize-contrast;
+  }
+}
+
+/* Performance monitoring styles */
+.performance-indicator {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  z-index: 9999;
+  backdrop-filter: blur(10px);
+}
+
+.performance-indicator.high {
+  background: rgba(0, 255, 0, 0.8);
+}
+
+.performance-indicator.medium {
+  background: rgba(255, 165, 0, 0.8);
+}
+
+.performance-indicator.low {
+  background: rgba(255, 0, 0, 0.8);
+}
+
+/* Loading states */
+.loading-skeleton {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.1) 25%, rgba(255, 255, 255, 0.05) 50%, rgba(255, 255, 255, 0.1) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  transform: translateZ(0);
+  will-change: background-position;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Focus styles for accessibility */
+.focus-visible {
+  outline: 2px solid rgba(177, 158, 239, 0.8);
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .background-pixelblast,
+  .background-dither,
+  .background-terminal,
+  .background-ascii,
+  .background-blinds {
+    background: none;
+    animation: none;
+  }
+  
+  .performance-indicator {
+    display: none;
+  }
+}
+
