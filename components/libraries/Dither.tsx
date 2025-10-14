@@ -5,6 +5,7 @@ import { Canvas, useFrame, useThree, ThreeEvent } from '@react-three/fiber';
 import { EffectComposer, wrapEffect } from '@react-three/postprocessing';
 import { Effect } from 'postprocessing';
 import * as THREE from 'three';
+import { usePerformance } from '@/contexts/PerformanceContext';
 
 import './Dither.css';
 
