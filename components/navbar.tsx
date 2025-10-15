@@ -182,7 +182,7 @@ export default function Navbar() {
         
         {/* Desktop Launch App Button */}
         <div className="hidden lg:flex items-center gap-4">
-          <Link href="/app" className="bg-transparent text-white px-4 xl:px-8 py-2 rounded-lg font-semibold transition-colors whitespace-nowrap text-sm xl:text-base hover:text-cyan-300" style={{fontFamily: 'Be Vietnam Pro'}}>
+          <Link href="/launch-app" className="bg-transparent text-white px-4 xl:px-8 py-2 rounded-lg font-semibold transition-colors whitespace-nowrap text-sm xl:text-base hover:text-cyan-300" style={{fontFamily: 'Be Vietnam Pro'}}>
             Launch App
           </Link>
         </div>
@@ -250,7 +250,7 @@ export default function Navbar() {
               Docs
             </Link>
             <div className="pt-4 border-t border-gray-800">
-              <Link href="/app" className="w-full bg-transparent text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors block text-center" style={{fontFamily: 'Be Vietnam Pro'}}>
+              <Link href="/launch-app" className="w-full bg-transparent text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors block text-center" style={{fontFamily: 'Be Vietnam Pro'}}>
                 Launch App
               </Link>
             </div>
