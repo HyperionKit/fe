@@ -3,71 +3,101 @@ export default function LaunchAppCommunity() {
     <div className="min-h-screen bg-black flex items-center justify-center p-8">
       <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl p-8">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-8">
           {/* Top Bar with Logo and Search */}
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex justify-between items-center mb-6">
             <div className="flex items-center gap-3">
-              <div className="w-6 h-6 bg-blue-600 rounded-full" />
-              <div className="h-4 w-48 bg-cyan-300 rounded" />
+              <img 
+                src="/icons/launch-app/community/community-build.png" 
+                alt="Community Build" 
+                className="w-8 h-8"
+              />
+              <h1 className="text-2xl font-bold text-gray-800 mb-1" style={{fontFamily: 'Inter'}}>
+                Build by Community
+              </h1>
             </div>
-            <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-4 py-2 bg-white">
+                <img src="/icons/launch-app/community/search.png" alt="Search" className="w-4 h-4" />
                 <input 
                   type="text" 
-                  placeholder="Search apps..." 
+                  placeholder="Search apps" 
                   className="outline-none text-sm text-gray-600 w-48"
                 />
               </div>
-              <div className="w-16 h-8 bg-blue-500 rounded" />
-              <div className="w-8 h-8 bg-white border-2 border-gray-200 rounded" />
+              <button className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
+                <span className="text-sm font-medium">View all</span>
+                <img src="/icons/launch-app/community/see-all.png" alt="View all" className="w-4 h-4" />
+              </button>
             </div>
           </div>
           
-          {/* Navigation Tabs */}
-          <div className="flex items-center gap-2 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full p-1.5">
-            <div className="px-6 py-2 bg-red-500 rounded-full" />
-            <div className="px-6 py-2 bg-red-400 rounded-full" />
-            <div className="px-6 py-2 bg-red-500 rounded-full" />
-            <div className="px-6 py-2 bg-red-400 rounded-full opacity-70" />
-            <div className="px-6 py-2 bg-red-500 rounded-full" />
-            <div className="flex-1" />
-          </div>
+          {/* Description */}
+          <p className="text-gray-600 text-base mb-1" style={{fontFamily: 'Inter'}}>
+            Discover a curated collection of applications built by our community.
+          </p>
           
-          {/* Secondary Nav */}
-          <div className="flex justify-end gap-2 mt-3">
-            <div className="w-16 h-6 bg-cyan-300 rounded" />
-            <div className="w-6 h-6 bg-blue-700 rounded" />
+          {/* Navigation Tabs and Controls */}
+          <div className="flex items-center justify-between mb-4">
+            {/* Navigation Tabs */}
+            <div className="flex items-center gap-2">
+              <button className="px-4 py-2 bg-gray-800 text-white rounded-lg text-sm font-medium">
+                Website
+              </button>
+              <button className="px-4 py-2 text-gray-600 hover:text-gray-800 rounded-lg text-sm font-medium">
+                Game
+              </button>
+              <button className="px-4 py-2 text-gray-600 hover:text-gray-800 rounded-lg text-sm font-medium">
+                Productivity
+              </button>
+              <button className="px-4 py-2 text-gray-600 hover:text-gray-800 rounded-lg text-sm font-medium">
+                Prototype
+              </button>
+              <button className="px-4 py-2 text-gray-600 hover:text-gray-800 rounded-lg text-sm font-medium">
+                App
+              </button>
+            </div>
+            
+            {/* Featured Dropdown */}
+            <button className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2 bg-white hover:bg-gray-50 transition-colors">
+              <span className="text-sm text-gray-700">featured</span>
+              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
           </div>
         </div>
         
         {/* App Grid */}
         <div className="grid grid-cols-3 gap-6">
           {[...Array(9)].map((_, i) => (
-            <div key={i} className="bg-gradient-to-br from-purple-100 to-blue-50 rounded-2xl p-6">
-              {/* App Buttons */}
-              <div className="flex gap-3 mb-8 justify-center">
-                <div className="px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-500 rounded-full shadow-lg">
-                  <div className="w-16 h-3 bg-cyan-400 rounded" />
-                </div>
-                <div className="px-8 py-3 bg-black rounded-full shadow-lg">
-                  <div className="w-16 h-3 bg-blue-500 rounded" />
-                </div>
+            <div key={i} className="bg-purple-50 rounded-2xl p-6 border border-purple-100">
+              {/* App Preview Area */}
+              <div className="h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+                {i === 0 ? (
+                  <div className="flex gap-3">
+                    <button className="px-6 py-3 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
+                      Remix App
+                    </button>
+                    <button className="px-6 py-3 bg-black text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition-colors">
+                      View Details
+                    </button>
+                  </div>
+                ) : (
+                  <div className="w-full h-full bg-gray-200 rounded-lg" />
+                )}
               </div>
               
               {/* App Info Footer */}
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-white rounded-full" />
+                <div className="w-8 h-8 bg-gray-300 rounded-full" />
                 <div className="flex-1">
-                  <div className="h-2 bg-cyan-400 rounded w-20 mb-2" />
-                  <div className="h-6 bg-purple-100 rounded" />
+                  <p className="text-sm font-medium text-gray-800">Username</p>
+                  <p className="text-xs text-gray-500">10,000</p>
                 </div>
-                <div className="w-12 h-6 bg-cyan-400 rounded" />
                 <div className="w-2 h-2 bg-purple-600 rounded-full" />
-                <div className="w-6 h-6 bg-white rounded" />
-                <div className="w-6 h-6 bg-gray-200 rounded" />
+                <img src="/icons/launch-app/community/remix.png" alt="Remix" className="w-5 h-5" />
+                <img src="/icons/launch-app/community/share.png" alt="Share" className="w-5 h-5" />
               </div>
             </div>
           ))}
