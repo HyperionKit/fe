@@ -100,10 +100,14 @@ export default function LaunchAppCommunity() {
         {/* App Grid */}
         <div className="grid grid-cols-3 gap-6">
           {[...Array(9)].map((_, i) => (
-            <div key={i} className="bg-purple-50 rounded-2xl p-6 border border-purple-100">
+            <div key={i} className="bg-purple-50 rounded-2xl p-6 border border-purple-100 group hover:shadow-lg transition-all duration-300">
               {/* App Preview Area */}
-              <div className="h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                {i === 0 ? (
+              <div className="h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center relative overflow-hidden">
+                {/* Default placeholder */}
+                <div className="w-full h-full bg-gray-200 rounded-lg group-hover:opacity-0 transition-opacity duration-300" />
+                
+                {/* Hover buttons - shown on hover */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="flex gap-3">
                     <button className="px-6 py-3 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
                       Remix App
@@ -112,9 +116,7 @@ export default function LaunchAppCommunity() {
                       View Details
                     </button>
                   </div>
-                ) : (
-                  <div className="w-full h-full bg-gray-200 rounded-lg" />
-                )}
+                </div>
               </div>
               
               {/* App Info Footer */}
