@@ -1,8 +1,42 @@
 'use client';
 
-export default function LaunchAppHeroPage() {
+import { useState, useRef, useCallback, memo } from 'react';
+
+const LaunchAppHeroPage = memo(function LaunchAppHeroPage() {
+  const [query, setQuery] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const handleSubmit = useCallback(async () => {
+    if (!query.trim() || isSubmitting) return;
+    
+    setIsSubmitting(true);
+    try {
+      // TODO: Implement actual AI query logic
+      console.log('Submitting query:', query);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    } catch (error) {
+      console.error('Error submitting query:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [query, isSubmitting]);
+
+  const handleKeyPress = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  }, [handleSubmit]);
+
+  const handleTextareaResize = useCallback((e: React.FormEvent<HTMLTextAreaElement>) => {
+    const target = e.target as HTMLTextAreaElement;
+    target.style.height = 'auto';
+    target.style.height = target.scrollHeight + 'px';
+  }, []);
   return (
-    <div className="min-h-screen bg-transparent flex items-cente justify-center px-1 pt-20">
+    <div className="min-h-screen bg-transparent flex items-center justify-center px-1 pt-20">
       <div className="w-full max-w-4xl space-y-4">
         {/* Top Bar */}
         <div className="relative">
@@ -36,20 +70,30 @@ export default function LaunchAppHeroPage() {
               <div className="flex justify-between items-start mb-6 gap-4">
                 <div className="flex-1 bg-transparent rounded-lg">
                   <textarea 
+                    ref={textareaRef}
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    onKeyPress={handleKeyPress}
+                    onInput={handleTextareaResize}
                     placeholder="Ask Alith to create a dashboard"
-                    className="w-full min-h-[40px] max-h-32 px-4 py-2 text-lg font-medium text-gray-600 bg-transparent border-none outline-none placeholder-gray-500 resize-none overflow-hidden"
+                    className="w-full min-h-[40px] max-h-32 px-4 py-2 text-lg font-medium text-gray-600 bg-transparent border-none outline-none placeholder-gray-500 resize-none overflow-hidden focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
                     rows={1}
-                    onInput={(e) => {
-                      const target = e.target as HTMLTextAreaElement;
-                      target.style.height = 'auto';
-                      target.style.height = target.scrollHeight + 'px'  ;
-                    }}
+                    disabled={isSubmitting}
                   />
                 </div>
-                <button className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-auto h-auto text-white">
-                    <path d="M18 14.9314L12.3811 9.3125L6.76221 14.9314" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
-                  </svg>
+                <button 
+                  onClick={handleSubmit}
+                  disabled={!query.trim() || isSubmitting}
+                  className="w-10 h-10 bg-purple-600 rounded-lg flex items-center justify-center flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-purple-700 transition-colors"
+                  aria-label="Submit query"
+                >
+                  {isSubmitting ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-auto h-auto text-white">
+                      <path d="M18 14.9314L12.3811 9.3125L6.76221 14.9314" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+                    </svg>
+                  )}
                 </button>
               </div>
               
@@ -96,4 +140,6 @@ export default function LaunchAppHeroPage() {
       </div>
     </div>
   );
-}
+});
+
+export default LaunchAppHeroPage;
