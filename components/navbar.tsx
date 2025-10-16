@@ -2,12 +2,15 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { OptimizedLogo, OptimizedIcon } from '@/components/ui/optimized-image';
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isExploreOpen, setIsExploreOpen] = useState(false);
   const exploreRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const isLaunchAppPage = pathname === '/launch-app';
 
   // Close explore dropdown when clicking outside
   useEffect(() => {
@@ -174,17 +177,35 @@ export default function Navbar() {
             <OptimizedIcon src="/icons/navbar/build.svg" alt="Build" width={16} height={16} />
             <span className="hidden xl:inline">Build</span>
           </Link>
-          <Link href="#" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+          <a href="https://docs.hyperionkit.xyz/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
             <OptimizedIcon src="/icons/navbar/docs.svg" alt="Docs" width={16} height={16} />
             <span className="hidden xl:inline">Docs</span>
-          </Link>
+          </a>
         </div>
         
         {/* Desktop Launch App Button */}
         <div className="hidden lg:flex items-center gap-4">
-          <Link href="/launch-app" className="bg-transparent text-white px-4 xl:px-8 py-2 rounded-lg font-semibold transition-colors whitespace-nowrap text-sm xl:text-base hover:text-cyan-300" style={{fontFamily: 'Be Vietnam Pro'}}>
-            Launch App
-          </Link>
+          {isLaunchAppPage ? (
+            <div className="flex items-center gap-2">
+              {/* Two icon containers */}
+              <div className="flex gap-1">
+                <button className="w-10 h-10 bg-transparent rounded flex items-center justify-center hover:bg-gray-800 transition-colors">
+                  <img src="/icons/launch-app/navbar/gift.png" alt="Gift" className="w-6 h-6" />
+                </button>
+                <button className="w-10 h-10 bg-transparent rounded flex items-center justify-center hover:bg-gray-800 transition-colors">
+                  <img src="/icons/launch-app/navbar/notifications.png" alt="Notifications" className="w-6 h-6" />
+                </button>
+              </div>
+              {/* My Workspace container */}
+              <button className="bg-purple-600 text-white px-4 xl:px-6 py-2 rounded-lg font-semibold whitespace-nowrap text-sm xl:text-base h-10 flex items-center hover:bg-purple-700 transition-colors" style={{fontFamily: 'Be Vietnam Pro'}}>
+                My Workspace
+              </button>
+            </div>
+          ) : (
+            <Link href="/launch-app" className="bg-transparent text-white px-4 xl:px-8 py-2 rounded-lg font-semibold transition-colors whitespace-nowrap text-sm xl:text-base hover:text-cyan-300" style={{fontFamily: 'Be Vietnam Pro'}}>
+              Launch App
+            </Link>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -245,14 +266,32 @@ export default function Navbar() {
               <OptimizedIcon src="/icons/navbar/build.svg" alt="Build" width={20} height={20} />
               Build
             </Link>
-            <Link href="#" className="flex items-center gap-3 text-white hover:text-cyan-300 transition-colors font-medium py-2" style={{fontFamily: 'Be Vietnam Pro'}}>
+            <a href="https://docs.hyperionkit.xyz/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white hover:text-cyan-300 transition-colors font-medium py-2" style={{fontFamily: 'Be Vietnam Pro'}}>
               <OptimizedIcon src="/icons/navbar/docs.svg" alt="Docs" width={20} height={20} />
               Docs
-            </Link>
+            </a>
             <div className="pt-4 border-t border-gray-800">
-              <Link href="/launch-app" className="w-full bg-transparent text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors block text-center" style={{fontFamily: 'Be Vietnam Pro'}}>
-                Launch App
-              </Link>
+              {isLaunchAppPage ? (
+                <div className="flex items-center justify-center gap-2 px-6 py-3">
+                  {/* Two icon containers */}
+                  <div className="flex gap-1">
+                    <button className="w-10 h-10 bg-transparent rounded flex items-center justify-center hover:bg-gray-800 transition-colors">
+                      <img src="/icons/launch-app/navbar/gift.png" alt="Gift" className="w-6 h-6" />
+                    </button>
+                    <button className="w-10 h-10 bg-transparent rounded flex items-center justify-center hover:bg-gray-800 transition-colors">
+                      <img src="/icons/launch-app/navbar/notifications.png" alt="Notifications" className="w-6 h-6" />
+                    </button>
+                  </div>
+                  {/* My Workspace container */}
+                  <button className="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold h-8 flex items-center hover:bg-purple-700 transition-colors" style={{fontFamily: 'Be Vietnam Pro'}}>
+                    My Workspace
+                  </button>
+                </div>
+              ) : (
+                <Link href="/launch-app" className="w-full bg-transparent text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors block text-center" style={{fontFamily: 'Be Vietnam Pro'}}>
+                  Launch App
+                </Link>
+              )}
             </div>
           </div>
         </div>
