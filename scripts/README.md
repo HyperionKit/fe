@@ -43,7 +43,7 @@ An intelligent, automated script that scans the entire repository for changes an
 
 ### **Basic Usage**
 ```bash
-# Run the script
+# Run the script / update & commit
 npm run update-changelog
 # or
 npm run changelog
