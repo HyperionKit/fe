@@ -331,7 +331,7 @@ function calculateTaskCompletion(task, allFiles) {
 function getTaskStatus(completion) {
   if (completion >= 100) return { status: 'Completed', color: 'green', symbol: '✓' };
   if (completion > 0) return { status: 'In Progress', color: 'yellow', symbol: '◐' };
-  return { status: 'Not Started', color: 'purple', symbol: '○' };
+  return { status: 'Not Started', color: 'red', symbol: '○' };
 }
 
 // Function to generate Gantt chart timeline
@@ -513,6 +513,15 @@ function main() {
   const ganttTimeline = generateGanttTimeline(allFiles);
   if (ganttTimeline) {
     console.log(ganttTimeline);
+  }
+  
+  // Sync roadmap component with latest progress
+  console.log('\n🔄 Syncing roadmap timeline component...');
+  try {
+    const { updateRoadmapComponent } = require('./sync-roadmap-progress');
+    updateRoadmapComponent();
+  } catch (error) {
+    console.log('ℹ️  Roadmap sync not available, continuing...');
   }
   
   // Analyze changes
