@@ -331,7 +331,7 @@ function calculateTaskCompletion(task, allFiles) {
 function getTaskStatus(completion) {
   if (completion >= 100) return { status: 'Completed', color: 'green', symbol: '✓' };
   if (completion > 0) return { status: 'In Progress', color: 'yellow', symbol: '◐' };
-  return { status: 'Not Started', color: 'red', symbol: '○' };
+  return { status: 'Not Started', color: 'purple', symbol: '○' };
 }
 
 // Function to generate Gantt chart timeline
