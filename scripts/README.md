@@ -1,6 +1,6 @@
-# Changelog Update Script
+# Enhanced Changelog Update Script with Gantt Timeline
 
-An intelligent, automated script that scans the entire repository for changes and updates the `DEVELOPMENT_CHANGELOG.md` file accordingly.
+An intelligent, automated script that scans the entire repository for changes, updates the `DEVELOPMENT_CHANGELOG.md` file, and generates a visual Gantt chart timeline with status indicators and tooltips based on current project files.
 
 ## 🚀 Features
 
@@ -8,6 +8,13 @@ An intelligent, automated script that scans the entire repository for changes an
 - **Git Integration**: Automatically detects modified, added, and untracked files
 - **Content Analysis**: Analyzes file content to understand the nature of changes
 - **Smart Categorization**: Automatically categorizes changes based on file paths and content
+
+### **Gantt Timeline Visualization**
+- **Visual Timeline**: Generates Gantt chart-style timeline with status bars
+- **Status Indicators**: Color-coded status (Completed, In Progress, Not Started)
+- **Progress Tooltips**: Detailed tooltips showing completion percentage and details
+- **Week-based Layout**: Timeline organized by weeks (W1-4) with visual progress bars
+- **Real-time Updates**: Timeline updates based on current project file status
 
 ### **Automatic Categorization**
 - **🚀 New Features** (`feat`): Interactive components, demo systems, new functionality
@@ -55,9 +62,10 @@ node scripts/update-changelog.js
 1. **Scans Repository**: Detects all modified, added, and untracked files
 2. **Analyzes Changes**: Examines file content to understand changes
 3. **Categorizes Files**: Groups changes by type and purpose
-4. **Updates Changelog**: Adds new entry to `DEVELOPMENT_CHANGELOG.md`
-5. **Commits Files**: Commits each file individually with descriptive messages
-6. **Reports Results**: Shows summary of changes and commits
+4. **Generates Gantt Timeline**: Creates visual timeline with status bars and tooltips
+5. **Updates Changelog**: Adds new entry to `DEVELOPMENT_CHANGELOG.md`
+6. **Commits Files**: Commits each file individually with descriptive messages
+7. **Reports Results**: Shows summary of changes and commits
 
 ### **Example Output**
 ```
@@ -70,6 +78,27 @@ node scripts/update-changelog.js
   - public/logo/brand/wallets/metamask-icon-fox.svg
 
 📈 Version: 2.1.0 → 2.1.1
+
+📊 Generating Gantt Timeline...
+┌─────────────────────────────────────────────────────────────────┐
+│ Month 1: HyperKit Project Launch                               │
+│ Complete rebranding, AI project generation system, modular     │
+│ customization platform, and community engagement               │
+├─────────────────────────────────────────────────────────────────┤
+│ Detailed Tasks & Timeline                                      │
+├─────────────────────────────────────────────────────────────────┤
+│ Tasks                    │ Status        │ W1  W2  W3  W4  W5  │
+├─────────────────────────────────────────────────────────────────┤
+│ Finalize Logo Design     │ Completed 100%│ ████                │
+│ Universal Theme          │ In Progress 75%│ ████ ██              │
+│ Project Types Docs       │ Not Started 0%│     ████              │
+│ Landing Page Redesign    │ In Progress 75%│     ████ ██           │
+│ A11y Validation          │ Not Started 0%│         ████           │
+│ Visual Regression Tests  │ Not Started 0%│         ████           │
+│ AI Generation Flow       │ Not Started 0%│             ████       │
+│ AI Model Integration     │ Not Started 0%│             ████ ██     │
+│ Artifact Generation      │ Not Started 0%│                 ████    │
+└─────────────────────────────────────────────────────────────────┘
 
 ✅ Updated DEVELOPMENT_CHANGELOG.md
 
@@ -106,6 +135,27 @@ const CONFIG = {
   changelogPath: 'reports/DEVELOPMENT_CHANGELOG.md',
   versionIncrement: 'patch', // 'major', 'minor', 'patch'
   autoDetectChanges: true,
+  generateGanttTimeline: true, // Enable Gantt timeline generation
+  ganttConfig: {
+    projectTitle: 'Month 1: HyperKit Project Launch',
+    projectDescription: 'Complete rebranding, AI project generation system, modular customization platform, and community engagement',
+    weeks: ['W1', 'W2', 'W3', 'W4', 'W5'],
+    tasks: [
+      {
+        name: 'Finalize Logo Design',
+        criteria: ['public/logo/brand/hyperkit/'],
+        week: 1,
+        duration: 1
+      },
+      {
+        name: 'Universal Theme',
+        criteria: ['components/', 'app/globals.css'],
+        week: 1,
+        duration: 2
+      },
+      // ... more tasks
+    ]
+  },
   categories: {
     'feat': '🚀 New Features',
     'fix': '🐛 Bug Fixes',
