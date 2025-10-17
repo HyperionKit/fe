@@ -7,54 +7,12 @@ import {
 } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 
-// Progress Bar Component
-const ProgressBar = ({ progress, phase }: { progress: number; phase: string }) => {
-  const progressBarWidth = Math.min(progress, 100);
-  
-  // Determine status based on progress
-  const getStatus = (progress: number) => {
-    if (progress >= 100) return { status: 'Completed', color: 'text-green-400', bgColor: 'bg-green-500' };
-    if (progress > 0) return { status: 'In Progress', color: 'text-yellow-400', bgColor: 'bg-yellow-500' };
-    return { status: 'Not Started', color: 'text-red-400', bgColor: 'bg-red-500' };
-  };
-  
-  const statusInfo = getStatus(progress);
-  
-  return (
-    <div className="mb-4">
-      <div className="flex items-center justify-between mb-2">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-gray-400" style={{fontFamily: 'Inter'}}>
-            {phase} Progress
-          </span>
-          <span className={`text-xs px-2 py-1 rounded-full ${statusInfo.color} ${statusInfo.bgColor} bg-opacity-20`} style={{fontFamily: 'Inter'}}>
-            {statusInfo.status}
-          </span>
-        </div>
-        <span className="text-sm font-semibold text-white" style={{fontFamily: 'Inter'}}>
-          {Math.round(progress)}%
-        </span>
-      </div>
-      <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
-        <motion.div
-          className={`h-full rounded-full ${statusInfo.bgColor}`}
-          initial={{ width: 0 }}
-          animate={{ width: `${progressBarWidth}%` }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-        />
-      </div>
-    </div>
-  );
-};
-
 interface TimelineEntry {
   title: string;
   subtitle?: string;
   content: React.ReactNode;
   titleSize?: string;
   subtitleSize?: string;
-  progress?: number;
-  phase?: string;
 }
 
 export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
@@ -156,60 +114,6 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
 };
 
 const RoadmapTimeline = () => {
-  // Real-time progress calculation based on actual project files
-  const calculateProgress = (criteria: string[]) => {
-    // This matches the exact logic from the Gantt timeline script
-    const progressMap: { [key: string]: number } = {
-      'public/logo/brand/hyperkit/': 100, // Logo files exist
-      'components/': 75, // Theme files exist but not complete
-      'app/globals.css': 75, // Theme files exist
-      'reports/': 50, // Some docs exist
-      'docs/': 50, // Some docs exist
-      'app/page.tsx': 75, // Landing page exists
-      'components/hero-page.tsx': 75, // Landing page exists
-      'components/ai-chat-page.tsx': 25, // AI components exist but not complete
-      'app/ai/': 25, // AI components exist but not complete
-      'accessibility': 0, // No accessibility tests yet
-      'test/': 0, // No test files yet
-      'cypress/': 0, // No test files yet
-      'playwright/': 0, // No test files yet
-      'lib/ai/': 0, // No AI lib files yet
-      'components/ai-': 25, // Some AI components exist
-      'lib/generation/': 0, // No generation lib yet
-      'components/web3-interactive-demo.tsx': 25 // Demo component exists
-    };
-    
-    let totalProgress = 0;
-    let totalCriteria = 0;
-    
-    criteria.forEach(criterion => {
-      totalCriteria++;
-      // Check for exact matches first
-      const exactMatch = progressMap[criterion];
-      if (exactMatch !== undefined) {
-        totalProgress += exactMatch;
-      } else {
-        // Check for partial matches
-        const matchingKey = Object.keys(progressMap).find(key => criterion.includes(key));
-        if (matchingKey) {
-          totalProgress += progressMap[matchingKey];
-        } else {
-          // Default progress based on criterion type
-          const key = criterion.toLowerCase().replace(/[^a-z]/g, '');
-          if (key.includes('logo')) totalProgress += 100;
-          else if (key.includes('theme')) totalProgress += 75;
-          else if (key.includes('landing')) totalProgress += 75;
-          else if (key.includes('ai')) totalProgress += 25;
-          else if (key.includes('docs')) totalProgress += 50;
-          else totalProgress += 0;
-        }
-      }
-    });
-    
-    if (totalCriteria === 0) return 0;
-    return Math.round(totalProgress / totalCriteria);
-  };
-
   const timelineData: TimelineEntry[] = [
     {
       title: "2025",
@@ -224,7 +128,6 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Finalize new logo and themes. Outline supported blockchain project types.
           </p>
-          <ProgressBar progress={calculateProgress(['public/logo/brand/hyperkit/', 'components/', 'app/globals.css', 'reports/'])} phase="Rebranding & Planning" />
           {/* 2x2 Grid - Hyperkit Branding Assets */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - Hyperkit Abstract Logo */}
@@ -287,7 +190,6 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Launch redesigned landing page and onboarding flow. Validate accessibility. Create wireframes/prototypes for AI project generation.
           </p>
-          <ProgressBar progress={calculateProgress(['app/page.tsx', 'components/hero-page.tsx', 'components/', 'accessibility'])} phase="UI/UX & Landing Page" />
           {/* 2x2 Grid - Page Design Mockups */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - Product Page Mockup */}
@@ -350,7 +252,6 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Integrate selected AI models. Build and test artifact/local code generator. Start customizable module editor. Set up backend logging.
           </p>
-          <ProgressBar progress={calculateProgress(['components/ai-chat-page.tsx', 'app/ai/', 'lib/ai/', 'components/ai-', 'components/web3-interactive-demo.tsx'])} phase="AI & Module Development" />
           {/* 2x2 Grid - Image Placeholders for AI & Module Development */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - AI Models Image */}
@@ -417,7 +318,6 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Integrate drag and drop tools. Release first dashboard and blockchain dApps. MVP backend integration. Security/node validation for AI outputs. Prepare demos/videos for launch.
           </p>
-          <ProgressBar progress={calculateProgress(['lib/generation/', 'test/', 'cypress/', 'playwright/'])} phase="Customization & Release" />
           {/* 2x2 Grid - Image Placeholders for Customization & Release */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - Drag & Drop Image */}
