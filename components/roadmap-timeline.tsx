@@ -13,9 +13,9 @@ const ProgressBar = ({ progress, phase }: { progress: number; phase: string }) =
   
   // Determine status based on progress
   const getStatus = (progress: number) => {
-    if (progress >= 100) return { status: 'Completed', color: 'text-green-400', bgColor: 'bg-green-500' };
-    if (progress > 0) return { status: 'In Progress', color: 'text-yellow-400', bgColor: 'bg-yellow-500' };
-    return { status: 'Not Started', color: 'text-red-400', bgColor: 'bg-red-500' };
+    if (progress >= 100) return { status: 'Completed', color: 'text-green-400', bgColor: 'bg-green-500', dotColor: 'bg-green-500' };
+    if (progress > 0) return { status: 'In Progress', color: 'text-yellow-400', bgColor: 'bg-yellow-500', dotColor: 'bg-yellow-500' };
+    return { status: 'Not Started', color: 'text-purple-400', bgColor: 'bg-purple-500', dotColor: 'bg-purple-500' };
   };
   
   const statusInfo = getStatus(progress);
@@ -86,9 +86,33 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
         <h2 className="text-4xl md:text-6xl mb-6 text-white max-w-5xl leading-tight" style={{fontFamily: 'Be Vietnam Pro'}}>
           Tracking Every Breakthrough
         </h2>
-        <p className="text-gray-300 text-lg md:text-xl max-w-4xl leading-relaxed" style={{fontFamily: 'Inter'}}>
+        <p className="text-gray-300 text-lg md:text-xl max-w-4xl leading-relaxed mb-8" style={{fontFamily: 'Inter'}}>
           Stay updated with the latest milestones, enhancements, and pivotal moments from my development journey. This changelog reflects an open commitment to transparency and continuous innovation, sharing each step forward as Hyperkit evolves.
         </p>
+        
+        {/* Progress Summary */}
+        <div className="bg-gray-900/50 backdrop-blur-sm rounded-lg p-6 mb-8">
+          <h3 className="text-white text-2xl font-bold mb-4" style={{fontFamily: 'Be Vietnam Pro'}}>
+            Month 1: HyperKit Project Launch
+          </h3>
+          <p className="text-gray-300 text-base mb-4" style={{fontFamily: 'Inter'}}>
+            Complete rebranding, AI-powered project generation, and modular customization platform, with community-driven innovation.
+          </p>
+          <div className="flex gap-6 text-sm" style={{fontFamily: 'Inter'}}>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span className="text-gray-300">Completed ({progressSummary.completed})</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+              <span className="text-gray-300">In Progress ({progressSummary.inProgress})</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+              <span className="text-gray-300">Not Started ({progressSummary.notStarted})</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
@@ -185,6 +209,31 @@ const RoadmapTimeline = () => {
     
     return Math.round(totalProgress / criteria.length);
   };
+
+  // Calculate progress summary
+  const calculateProgressSummary = () => {
+    const phases = [
+      { criteria: ['logo', 'theme', 'docs'] },
+      { criteria: ['landing', 'theme', 'a11y'] },
+      { criteria: ['ai', 'backend', 'modules'] },
+      { criteria: ['preview', 'dashboard', 'security', 'dragdrop', 'early-access'] }
+    ];
+    
+    let completed = 0;
+    let inProgress = 0;
+    let notStarted = 0;
+    
+    phases.forEach(phase => {
+      const progress = calculateProgress(phase.criteria);
+      if (progress >= 100) completed++;
+      else if (progress > 0) inProgress++;
+      else notStarted++;
+    });
+    
+    return { completed, inProgress, notStarted };
+  };
+
+  const progressSummary = calculateProgressSummary();
 
   const timelineData: TimelineEntry[] = [
     {
