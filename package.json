@@ -18,7 +18,8 @@
     "changelog": "node scripts/update-changelog.js",
     "enhanced-changelog": "node scripts/enhanced-update-changelog.js",
     "update-progress": "node scripts/update-timeline-progress.js",
-    "timeline-progress": "node scripts/update-timeline-progress.js"
+    "timeline-progress": "node scripts/update-timeline-progress.js",
+    "sync-roadmap": "node scripts/sync-roadmap-progress.js"
   },
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.20.0",
