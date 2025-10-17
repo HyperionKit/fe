@@ -7,12 +7,40 @@ import {
 } from "framer-motion";
 import React, { useEffect, useRef, useState } from "react";
 
+// Progress Bar Component
+const ProgressBar = ({ progress, phase }: { progress: number; phase: string }) => {
+  const progressBarWidth = Math.min(progress, 100);
+  
+  return (
+    <div className="mb-4">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm text-gray-400" style={{fontFamily: 'Inter'}}>
+          {phase} Progress
+        </span>
+        <span className="text-sm font-semibold text-white" style={{fontFamily: 'Inter'}}>
+          {Math.round(progress)}%
+        </span>
+      </div>
+      <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
+        <motion.div
+          className="h-full bg-gradient-to-r from-purple-500 via-cyan-400 to-blue-500 rounded-full"
+          initial={{ width: 0 }}
+          animate={{ width: `${progressBarWidth}%` }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        />
+      </div>
+    </div>
+  );
+};
+
 interface TimelineEntry {
   title: string;
   subtitle?: string;
   content: React.ReactNode;
   titleSize?: string;
   subtitleSize?: string;
+  progress?: number;
+  phase?: string;
 }
 
 export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
@@ -128,6 +156,7 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Finalize new logo and themes. Outline supported blockchain project types.
           </p>
+          <ProgressBar progress={85} phase="Rebranding & Planning" />
           {/* 2x2 Grid - Hyperkit Branding Assets */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - Hyperkit Abstract Logo */}
@@ -190,6 +219,7 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Launch redesigned landing page and onboarding flow. Validate accessibility. Create wireframes/prototypes for AI project generation.
           </p>
+          <ProgressBar progress={92} phase="UI/UX & Landing Page" />
           {/* 2x2 Grid - Page Design Mockups */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - Product Page Mockup */}
@@ -252,6 +282,7 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Integrate selected AI models. Build and test artifact/local code generator. Start customizable module editor. Set up backend logging.
           </p>
+          <ProgressBar progress={67} phase="AI & Module Development" />
           {/* 2x2 Grid - Image Placeholders for AI & Module Development */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - AI Models Image */}
@@ -318,6 +349,7 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Integrate drag and drop tools. Release first dashboard and blockchain dApps. MVP backend integration. Security/node validation for AI outputs. Prepare demos/videos for launch.
           </p>
+          <ProgressBar progress={34} phase="Customization & Release" />
           {/* 2x2 Grid - Image Placeholders for Customization & Release */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - Drag & Drop Image */}
