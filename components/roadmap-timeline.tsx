@@ -377,4 +377,3 @@ const RoadmapTimeline = () => {
 };
 
 export default RoadmapTimeline;
-
