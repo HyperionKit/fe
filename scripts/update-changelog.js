@@ -9,6 +9,77 @@ const CONFIG = {
   changelogPath: 'reports/DEVELOPMENT_CHANGELOG.md',
   versionIncrement: 'patch', // 'major', 'minor', 'patch'
   autoDetectChanges: true,
+  generateGanttTimeline: true, // Enable Gantt timeline generation
+  ganttConfig: {
+    projectTitle: 'Month 1: HyperKit Project Launch',
+    projectDescription: 'Complete rebranding, AI project generation system, modular customization platform, and community engagement',
+    weeks: ['W1', 'W2', 'W3', 'W4', 'W5'],
+    tasks: [
+      {
+        name: 'Finalize Logo Design',
+        criteria: ['public/logo/brand/hyperkit/'],
+        week: 1,
+        duration: 1,
+        description: 'Finalize and deploy new logo design'
+      },
+      {
+        name: 'Universal Theme',
+        criteria: ['components/', 'app/globals.css'],
+        week: 1,
+        duration: 2,
+        description: 'Implement new universal theme across UI components'
+      },
+      {
+        name: 'Project Types Docs',
+        criteria: ['reports/', 'docs/'],
+        week: 2,
+        duration: 1,
+        description: 'Specify and publish supported project types in technical docs'
+      },
+      {
+        name: 'Landing Page Redesign',
+        criteria: ['app/page.tsx', 'components/hero-page.tsx'],
+        week: 2,
+        duration: 2,
+        description: 'Redesign and launch new landing page with improved onboarding flow'
+      },
+      {
+        name: 'A11y Validation',
+        criteria: ['components/', 'accessibility'],
+        week: 3,
+        duration: 1,
+        description: 'Validate accessibility (A11y) and responsive navigation across devices'
+      },
+      {
+        name: 'Visual Regression Tests',
+        criteria: ['test/', 'cypress/', 'playwright/'],
+        week: 3,
+        duration: 1,
+        description: 'Visual regression test suite for UI changes'
+      },
+      {
+        name: 'AI Generation Flow',
+        criteria: ['components/ai-chat-page.tsx', 'app/ai/'],
+        week: 4,
+        duration: 1,
+        description: 'Complete UI/UX rework for AI generation flow with wireframes/prototypes'
+      },
+      {
+        name: 'AI Model Integration',
+        criteria: ['lib/ai/', 'components/ai-'],
+        week: 4,
+        duration: 2,
+        description: 'Integrate 1-2 specific AI models for project creation'
+      },
+      {
+        name: 'Artifact Generation',
+        criteria: ['components/web3-interactive-demo.tsx', 'lib/generation/'],
+        week: 5,
+        duration: 2,
+        description: 'Build artifact generation logic and publish demo video'
+      }
+    ]
+  },
   categories: {
     'feat': '🚀 New Features',
     'fix': '🐛 Bug Fixes',
@@ -210,6 +281,92 @@ function analyzeContent(content, filePath) {
   };
 }
 
+// Function to calculate task completion based on file criteria
+function calculateTaskCompletion(task, allFiles) {
+  let completedFiles = 0;
+  let totalCriteria = 0;
+  
+  task.criteria.forEach(criteria => {
+    totalCriteria++;
+    const matchingFiles = allFiles.filter(file => file.includes(criteria));
+    if (matchingFiles.length > 0) {
+      // Check if files exist and have content
+      const validFiles = matchingFiles.filter(file => {
+        try {
+          const stats = fs.statSync(file);
+          return stats.size > 0;
+        } catch (error) {
+          return false;
+        }
+      });
+      if (validFiles.length > 0) {
+        completedFiles++;
+      }
+    }
+  });
+  
+  if (totalCriteria === 0) return 0;
+  return Math.round((completedFiles / totalCriteria) * 100);
+}
+
+// Function to get task status based on completion percentage
+function getTaskStatus(completion) {
+  if (completion >= 100) return { status: 'Completed', color: 'green', symbol: '✓' };
+  if (completion > 0) return { status: 'In Progress', color: 'yellow', symbol: '◐' };
+  return { status: 'Not Started', color: 'red', symbol: '○' };
+}
+
+// Function to generate Gantt chart timeline
+function generateGanttTimeline(allFiles) {
+  if (!CONFIG.generateGanttTimeline) return '';
+  
+  console.log('\n📊 Generating Gantt Timeline...');
+  
+  const timeline = [];
+  const maxTaskNameLength = Math.max(...CONFIG.ganttConfig.tasks.map(task => task.name.length));
+  const weekHeader = CONFIG.ganttConfig.weeks.join('  ');
+  
+  // Header
+  timeline.push('┌' + '─'.repeat(60) + '┐');
+  timeline.push(`│ ${CONFIG.ganttConfig.projectTitle.padEnd(58)} │`);
+  timeline.push(`│ ${CONFIG.ganttConfig.projectDescription.padEnd(58)} │`);
+  timeline.push('├' + '─'.repeat(60) + '┤');
+  timeline.push('│ Detailed Tasks & Timeline'.padEnd(60) + ' │');
+  timeline.push('├' + '─'.repeat(60) + '┤');
+  timeline.push(`│ Tasks${' '.repeat(maxTaskNameLength - 5)} │ Status        │ ${weekHeader} │`);
+  timeline.push('├' + '─'.repeat(60) + '┤');
+  
+  // Task rows
+  CONFIG.ganttConfig.tasks.forEach(task => {
+    const completion = calculateTaskCompletion(task, allFiles);
+    const statusInfo = getTaskStatus(completion);
+    const taskName = task.name.padEnd(maxTaskNameLength);
+    const statusText = `${statusInfo.status} ${completion}%`.padEnd(13);
+    
+    // Generate Gantt bar
+    let ganttBar = '';
+    for (let week = 1; week <= 5; week++) {
+      if (week >= task.week && week < task.week + task.duration) {
+        if (completion >= 100) {
+          ganttBar += '██';
+        } else if (completion > 0) {
+          ganttBar += '██';
+        } else {
+          ganttBar += '██';
+        }
+      } else {
+        ganttBar += '  ';
+      }
+    }
+    
+    timeline.push(`│ ${taskName} │ ${statusText} │ ${ganttBar} │`);
+  });
+  
+  timeline.push('└' + '─'.repeat(60) + '┘');
+  
+  return timeline.join('\n');
+}
+
 // Function to get current version from changelog
 function getCurrentVersion() {
   try {
@@ -334,6 +491,12 @@ function main() {
   allFiles.forEach(file => console.log(`  - ${file}`));
   console.log('');
   
+  // Generate Gantt timeline
+  const ganttTimeline = generateGanttTimeline(allFiles);
+  if (ganttTimeline) {
+    console.log(ganttTimeline);
+  }
+  
   // Analyze changes
   const categorizedChanges = analyzeChanges(changes);
   
@@ -341,7 +504,7 @@ function main() {
   const currentVersion = getCurrentVersion();
   const newVersion = incrementVersion(currentVersion, CONFIG.versionIncrement);
   
-  console.log(`📈 Version: ${currentVersion} → ${newVersion}\n`);
+  console.log(`\n📈 Version: ${currentVersion} → ${newVersion}\n`);
   
   // Generate changelog entry
   const changelogEntry = generateChangelogEntry(categorizedChanges, newVersion);
