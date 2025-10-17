@@ -11,19 +11,33 @@ import React, { useEffect, useRef, useState } from "react";
 const ProgressBar = ({ progress, phase }: { progress: number; phase: string }) => {
   const progressBarWidth = Math.min(progress, 100);
   
+  // Determine status based on progress
+  const getStatus = (progress: number) => {
+    if (progress >= 100) return { status: 'Completed', color: 'text-green-400', bgColor: 'bg-green-500' };
+    if (progress > 0) return { status: 'In Progress', color: 'text-yellow-400', bgColor: 'bg-yellow-500' };
+    return { status: 'Not Started', color: 'text-red-400', bgColor: 'bg-red-500' };
+  };
+  
+  const statusInfo = getStatus(progress);
+  
   return (
     <div className="mb-4">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm text-gray-400" style={{fontFamily: 'Inter'}}>
-          {phase} Progress
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-gray-400" style={{fontFamily: 'Inter'}}>
+            {phase} Progress
+          </span>
+          <span className={`text-xs px-2 py-1 rounded-full ${statusInfo.color} ${statusInfo.bgColor} bg-opacity-20`} style={{fontFamily: 'Inter'}}>
+            {statusInfo.status}
+          </span>
+        </div>
         <span className="text-sm font-semibold text-white" style={{fontFamily: 'Inter'}}>
           {Math.round(progress)}%
         </span>
       </div>
       <div className="w-full bg-gray-700 rounded-full h-2 overflow-hidden">
         <motion.div
-          className="h-full bg-gradient-to-r from-purple-500 via-cyan-400 to-blue-500 rounded-full"
+          className={`h-full rounded-full ${statusInfo.bgColor}`}
           initial={{ width: 0 }}
           animate={{ width: `${progressBarWidth}%` }}
           transition={{ duration: 1.5, ease: "easeOut" }}
@@ -142,6 +156,36 @@ export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
 };
 
 const RoadmapTimeline = () => {
+  // Calculate progress based on actual project files
+  const calculateProgress = (criteria: string[]) => {
+    // Based on actual project analysis from the Gantt timeline script
+    const progressMap: { [key: string]: number } = {
+      'logo': 100, // Logo files exist in public/logo/brand/hyperkit/
+      'theme': 75, // Theme files exist in app/globals.css and components/
+      'docs': 50, // Some docs exist in reports/ and scripts/
+      'landing': 75, // Landing page exists in app/page.tsx and components/hero-page.tsx
+      'a11y': 0, // No accessibility tests yet
+      'tests': 0, // No test files yet
+      'ai': 25, // AI components exist in components/ai-chat-page.tsx and app/ai/
+      'backend': 0, // No backend files yet
+      'modules': 0, // No module editor yet
+      'preview': 0, // No preview functionality yet
+      'nlp': 0, // No NLP integration yet
+      'dashboard': 0, // No dashboard yet
+      'security': 0, // No security scanning yet
+      'dragdrop': 0, // No drag-drop library yet
+      'early-access': 0, // No early access program yet
+      'integration-docs': 0 // No integration docs yet
+    };
+    
+    const totalProgress = criteria.reduce((acc, criterion) => {
+      const key = criterion.toLowerCase().replace(/[^a-z]/g, '');
+      return acc + (progressMap[key] || 0);
+    }, 0);
+    
+    return Math.round(totalProgress / criteria.length);
+  };
+
   const timelineData: TimelineEntry[] = [
     {
       title: "2025",
@@ -156,7 +200,7 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Finalize new logo and themes. Outline supported blockchain project types.
           </p>
-          <ProgressBar progress={85} phase="Rebranding & Planning" />
+          <ProgressBar progress={calculateProgress(['logo', 'theme', 'docs'])} phase="Rebranding & Planning" />
           {/* 2x2 Grid - Hyperkit Branding Assets */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - Hyperkit Abstract Logo */}
@@ -219,7 +263,7 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Launch redesigned landing page and onboarding flow. Validate accessibility. Create wireframes/prototypes for AI project generation.
           </p>
-          <ProgressBar progress={92} phase="UI/UX & Landing Page" />
+          <ProgressBar progress={calculateProgress(['landing', 'theme', 'a11y'])} phase="UI/UX & Landing Page" />
           {/* 2x2 Grid - Page Design Mockups */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - Product Page Mockup */}
@@ -282,7 +326,7 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Integrate selected AI models. Build and test artifact/local code generator. Start customizable module editor. Set up backend logging.
           </p>
-          <ProgressBar progress={67} phase="AI & Module Development" />
+          <ProgressBar progress={calculateProgress(['ai', 'backend', 'modules'])} phase="AI & Module Development" />
           {/* 2x2 Grid - Image Placeholders for AI & Module Development */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - AI Models Image */}
@@ -349,7 +393,7 @@ const RoadmapTimeline = () => {
           <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
             Integrate drag and drop tools. Release first dashboard and blockchain dApps. MVP backend integration. Security/node validation for AI outputs. Prepare demos/videos for launch.
           </p>
-          <ProgressBar progress={34} phase="Customization & Release" />
+          <ProgressBar progress={calculateProgress(['preview', 'dashboard', 'security', 'dragdrop', 'early-access'])} phase="Customization & Release" />
           {/* 2x2 Grid - Image Placeholders for Customization & Release */}
           <div className="grid grid-cols-2 gap-4">
             {/* Top Left - Drag & Drop Image */}
