@@ -43,9 +43,9 @@ An intelligent, automated script that scans the entire repository for changes an
 
 ### **Basic Usage**
 ```bash
-# Run the script / update & commit
+# Run the script
 npm run update-changelog
-# or / update only and see on reports changes
+# or
 npm run changelog
 # or
 node scripts/update-changelog.js
