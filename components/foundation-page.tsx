@@ -11,20 +11,23 @@ const TeamSection = () => {
     {
       name: "Aaron Jay Sopeña",
       role: "Co-founder",
+      title: "CTO",
       image: "/Profile/Aaron jay Sopeña.jpeg",
-      alt: "Aaron Jay Sopeña, Co-founder"
+      alt: "Aaron Jay Sopeña, Co-founder & CTO"
     },
     {
       name: "Justine Lupasi", 
       role: "Co-founder",
+      title: "CPOO",
       image: "/Profile/Justine Lupasi.jpeg",
-      alt: "Justine Lupasi, Co-founder"
+      alt: "Justine Lupasi, Co-founder & CPOO"
     },
     {
       name: "Tristan Triñanes",
-      role: "Co-founder", 
+      role: "Co-founder",
+      title: "CMFO", 
       image: "/Profile/Tristan Triñanes.jpeg",
-      alt: "Tristan Triñanes, Co-founder"
+      alt: "Tristan Triñanes, Co-founder & CMFO"
     }
   ];
 
@@ -56,6 +59,9 @@ const TeamSection = () => {
                 </h3>
                 <p className="text-sm text-gray-300" style={{fontFamily: 'Inter'}}>
                   {member.role}
+                </p>
+                <p className="text-xs text-gray-400" style={{fontFamily: 'Inter'}}>
+                  {member.title}
                 </p>
               </div>
             ))}
