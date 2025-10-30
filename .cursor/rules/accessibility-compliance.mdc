@@ -1,0 +1,74 @@
+---
+description: Accessibility Compliance Rule
+globs: ["components/**/*.{js,ts,tsx,jsx}", "app/**/*.{js,ts,tsx,jsx}"]
+severity: error
+category: accessibility
+feature: compliance
+---
+
+# Accessibility Compliance Linter
+
+Ensures all components meet WCAG 2.1 AA standards and provide inclusive user experiences.
+Flags accessibility violations and enforces best practices.
+
+## FORBIDDEN PATTERNS:
+- ❌ Missing alt text for images and icons
+- ❌ Missing ARIA labels for interactive elements
+- ❌ Poor color contrast ratios (<4.5:1 for normal text)
+- ❌ Missing keyboard navigation support
+- ❌ Components that don't respect reduced motion
+- ❌ Missing focus indicators
+- ❌ Non-semantic HTML structure
+
+## ALLOWED PATTERNS:
+- ✅ Proper ARIA labels and descriptions
+- ✅ Keyboard navigation support
+- ✅ High contrast color schemes
+- ✅ Semantic HTML elements
+- ✅ Screen reader friendly content
+- ✅ Respect for user preferences
+- ✅ Clear focus indicators
+
+## EXAMPLES:
+
+### ❌ BAD - Missing accessibility
+```tsx
+const ToggleButton = () => {
+  return (
+    <div onClick={toggle}>
+      <div className="toggle-slider" />
+    </div>
+  );
+};
+```
+
+### ✅ GOOD - Accessible component
+```tsx
+const ToggleButton = ({ label, checked, onChange }) => {
+  return (
+    <button
+      onClick={onChange}
+      aria-label={label}
+      aria-pressed={checked}
+      className="toggle-button"
+      role="switch"
+    >
+      <span className="sr-only">{label}</span>
+      <div className="toggle-slider" />
+    </button>
+  );
+};
+```
+
+## ACCESSIBILITY REQUIREMENTS:
+- WCAG 2.1 AA compliance
+- Keyboard navigation support
+- Screen reader compatibility
+- High contrast mode support
+- Reduced motion respect
+- Focus management
+
+## USAGE:
+- Runs on all component files
+- Integrates with accessibility testing tools
+- Provides inline suggestions for improvements

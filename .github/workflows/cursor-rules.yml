@@ -1,0 +1,285 @@
+name: Hyperkit Cursor Rules & Commands
+
+on:
+  pull_request:
+    branches: [main, develop, rebrand/landing-page]
+    paths:
+      - 'components/**'
+      - 'app/**'
+      - 'lib/**'
+      - '.cursor/**'
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: 'Scope of the audit'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - onboarding
+          - performance
+          - wallet
+          - docs
+      device:
+        description: 'Device type for testing'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - mobile
+          - desktop
+
+jobs:
+  lint-cursor-rules:
+    runs-on: ubuntu-latest
+    name: Lint Cursor Rules
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run Cursor Rules Lint
+        run: |
+          echo "🔍 Running Hyperkit Cursor Rules..."
+          node .cursor/cli.js lint --changed-only
+          
+      - name: Run Onboarding UX Check
+        run: |
+          echo "📱 Checking onboarding UX..."
+          node .cursor/cli.js lint --rule onboarding-ux
+          
+      - name: Run Performance Check
+        run: |
+          echo "⚡ Checking performance optimizations..."
+          node .cursor/cli.js lint --rule performance-optimization
+          
+      - name: Run Accessibility Check
+        run: |
+          echo "♿ Checking accessibility compliance..."
+          node .cursor/cli.js lint --rule accessibility-compliance
+          
+      - name: Run Smart Wallet Config Check
+        run: |
+          echo "🔐 Checking smart wallet configurations..."
+          node .cursor/cli.js lint --rule smart-wallet-config
+
+  audit-wallets:
+    runs-on: ubuntu-latest
+    name: Audit Wallets
+    if: github.event_name == 'pull_request' || github.event.inputs.scope == 'all' || github.event.inputs.scope == 'wallet'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run Wallet Audit
+        run: |
+          echo "🔍 Running comprehensive wallet audit..."
+          node .cursor/cli.js command audit-wallets
+          
+      - name: Run Transaction Flow Audit
+        run: |
+          echo "💸 Auditing transaction flows..."
+          node .cursor/cli.js lint --rule tx-flow
+
+  performance-audit:
+    runs-on: ubuntu-latest
+    name: Performance Audit
+    if: github.event_name == 'pull_request' || github.event.inputs.scope == 'all' || github.event.inputs.scope == 'performance'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build application
+        run: npm run build
+        
+      - name: Run Performance Audit
+        run: |
+          echo "⚡ Running performance audit..."
+          node .cursor/cli.js command performance-audit
+          
+      - name: Check Bundle Size
+        run: |
+          echo "📦 Checking bundle size..."
+          npm run analyze || echo "Bundle analysis not available"
+
+  docs-audit:
+    runs-on: ubuntu-latest
+    name: Documentation Audit
+    if: github.event_name == 'pull_request' || github.event.inputs.scope == 'all' || github.event.inputs.scope == 'docs'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run Documentation Fix
+        run: |
+          echo "📚 Running documentation audit..."
+          node .cursor/cli.js command fix-docs
+          
+      - name: Check for missing JSDoc
+        run: |
+          echo "🔍 Checking for missing JSDoc comments..."
+          find components/ -name "*.tsx" -o -name "*.ts" | xargs grep -L "@param\|@returns\|@description" | head -10 || echo "No missing JSDoc found"
+
+  mobile-testing:
+    runs-on: ubuntu-latest
+    name: Mobile Testing
+    if: github.event.inputs.device == 'mobile' || github.event.inputs.device == 'all'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Run Mobile Performance Audit
+        run: |
+          echo "📱 Running mobile performance audit..."
+          node .cursor/cli.js command performance-audit --device=mobile
+          
+      - name: Check Mobile Responsiveness
+        run: |
+          echo "📱 Checking mobile responsiveness..."
+          node .cursor/cli.js lint --rule onboarding-ux
+
+  generate-demo:
+    runs-on: ubuntu-latest
+    name: Generate Demo
+    if: github.event_name == 'workflow_dispatch'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Generate Wallet Demo
+        run: |
+          echo "🎬 Generating wallet onboarding demo..."
+          node .cursor/cli.js command onboard-wallet-demo --output=demos/
+          
+      - name: Upload Demo Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wallet-demo
+          path: demos/
+          retention-days: 30
+
+  comment-pr:
+    runs-on: ubuntu-latest
+    name: Comment PR
+    if: github.event_name == 'pull_request'
+    needs: [lint-cursor-rules, audit-wallets, performance-audit, docs-audit]
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Comment PR with Results
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('🔍 Hyperkit Cursor Rules Results')
+            );
+            
+            const results = `
+            ## 🔍 Hyperkit Cursor Rules Results
+            
+            ### ✅ Completed Checks:
+            - **Linting Rules**: ${needs.lint-cursor-rules.result === 'success' ? '✅ Passed' : '❌ Failed'}
+            - **Wallet Audit**: ${needs.audit-wallets.result === 'success' ? '✅ Passed' : '❌ Failed'}
+            - **Performance Audit**: ${needs.performance-audit.result === 'success' ? '✅ Passed' : '❌ Failed'}
+            - **Documentation Audit**: ${needs.docs-audit.result === 'success' ? '✅ Passed' : '❌ Failed'}
+            
+            ### 📋 Summary:
+            All Hyperkit-specific rules and commands have been executed. 
+            Please review any warnings or errors above and address them before merging.
+            
+            ### 🔧 Available Commands:
+            - \`/wallet-auditor\` - Run comprehensive wallet audit
+            - \`/performance-audit\` - Run performance analysis
+            - \`/fix-docs\` - Fix documentation issues
+            - \`/onboard-wallet-demo\` - Generate interactive demo
+            `;
+            
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: results
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: results
+              });
+            }

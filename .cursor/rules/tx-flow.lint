@@ -1,0 +1,73 @@
+---
+description: Zero-Friction Transaction Flow Auditor
+globs: ["components/libraries/**/*.{js,ts,tsx}", "lib/**/*.{js,ts}", "app/**/*transaction*.{js,ts,tsx}"]
+severity: error
+category: transaction
+feature: wallet-core
+---
+
+# Transaction UX Auditor
+
+Checks for minimal user steps and transparent gas management in all send/approval flows.
+Ensures transactions are as frictionless as possible while maintaining security.
+
+## FORBIDDEN PATTERNS:
+- ❌ Requires user to manually select "sponsor gas" when dApp intends to be gasless
+- ❌ More than 3 user confirmations for a token swap
+- ❌ Hidden gas fees or unexpected transaction costs
+- ❌ Missing transaction status indicators
+- ❌ No retry mechanism for failed transactions
+- ❌ Complex approval flows for simple operations
+- ❌ Missing transaction history or receipt display
+
+## ALLOWED PATTERNS:
+- ✅ Transaction automatically leverages sponsor/paymaster if config present
+- ✅ Clear auto-detection and prompts for fallback (if not possible)
+- ✅ Single-click transactions for common operations
+- ✅ Transparent gas estimation and fee display
+- ✅ Real-time transaction status updates
+- ✅ Automatic retry with exponential backoff
+- ✅ Clear success/error messaging
+
+## EXAMPLES:
+
+### ❌ BAD - Too many confirmations
+```tsx
+const TokenSwap = () => {
+  const handleSwap = async () => {
+    // Step 1: Approve token
+    await approveToken();
+    // Step 2: Confirm gas sponsorship
+    await confirmGasSponsorship();
+    // Step 3: Confirm swap parameters
+    await confirmSwapParameters();
+    // Step 4: Execute swap
+    await executeSwap();
+  };
+};
+```
+
+### ✅ GOOD - Streamlined transaction
+```tsx
+const TokenSwap = () => {
+  const handleSwap = async () => {
+    // Single transaction with automatic gas sponsorship
+    await executeSwap({
+      autoSponsor: true,
+      showProgress: true,
+      retryOnFailure: true
+    });
+  };
+};
+```
+
+## GAS MANAGEMENT RULES:
+- Always attempt gasless transaction first
+- Fallback to user-paid gas only when necessary
+- Display clear fee breakdown before execution
+- Provide gas optimization suggestions
+
+## USAGE:
+- Runs on all transaction-related components
+- Integrates with wallet core library
+- Provides inline suggestions for UX improvements
