@@ -3,10 +3,10 @@
     "development"
   ],
   "hints": {
-    "axe/aria": [
+    "axe/name-role-value": [
       "default",
       {
-        "aria-valid-attr-value": "off"
+        "button-name": "off"
       }
     ]
   }

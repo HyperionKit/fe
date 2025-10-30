@@ -1,0 +1,136 @@
+roles:
+  - name: pr-reviewer
+    description: "Pull Request Reviewer - Reviews code changes and ensures quality"
+    triggers:
+      - .cursor/rules/onboarding-ux.mdc
+      - .cursor/rules/tx-flow.lint
+      - .cursor/rules/accessibility-compliance.mdc
+      - .cursor/rules/performance-optimization.mdc
+    permissions: [dev, audit, ux, security, review]
+    applies_to: [pull_request, code_review]
+    
+  - name: automation-bot
+    description: "Automation Bot - Runs automated checks and fixes"
+    triggers:
+      - .cursor/commands/audit-wallets.md
+      - .cursor/commands/fix-docs.md
+      - .cursor/commands/performance-audit.md
+    permissions: [ci, dev, integrator, automation]
+    applies_to: [pull_request, push, schedule]
+    
+  - name: ux-specialist
+    description: "UX Specialist - Focuses on user experience and accessibility"
+    triggers:
+      - .cursor/rules/onboarding-ux.mdc
+      - .cursor/rules/accessibility-compliance.mdc
+      - .cursor/commands/onboard-wallet-demo.md
+    permissions: [ux, accessibility, design, review]
+    applies_to: [pull_request, design_review, ux_audit]
+    
+  - name: performance-engineer
+    description: "Performance Engineer - Optimizes performance and monitors metrics"
+    triggers:
+      - .cursor/rules/performance-optimization.mdc
+      - .cursor/commands/performance-audit.md
+    permissions: [performance, optimization, monitoring, dev]
+    applies_to: [pull_request, performance_review, monitoring]
+    
+  - name: wallet-auditor
+    description: "Wallet Auditor - Specializes in smart wallet and AA configurations"
+    triggers:
+      - .cursor/rules/smart-wallet-config.mdc
+      - .cursor/commands/audit-wallets.md
+    permissions: [wallet, security, audit, blockchain]
+    applies_to: [pull_request, security_review, wallet_audit]
+    
+  - name: documentation-maintainer
+    description: "Documentation Maintainer - Keeps docs updated and comprehensive"
+    triggers:
+      - .cursor/commands/fix-docs.md
+    permissions: [docs, content, technical_writing]
+    applies_to: [pull_request, documentation_update, content_review]
+    
+  - name: demo-generator
+    description: "Demo Generator - Creates interactive demonstrations and examples"
+    triggers:
+      - .cursor/commands/onboard-wallet-demo.md
+    permissions: [demo, marketing, content, public_facing]
+    applies_to: [release, demo_update, marketing_request]
+    
+  - name: security-auditor
+    description: "Security Auditor - Reviews security implications and vulnerabilities"
+    triggers:
+      - .cursor/rules/smart-wallet-config.mdc
+      - .cursor/rules/accessibility-compliance.mdc
+    permissions: [security, audit, vulnerability, compliance]
+    applies_to: [pull_request, security_review, vulnerability_scan]
+    
+  - name: mobile-specialist
+    description: "Mobile Specialist - Ensures mobile compatibility and performance"
+    triggers:
+      - .cursor/rules/onboarding-ux.mdc
+      - .cursor/rules/performance-optimization.mdc
+    permissions: [mobile, responsive, performance, ux]
+    applies_to: [pull_request, mobile_review, responsive_testing]
+    
+  - name: integration-tester
+    description: "Integration Tester - Tests end-to-end functionality and integrations"
+    triggers:
+      - .cursor/commands/audit-wallets.md
+      - .cursor/commands/performance-audit.md
+    permissions: [testing, integration, qa, automation]
+    applies_to: [pull_request, integration_test, qa_review]
+
+# Role Assignment Rules
+assignment_rules:
+  - when: "file_changed matches 'components/libraries/*'"
+    assign: [pr-reviewer, performance-engineer, ux-specialist]
+    
+  - when: "file_changed matches '**/*wallet*' or **/*aa*'"
+    assign: [wallet-auditor, security-auditor]
+    
+  - when: "file_changed matches '**/*onboarding*' or **/*auth*'"
+    assign: [ux-specialist, mobile-specialist, pr-reviewer]
+    
+  - when: "file_changed matches '**/*performance*' or **/*webgl*'"
+    assign: [performance-engineer, pr-reviewer]
+    
+  - when: "file_changed matches '**/*docs*' or **/*readme*'"
+    assign: [documentation-maintainer]
+    
+  - when: "pull_request_label includes 'security'"
+    assign: [security-auditor, wallet-auditor]
+    
+  - when: "pull_request_label includes 'mobile'"
+    assign: [mobile-specialist, ux-specialist]
+    
+  - when: "pull_request_label includes 'performance'"
+    assign: [performance-engineer, pr-reviewer]
+
+# Permission Levels
+permission_levels:
+  dev: "Basic development permissions"
+  review: "Code review and approval permissions"
+  audit: "Audit and compliance checking permissions"
+  ux: "User experience and design permissions"
+  security: "Security and vulnerability assessment permissions"
+  performance: "Performance optimization and monitoring permissions"
+  wallet: "Smart wallet and blockchain-specific permissions"
+  docs: "Documentation and content management permissions"
+  demo: "Demo and example generation permissions"
+  mobile: "Mobile-specific testing and optimization permissions"
+  testing: "Integration and end-to-end testing permissions"
+  ci: "CI/CD pipeline and automation permissions"
+  automation: "Automated tool and bot permissions"
+  integrator: "Integration and deployment permissions"
+  design: "Design and visual asset permissions"
+  accessibility: "Accessibility compliance and testing permissions"
+  content: "Content creation and management permissions"
+  technical_writing: "Technical documentation writing permissions"
+  public_facing: "Public-facing content and demo permissions"
+  compliance: "Regulatory and compliance checking permissions"
+  vulnerability: "Vulnerability assessment and remediation permissions"
+  responsive: "Responsive design and mobile compatibility permissions"
+  qa: "Quality assurance and testing permissions"
+  blockchain: "Blockchain and smart contract permissions"
+  marketing: "Marketing and promotional content permissions"

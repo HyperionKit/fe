@@ -1,219 +1,379 @@
-"use client"
+"use client";
+import {
+  useMotionValueEvent,
+  useScroll,
+  useTransform,
+  motion,
+} from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
 
-import type React from "react"
-import { useState, useEffect } from "react"
-
-interface TimelinePointProps {
-  id: string
-  type: "phase" | "milestone"
-  title?: string
-  description?: string
-  markerGradient?: string
-  markerColor?: string
-  left: string
-  lineColorClass: string
-  index: number
+interface TimelineEntry {
+  title: string;
+  subtitle?: string;
+  content: React.ReactNode;
+  titleSize?: string;
+  subtitleSize?: string;
 }
 
-const TimelinePoint: React.FC<TimelinePointProps> = ({
-  type,
-  title,
-  description,
-  markerGradient,
-  markerColor,
-  left,
-  lineColorClass,
-  index,
-}) => {
-  const isPhase = type === "phase"
-  const markerSize = isPhase ? "w-3 h-3 md:w-4 md:h-4" : "w-2 h-2 md:w-2 md:h-2"
-  const markerClasses = isPhase
-    ? `relative rounded-full flex items-center justify-center bg-gradient-to-br ${markerGradient}`
-    : `rounded-full ${markerColor}`
+export const Timeline = ({ data }: { data: TimelineEntry[] }) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [height, setHeight] = useState(0);
+
+  useEffect(() => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      setHeight(rect.height);
+    }
+  }, [ref]);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start 0%", "end 100%"],
+  });
+
+  const heightTransform = useTransform(scrollYProgress, [0, 1], [0, height]);
+  const opacityTransform = useTransform(scrollYProgress, [0, 0.2], [0, 1]);
 
   return (
     <div
-      className="absolute flex flex-col items-center px-2 md:px-2"
-      style={{
-        left,
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-      }}
+      className="w-full bg-black font-sans md:px-10"
+      ref={containerRef}
     >
-      {isPhase ? (
-        <>
-          <div className="absolute bottom-[calc(100%+20px)] md:bottom-[calc(100%+30px)] text-center text-xs md:text-sm font-medium text-gray-700 whitespace-pre-line w-[80px] md:w-[100px]">
-            {title}
-          </div>
-          <div className={`absolute bottom-full w-0.5 h-4 md:h-6 ${lineColorClass}`} />
-          <div className={`relative z-10 ${markerClasses} ${markerSize}`}>
-            <div className="w-1.5 h-1.5 md:w-2 md:h-2 bg-white rounded-full" />
-          </div>
-        </>
-      ) : (
-        <>
-          <div className={`relative z-10 ${markerClasses} ${markerSize}`} />
-          <div className={`absolute top-full w-0.5 h-4 md:h-6 ${lineColorClass}`} />
-          <div className="absolute top-[calc(100%+20px)] md:top-[calc(100%+30px)] text-center text-xs md:text-sm text-gray-600 max-w-[75px] md:max-w-[90px] whitespace-pre-line leading-tight">
-            {description}
-          </div>
-        </>
-      )}
-    </div>
-  )
-}
-
-const timelineData: Omit<TimelinePointProps, "index">[] = [
-  {
-    id: "q3-phase1",
-    type: "phase",
-    title: "Q3 Phase 1:\nDeveloping Stage",
-    markerGradient: "from-purple-500 to-fuchsia-500",
-    lineColorClass: "bg-purple-500",
-    left: "2%",
-  },
-  {
-    id: "design-defi",
-    type: "milestone",
-    description: "Design Modular DeFi Primitives",
-    markerColor: "bg-purple-500",
-    lineColorClass: "bg-purple-500",
-    left: "10.7%",
-  },
-  {
-    id: "build-cli",
-    type: "milestone",
-    description: "Build Core CLI and TypeScript SDK",
-    markerColor: "bg-purple-500",
-    lineColorClass: "bg-purple-500",
-    left: "19.4%",
-  },
-  {
-    id: "q4-phase2",
-    type: "phase",
-    title: "Q4 Phase 2:\nStress Test Launch",
-    markerGradient: "from-blue-500 to-indigo-500",
-    lineColorClass: "bg-blue-500",
-    left: "28.1%",
-  },
-  {
-    id: "integrate-metis",
-    type: "milestone",
-    description: "Integrate Metis SDK for Bridging",
-    markerColor: "bg-blue-500",
-    lineColorClass: "bg-blue-500",
-    left: "36.8%",
-  },
-  {
-    id: "release-alpha",
-    type: "milestone",
-    description: "Release Alpha with Documentation",
-    markerColor: "bg-blue-500",
-    lineColorClass: "bg-blue-500",
-    left: "45.5%",
-  },
-  {
-    id: "develop-python",
-    type: "milestone",
-    description: "Develop Python SDK and Enhance CLI",
-    markerColor: "bg-blue-500",
-    lineColorClass: "bg-blue-500",
-    left: "54.2%",
-  },
-  {
-    id: "implement-vault",
-    type: "milestone",
-    description: "Implement Vault and Swapping Features",
-    markerColor: "bg-blue-500",
-    lineColorClass: "bg-blue-500",
-    left: "62.9%",
-  },
-  {
-    id: "deploy-beta",
-    type: "milestone",
-    description: "Deploy Beta Dashboard and Audits",
-    markerColor: "bg-blue-500",
-    lineColorClass: "bg-blue-500",
-    left: "71.6%",
-  },
-  {
-    id: "badge-rewards",
-    type: "milestone",
-    description: "Badge Rewards Community",
-    markerColor: "bg-cyan-400",
-    lineColorClass: "bg-cyan-400",
-    left: "80.3%",
-  },
-  {
-    id: "launch-hyperkit",
-    type: "milestone",
-    description: "Launch HyperKit v1.0.0 and Scale Ecosystem",
-    markerColor: "bg-cyan-400",
-    lineColorClass: "bg-cyan-400",
-    left: "89%",
-  },
-  {
-    id: "q1-phase3",
-    type: "phase",
-    title: "Q1 (2026) Phase 3\nOfficial Launch",
-    markerGradient: "from-cyan-400 to-blue-400",
-    lineColorClass: "bg-cyan-400",
-    left: "98%",
-  },
-]
-
-export default function Component() {
-  const [isMobile, setIsMobile] = useState(false)
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
-    
-    checkMobile()
-    window.addEventListener('resize', checkMobile)
-    
-    return () => window.removeEventListener('resize', checkMobile)
-  }, [])
-
-  return (
-    <div className="relative w-full max-w-6xl mx-auto h-[140px] md:h-[200px] flex items-center justify-center bg-white py-4 md:py-6 px-2 md:px-8">
-      <div 
-        className="relative h-full w-full flex items-center overflow-x-auto md:overflow-x-visible px-8 md:px-8"
-        style={{
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
-          WebkitOverflowScrolling: 'touch'
-        }}
-      >
-        <div
-          className="absolute top-1/2 h-0.5 left-8 md:left-8 md:right-8 rounded-full"
-          style={{
-            background:
-              "linear-gradient(to right, #8B5CF6 0%, #EC4899 30%, #3B82F6 60%, #06B6D4 100%)",
-            width: isMobile ? "300%" : "calc(100% - 4rem)",
-          }}
-        />
-        <div
-          className="relative flex-shrink-0 md:w-full"
-          style={{
-            width: isMobile ? "300%" : "100%",
-            minWidth: isMobile ? "300%" : "100%",
-          }}
-        >
-          {timelineData.map((item, index) => (
-            <TimelinePoint key={item.id} {...item} index={index} />
-          ))}
-        </div>
+      <div className="max-w-7xl mx-auto py-16 px-4 md:px-8 lg:px-10">
+        <h2 className="text-4xl md:text-6xl mb-6 text-white max-w-5xl leading-tight" style={{fontFamily: 'Be Vietnam Pro'}}>
+          Tracking Every Breakthrough
+        </h2>
+        <p className="text-gray-300 text-lg md:text-xl max-w-4xl leading-relaxed" style={{fontFamily: 'Inter'}}>
+          Stay updated with the latest milestones, enhancements, and pivotal moments from my development journey. This changelog reflects an open commitment to transparency and continuous innovation, sharing each step forward as Hyperkit evolves.
+        </p>
       </div>
 
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          div[style*="overflow-x"]::-webkit-scrollbar {
-            display: none;
-          }
-        `
-      }} />
+      <div ref={ref} className="relative max-w-7xl mx-auto pb-20">
+        {data.map((item, index) => (
+          <div
+            key={index}
+            className="flex justify-start pt-12 md:pt-48 md:gap-12"
+          >
+            <div className="sticky flex flex-col md:flex-row z-40 items-center top-40 self-start max-w-xs lg:max-w-sm md:w-full">
+              <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-black flex items-center justify-center">
+                <div className="h-4 w-4 rounded-full bg-gray-400 border border-gray-600 p-2" />
+              </div>
+              {/* Horizontal connector line */}
+              <div className="absolute left-8 md:left-8 top-1/2 w-12 h-px bg-gray-400 transform -translate-y-1/2"></div>
+              <div className="hidden md:block md:pl-20">
+                <h3 className={`font-bold text-white leading-none ${item.titleSize || 'text-2xl md:text-8xl'}`} style={{fontFamily: 'Be Vietnam Pro'}}>
+                  {item.title}
+                </h3>
+                {item.subtitle && (
+                  <h4 className={`font-bold text-white leading-tight mt-2 ${item.subtitleSize || 'text-lg md:text-3xl'}`} style={{fontFamily: 'Be Vietnam Pro'}}>
+                    {item.subtitle}
+                  </h4>
+                )}
+              </div>
+            </div>
+
+            <div className="relative pl-20 pr-4 md:pl-4 w-full">
+              {/* Mobile horizontal connector line */}
+              <div className="md:hidden absolute left-8 top-1/2 w-12 h-px bg-gray-400 transform -translate-y-1/2"></div>
+              <div className="md:hidden block mb-4 text-left">
+                <h3 className={`font-bold text-white leading-none ${item.titleSize || 'text-4xl'}`} style={{fontFamily: 'Be Vietnam Pro'}}>
+                  {item.title}
+                </h3>
+                {item.subtitle && (
+                  <h4 className={`font-bold text-white leading-tight mt-1 ${item.subtitleSize || 'text-xl'}`} style={{fontFamily: 'Be Vietnam Pro'}}>
+                    {item.subtitle}
+                  </h4>
+                )}
+              </div>
+              {item.content}
+            </div>
+          </div>
+        ))}
+        <div
+          style={{
+            height: height + "px",
+          }}
+          className="absolute md:left-8 left-8 top-0 w-[2px]"
+        >
+          {/* Base line - extends to bottom */}
+          <div className="absolute top-0 bottom-0 w-[2px] bg-gray-600"></div>
+          
+          {/* Animated progress line */}
+          <motion.div
+            style={{
+              height: heightTransform,
+              opacity: opacityTransform,
+            }}
+            className="absolute top-0 left-0 w-[2px] bg-gradient-to-b from-white to-black"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const RoadmapTimeline = () => {
+  const timelineData: TimelineEntry[] = [
+    {
+      title: "2025",
+      subtitle: "October, Week 1",
+      titleSize: "text-8xl md:text-9xl",
+      subtitleSize: "text-5x1 md:text-4xl",
+      content: (
+        <div className="bg-gray-900/50 backdrop-blur-sm rounded-lg p-8">
+          <h3 className="text-white text-3xl font-bold mb-4" style={{fontFamily: 'Be Vietnam Pro'}}>
+            Rebranding & Planning
+          </h3>
+          <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
+            Finalize new logo and themes. Outline supported blockchain project types.
+          </p>
+          {/* 2x2 Grid - Hyperkit Branding Assets */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Top Left - Hyperkit Abstract Logo */}
+            <div className="rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <img 
+                  src="/logo/brand/hyperkit/Hyperkit Abstract.svg" 
+                  alt="Hyperkit Abstract Logo" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+            
+            {/* Top Right - Hyperkit Header Black */}
+            <div className="rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <img 
+                  src="/logo/brand/hyperkit/Hyperkit Header Black.svg" 
+                  alt="Hyperkit Header Black" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+            
+            {/* Bottom Left - Hyperkit Header White */}
+            <div className="rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <img 
+                  src="/logo/brand/hyperkit/Hyperkit Header White.svg" 
+                  alt="Hyperkit Header White" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+            
+            {/* Bottom Right - Hyperkit Abstract p-b */}
+            <div className="rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <img 
+                  src="/logo/brand/hyperkit/Hyperkit Abstract p-b.svg" 
+                  alt="Hyperkit Abstract p-b" 
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "October",
+      subtitle: "Week 2",
+      titleSize: "text-8xl md:text-8xl",
+      subtitleSize: "text-5x1 md:text-3xl",
+      content: (
+        <div className="bg-gray-900/50 backdrop-blur-sm rounded-lg p-8">
+          <h3 className="text-white text-3xl font-bold mb-4" style={{fontFamily: 'Be Vietnam Pro'}}>
+            UI/UX & Landing Page
+          </h3>
+          <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
+            Launch redesigned landing page and onboarding flow. Validate accessibility. Create wireframes/prototypes for AI project generation.
+          </p>
+          {/* 2x2 Grid - Page Design Mockups */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Top Left - Product Page Mockup */}
+            <div className="rounded-lg p-2 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 w-full h-full">
+                <img 
+                  src="/UI/Design/Product Page.png" 
+                  alt="Product Page Design" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            </div>
+            
+            {/* Top Right - Launch App Page Mockup */}
+            <div className="rounded-lg p-2 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 w-full h-full">
+                <img 
+                  src="/UI/Design/Launch App Page.png" 
+                  alt="Launch App Page Design" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            </div>
+            
+            {/* Bottom Left - Landing Page Mockup */}
+            <div className="rounded-lg p-2 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 w-full h-full">
+                <img 
+                  src="/UI/Design/Landing page.png" 
+                  alt="Landing Page Design" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            </div>
+            
+            {/* Bottom Right - Build Page Mockup */}
+            <div className="rounded-lg p-2 relative overflow-hidden aspect-square border border-gray-700" style={{backgroundColor: '#7C3AED'}}>
+              <div className="relative z-10 w-full h-full">
+                <img 
+                  src="/UI/Design/Build page.png" 
+                  alt="Build Page Design" 
+                  className="w-full h-full object-cover rounded-lg"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      title: "October",
+      subtitle: "Week 3",
+      titleSize: "text-8xl md:text-8xl",
+      subtitleSize: "text-5x1 md:text-3xl",
+      content: (
+        <div className="bg-gray-900/50 backdrop-blur-sm rounded-lg p-8">
+          <h3 className="text-white text-3xl font-bold mb-4" style={{fontFamily: 'Be Vietnam Pro'}}>
+            AI & Module Development
+          </h3>
+          <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
+            Integrate selected AI models. Build and test artifact/local code generator. Start customizable module editor. Set up backend logging.
+          </p>
+          {/* 2x2 Grid - Image Placeholders for AI & Module Development */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Top Left - AI Models Image */}
+            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
+                }}></div>
+              </div>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+              </div>
+            </div>
+            
+            {/* Top Right - Code Generator Image */}
+            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
+                }}></div>
+              </div>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+              </div>
+            </div>
+            
+            {/* Bottom Left - Module Editor Image */}
+            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
+                }}></div>
+              </div>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+              </div>
+      </div>
+      
+            {/* Bottom Right - Backend Logging Image */}
+            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
+                }}></div>
+              </div>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+        </div>
+        </div>
+      </div>
+    </div>
+  )
+    },
+    {
+      title: "October",
+      subtitle: "Week 4",
+      titleSize: "text-8xl md:text-8xl",
+      subtitleSize: "text-5x1 md:text-3xl",
+      content: (
+        <div className="bg-gray-900/50 backdrop-blur-sm rounded-lg p-8">
+          <h3 className="text-white text-3xl font-bold mb-4" style={{fontFamily: 'Be Vietnam Pro'}}>
+            Customization & Release
+          </h3>
+          <p className="text-gray-300 text-lg mb-6 leading-relaxed" style={{fontFamily: 'Inter'}}>
+            Integrate drag and drop tools. Release first dashboard and blockchain dApps. MVP backend integration. Security/node validation for AI outputs. Prepare demos/videos for launch.
+          </p>
+          {/* 2x2 Grid - Image Placeholders for Customization & Release */}
+          <div className="grid grid-cols-2 gap-4">
+            {/* Top Left - Drag & Drop Image */}
+            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
+                }}></div>
+              </div>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+              </div>
+            </div>
+            
+            {/* Top Right - Dashboard Image */}
+            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
+                }}></div>
+              </div>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+              </div>
+            </div>
+            
+            {/* Bottom Left - Backend Integration Image */}
+            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
+                }}></div>
+              </div>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+              </div>
+      </div>
+      
+            {/* Bottom Right - Security Validation Image */}
+            <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square">
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute inset-0" style={{
+                  backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255,255,255,0.1) 10px, rgba(255,255,255,0.1) 20px)'
+                }}></div>
+              </div>
+              <div className="relative z-10 flex items-center justify-center h-full">
+                <div className="w-16 h-16 bg-gray-600 rounded-lg animate-pulse"></div>
+        </div>
+        </div>
+      </div>
     </div>
   )
 }
+  ];
+
+  return <Timeline data={timelineData} />;
+};
+
+export default RoadmapTimeline;

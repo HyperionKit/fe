@@ -1,286 +1,301 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { usePathname } from 'next/navigation';
+import { OptimizedLogo, OptimizedIcon } from '@/components/ui/optimized-image';
 
-const Navbar: React.FC = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isMobileCampaignsOpen, setIsMobileCampaignsOpen] = useState(false);
-  
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const [isExploreOpen, setIsExploreOpen] = useState(false);
+  const exploreRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const isLaunchAppPage = pathname === '/launch-app';
 
-  // Close mobile menu when screen size changes
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setIsMobileMenuOpen(false);
-        setIsMobileCampaignsOpen(false);
-      }
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  // Close dropdowns when clicking outside
+  // Close explore dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Node;
-      
-      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
-        setIsDropdownOpen(false);
-      }
-      
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(target)) {
-        setIsMobileMenuOpen(false);
-        setIsMobileCampaignsOpen(false);
+      if (exploreRef.current && !exploreRef.current.contains(event.target as Node)) {
+        setIsExploreOpen(false);
       }
     };
 
-    if (isDropdownOpen || isMobileMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-      return () => document.removeEventListener('mousedown', handleClickOutside);
-    }
-  }, [isDropdownOpen, isMobileMenuOpen]);
-
-  // Prevent body scroll when mobile menu is open
-  useEffect(() => {
-    if (isMobileMenuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.body.style.overflow = 'unset';
+      document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isMobileMenuOpen]);
-
-  const navigationLinks = [
-    { href: "/", label: "Explore" },
-    { href: "/#roadmap", label: "Roadmap" },
-    { href: "/whitelist", label: "Whitelist" },
-    { href: "/#how-to", label: "How to Earn" },
-    { href: "https://ai.hyperionkit.xyz", label: "HyperKit AI" }
-  ];
-
-  const campaignLinks = [
-    { href: "/#", label: "Active Campaigns" },
-    { href: "/#", label: "Upcoming Campaigns" },
-    { href: "/#", label: "Completed Campaigns" }
-  ];
-
-  const handleMobileMenuToggle = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-    if (isMobileCampaignsOpen) {
-      setIsMobileCampaignsOpen(false);
-    }
-  };
-
-  const handleDesktopDropdownToggle = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleMobileCampaignsToggle = () => {
-    setIsMobileCampaignsOpen(!isMobileCampaignsOpen);
-  };
-
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-    setIsMobileCampaignsOpen(false);
-  };
+  }, []);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo Section */}
-          <div className="flex items-center space-x-2 sm:space-x-3 flex-shrink-0">
-            <Link href="/" className="flex-shrink-0" onClick={closeMobileMenu}>
-              <Image
-                src="/l_2.png"
-                alt="Hyperkit Logo"
-                width={150}
-                height={100}
-                className="w-[150px] h-[100px] object-contain"
-              />
-            </Link>
-            <div className="bg-gradient-to-b from-teal-400 to-teal-600 text-white px-2 py-1 sm:px-3 sm:py-1 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap">
-              Qwei 1.96
-            </div>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-black w-full">
+      <div className="container max-w-7xl mx-auto flex items-center justify-between py-3">
+        {/* Logo - Hyperkit Header White */}
+        <Link href="/" className="flex items-center">
+          <div className="flex items-center">
+            <OptimizedLogo 
+              src="/logo/brand/hyperkit/Hyperkit Header White.svg" 
+              alt="Hyperkit" 
+              width={120}
+              height={48}
+              className="h-12 sm:h-14 lg:h-16 w-auto"
+              priority
+            />
           </div>
-
-          {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-2 bg-violet-600 px-6 py-2 rounded-xl">
-            {navigationLinks.map((link) => (
-              <Link 
-                key={link.label}
-                href={link.href} 
-                className="text-white hover:text-violet-200 transition-colors px-3 py-1 rounded-md whitespace-nowrap"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-
-          {/* Desktop Right Side - Campaigns Dropdown */}
-          <div className="hidden md:flex items-center">
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={handleDesktopDropdownToggle}
-                className="flex items-center space-x-1 text-gray-700 hover:text-violet-600 transition-colors px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 whitespace-nowrap"
-                aria-expanded={isDropdownOpen}
-                aria-haspopup="true"
-              >
-                <span>Campaigns</span>
-                <svg
-                  className={`w-4 h-4 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-
-              {isDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 z-50">
-                  <div className="py-1">
-                    {campaignLinks.map((link) => (
-                      <Link
-                        key={link.label}
-                        href={link.href}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-violet-600 transition-colors"
-                        onClick={() => setIsDropdownOpen(false)}
-                      >
-                        {link.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Mobile Menu Button - Only visible on mobile/tablet */}
-          <div className="md:hidden">
+        </Link>
+        
+        {/* Desktop Navigation Links */}
+        <div className="hidden lg:flex items-center flex-1 justify-center gap-6 xl:gap-12">
+          <Link href="/foundation" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+            <OptimizedIcon src="/icons/navbar/foundation.svg" alt="Foundation" width={16} height={16} />
+            <span className="hidden xl:inline">Foundation</span>
+          </Link>
+          <Link href="/products" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+            <OptimizedIcon src="/icons/navbar/products.png" alt="Products" width={16} height={16} />
+            <span className="hidden xl:inline">Products</span>
+          </Link>
+          {/* Explore Dropdown */}
+          <div className="relative" ref={exploreRef}>
             <button
-              type="button"
-              onClick={handleMobileMenuToggle}
-              className="text-gray-700 hover:text-violet-600 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 p-2 rounded-md transition-colors"
-              aria-expanded={isMobileMenuOpen}
-              aria-label="Toggle mobile menu"
+              onMouseEnter={() => setIsExploreOpen(true)}
+              onMouseLeave={() => setIsExploreOpen(false)}
+              className="flex items-center gap-2 text-white hover:text-cyan-300 transition-all duration-300 font-medium text-sm xl:text-base group"
+              style={{fontFamily: 'Be Vietnam Pro'}}
             >
+              <OptimizedIcon 
+                src="/icons/navbar/explore.png" 
+                alt="Explore" 
+                width={16} 
+                height={16}
+                className="transition-transform duration-300 group-hover:rotate-12"
+              />
+            <span className="hidden xl:inline">Explore</span>
               <svg 
-                className={`h-6 w-6 transition-transform duration-300 ${isMobileMenuOpen ? 'rotate-180' : ''}`} 
+                className={`w-4 h-4 transition-transform duration-300 ${isExploreOpen ? 'rotate-180' : ''}`}
                 fill="none" 
-                viewBox="0 0 24 24" 
-                stroke="currentColor"
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
               >
-                {isMobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
-          </div>
-        </div>
-      </div>
 
-      {/* Mobile Menu Overlay - Only visible on mobile/tablet */}
-      <div className="md:hidden">
-        <div 
-          ref={mobileMenuRef}
-          className={`fixed inset-x-0 top-16 bg-white border-t border-gray-200 shadow-lg z-40 overflow-hidden transition-all duration-300 ease-in-out ${
-            isMobileMenuOpen 
-              ? 'max-h-screen opacity-100 visible' 
-              : 'max-h-0 opacity-0 invisible'
-          }`}
-        >
-          <div className="px-4 py-3 space-y-1 max-h-[calc(100vh-4rem)] overflow-y-auto">
-            {/* Navigation Links */}
-            <div className="space-y-1">
-              {navigationLinks.map((link, index) => (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={`block px-3 py-3 text-base font-medium text-gray-700 hover:text-violet-600 hover:bg-gray-50 rounded-md transition-all duration-300 transform ${
-                    isMobileMenuOpen 
-                      ? 'translate-y-0 opacity-100' 
-                      : 'translate-y-2 opacity-0'
-                  }`}
-                  style={{
-                    transitionDelay: isMobileMenuOpen ? `${index * 50}ms` : '0ms'
-                  }}
-                  onClick={closeMobileMenu}
+            {/* Dropdown Menu */}
+            <div 
+              className={`absolute top-full left-0 mt-2 w-64 bg-gray-900 rounded-xl shadow-2xl border border-gray-700 overflow-hidden transition-all duration-300 transform ${
+                isExploreOpen 
+                  ? 'opacity-100 visible translate-y-0' 
+                  : 'opacity-0 invisible -translate-y-2'
+              }`}
+              onMouseEnter={() => setIsExploreOpen(true)}
+              onMouseLeave={() => setIsExploreOpen(false)}
+            >
+              <div className="py-2">
+                <Link 
+                  href="/ecosystem" 
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gray-800 transition-colors duration-200 group"
                 >
-                  {link.label}
+                  <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm" style={{fontFamily: 'Inter'}}>Ecosystem</div>
+                    <div className="text-xs text-gray-400">Discover our partners</div>
+                  </div>
                 </Link>
-              ))}
-            </div>
 
-            {/* Campaigns Section - Mobile */}
-            <div className={`pt-4 border-t border-gray-200 mt-4 transition-all duration-300 transform ${
-              isMobileMenuOpen 
-                ? 'translate-y-0 opacity-100' 
-                : 'translate-y-2 opacity-0'
-            }`}
-            style={{
-              transitionDelay: isMobileMenuOpen ? `${navigationLinks.length * 50}ms` : '0ms'
-            }}>
-              <button
-                onClick={handleMobileCampaignsToggle}
-                className="flex items-center justify-between w-full px-3 py-3 text-base font-medium text-gray-700 hover:text-violet-600 hover:bg-gray-50 rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-violet-500"
-                aria-expanded={isMobileCampaignsOpen}
-              >
-                <span>Campaigns</span>
-                <svg
-                  className={`w-4 h-4 transition-transform duration-300 ease-in-out ${
-                    isMobileCampaignsOpen ? 'rotate-180' : 'rotate-0'
-                  }`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+                <Link 
+                  href="/community" 
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gray-800 transition-colors duration-200 group"
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
-              
-              {/* Campaigns Dropdown - Mobile */}
-              <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                isMobileCampaignsOpen 
-                  ? 'max-h-48 opacity-100' 
-                  : 'max-h-0 opacity-0'
-              }`}>
-                <div className="mt-1 space-y-1 pl-3">
-                  {campaignLinks.map((link, index) => (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      className={`block px-6 py-2 text-sm text-gray-600 hover:text-violet-600 hover:bg-gray-50 rounded-md transition-all duration-300 transform ${
-                        isMobileCampaignsOpen 
-                          ? 'translate-x-0 opacity-100' 
-                          : '-translate-x-2 opacity-0'
-                      }`}
-                      style={{
-                        transitionDelay: isMobileCampaignsOpen ? `${index * 75}ms` : '0ms'
-                      }}
-                      onClick={closeMobileMenu}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
-                </div>
+                  <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm" style={{fontFamily: 'Inter'}}>Community</div>
+                    <div className="text-xs text-gray-400">Join the conversation</div>
+                  </div>
+                </Link>
+
+                <Link 
+                  href="/showcase" 
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gray-800 transition-colors duration-200 group"
+                >
+                  <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm" style={{fontFamily: 'Inter'}}>Showcase</div>
+                    <div className="text-xs text-gray-400">See what's built</div>
+                  </div>
+                </Link>
+
+                <Link 
+                  href="/tutorials" 
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gray-800 transition-colors duration-200 group"
+                >
+                  <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm" style={{fontFamily: 'Inter'}}>Tutorials</div>
+                    <div className="text-xs text-gray-400">Learn & build</div>
+                  </div>
+                </Link>
+
+                <div className="border-t border-gray-700 my-2"></div>
+
+                <Link 
+                  href="/api-docs" 
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-gray-800 transition-colors duration-200 group"
+                >
+                  <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div className="font-medium text-sm" style={{fontFamily: 'Inter'}}>API Reference</div>
+                    <div className="text-xs text-gray-400">Developer resources</div>
+                  </div>
+                </Link>
               </div>
             </div>
           </div>
+          <Link href="/roadmap" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+            <OptimizedIcon src="/icons/navbar/roadmap.png" alt="Roadmap" width={16} height={16} />
+            <span className="hidden xl:inline">Roadmap</span>
+          </Link>
+          <Link href="/build" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+            <OptimizedIcon src="/icons/navbar/build.svg" alt="Build" width={16} height={16} />
+            <span className="hidden xl:inline">Build</span>
+          </Link>
+          <a href="https://docs.hyperionkit.xyz/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white hover:text-cyan-300 transition-colors font-medium text-sm xl:text-base" style={{fontFamily: 'Be Vietnam Pro'}}>
+            <OptimizedIcon src="/icons/navbar/docs.svg" alt="Docs" width={16} height={16} />
+            <span className="hidden xl:inline">Docs</span>
+          </a>
         </div>
+        
+        {/* Desktop Launch App Button */}
+        <div className="hidden lg:flex items-center gap-4">
+          {isLaunchAppPage ? (
+            <div className="flex items-center gap-2">
+              {/* Two icon containers */}
+              <div className="flex gap-1">
+                <button className="w-10 h-10 bg-transparent rounded flex items-center justify-center hover:bg-gray-800 transition-colors">
+                  <img src="/icons/launch-app/navbar/gift.png" alt="Gift" className="w-6 h-6" />
+                </button>
+                <button className="w-10 h-10 bg-transparent rounded flex items-center justify-center hover:bg-gray-800 transition-colors">
+                  <img src="/icons/launch-app/navbar/notifications.png" alt="Notifications" className="w-6 h-6" />
+                </button>
+              </div>
+              {/* My Workspace container */}
+              <button className="bg-purple-600 text-white px-4 xl:px-6 py-2 rounded-lg font-semibold whitespace-nowrap text-sm xl:text-base h-10 flex items-center hover:bg-purple-700 transition-colors" style={{fontFamily: 'Be Vietnam Pro'}}>
+                My Workspace
+              </button>
+            </div>
+          ) : (
+            <Link href="https://ai.hyperionkit.xyz" className="bg-transparent text-white px-4 xl:px-8 py-2 rounded-lg font-semibold transition-colors whitespace-nowrap text-sm xl:text-base hover:text-cyan-300" style={{fontFamily: 'Be Vietnam Pro'}}>
+              Launch App
+            </Link>
+          )}
+        </div>
+
+        {/* Mobile Menu Button */}
+        <button 
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          className="lg:hidden flex items-center justify-center w-10 h-10 text-white hover:text-cyan-300 transition-colors"
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {isMobileMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden bg-black border-t border-gray-800">
+          <div className="px-4 py-6 space-y-4">
+            <Link href="/foundation" className="flex items-center gap-3 text-white hover:text-cyan-300 transition-colors font-medium py-2" style={{fontFamily: 'Be Vietnam Pro'}}>
+              <OptimizedIcon src="/icons/navbar/foundation.svg" alt="Foundation" width={20} height={20} />
+              Foundation
+            </Link>
+            <Link href="/products" className="flex items-center gap-3 text-white hover:text-cyan-300 transition-colors font-medium py-2" style={{fontFamily: 'Be Vietnam Pro'}}>
+              <OptimizedIcon src="/icons/navbar/products.png" alt="Products" width={20} height={20} />
+              Products
+            </Link>
+            <div className="space-y-2">
+              <div className="flex items-center gap-3 text-white font-medium py-2" style={{fontFamily: 'Be Vietnam Pro'}}>
+                <OptimizedIcon src="/icons/navbar/explore.png" alt="Explore" width={20} height={20} />
+              Explore
+              </div>
+              <div className="ml-8 space-y-2">
+                <Link href="/ecosystem" className="block text-gray-300 hover:text-cyan-300 transition-colors text-sm py-1" style={{fontFamily: 'Inter'}}>
+                  Ecosystem
+                </Link>
+                <Link href="/community" className="block text-gray-300 hover:text-cyan-300 transition-colors text-sm py-1" style={{fontFamily: 'Inter'}}>
+                  Community
+                </Link>
+                <Link href="/showcase" className="block text-gray-300 hover:text-cyan-300 transition-colors text-sm py-1" style={{fontFamily: 'Inter'}}>
+                  Showcase
+                </Link>
+                <Link href="/tutorials" className="block text-gray-300 hover:text-cyan-300 transition-colors text-sm py-1" style={{fontFamily: 'Inter'}}>
+                  Tutorials
+                </Link>
+                <Link href="/api-docs" className="block text-gray-300 hover:text-cyan-300 transition-colors text-sm py-1" style={{fontFamily: 'Inter'}}>
+                  API Reference
+                </Link>
+              </div>
+            </div>
+            <Link href="/roadmap" className="flex items-center gap-3 text-white hover:text-cyan-300 transition-colors font-medium py-2" style={{fontFamily: 'Be Vietnam Pro'}}>
+              <OptimizedIcon src="/icons/navbar/roadmap.png" alt="Roadmap" width={20} height={20} />
+              Roadmap
+            </Link>
+            <Link href="/build" className="flex items-center gap-3 text-white hover:text-cyan-300 transition-colors font-medium py-2" style={{fontFamily: 'Be Vietnam Pro'}}>
+              <OptimizedIcon src="/icons/navbar/build.svg" alt="Build" width={20} height={20} />
+              Build
+            </Link>
+            <a href="https://docs.hyperionkit.xyz/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 text-white hover:text-cyan-300 transition-colors font-medium py-2" style={{fontFamily: 'Be Vietnam Pro'}}>
+              <OptimizedIcon src="/icons/navbar/docs.svg" alt="Docs" width={20} height={20} />
+              Docs
+            </a>
+            <div className="pt-4 border-t border-gray-800">
+              {isLaunchAppPage ? (
+                <div className="flex items-center justify-center gap-2 px-6 py-3">
+                  {/* Two icon containers */}
+                  <div className="flex gap-1">
+                    <button className="w-10 h-10 bg-transparent rounded flex items-center justify-center hover:bg-gray-800 transition-colors">
+                      <img src="/icons/launch-app/navbar/gift.png" alt="Gift" className="w-6 h-6" />
+                    </button>
+                    <button className="w-10 h-10 bg-transparent rounded flex items-center justify-center hover:bg-gray-800 transition-colors">
+                      <img src="/icons/launch-app/navbar/notifications.png" alt="Notifications" className="w-6 h-6" />
+                    </button>
+                  </div>
+                  {/* My Workspace container */}
+                  <button className="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold h-8 flex items-center hover:bg-purple-700 transition-colors" style={{fontFamily: 'Be Vietnam Pro'}}>
+                    My Workspace
+                  </button>
+                </div>
+              ) : (
+                <Link href="/launch-app" className="w-full bg-transparent text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors block text-center" style={{fontFamily: 'Be Vietnam Pro'}}>
+                  Launch App
+                </Link>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </nav>
   );
-};
-
-export default Navbar;
+}

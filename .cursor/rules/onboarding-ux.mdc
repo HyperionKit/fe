@@ -1,0 +1,66 @@
+---
+description: Smart Wallet Onboarding UX Rule
+globs: ["components/**/*onboarding*.{js,ts,tsx,jsx}", "app/**/*onboarding*.{js,ts,tsx,jsx}", "components/libraries/ConnectWallet.tsx", "components/libraries/OrbInput.tsx"]
+severity: warning
+feature: onboarding
+category: ux
+---
+
+# Onboarding Experience Linter
+
+Ensures a frictionless onboarding experience for new wallet users in the Hyperkit ecosystem.
+This rule enforces zero-friction principles and flags UX anti-patterns that could deter adoption.
+
+## FORBIDDEN PATTERNS:
+- ❌ More than 2 required user confirmations before landing on main dashboard
+- ❌ Absence of social, passkey, or email onboarding options
+- ❌ Requiring users to fund gas before wallet is usable
+- ❌ Multi-step wallet creation without clear progress indicators
+- ❌ Missing error handling for failed authentication attempts
+- ❌ Complex seed phrase backup requirements on first login
+- ❌ Non-responsive onboarding flows that break on mobile
+
+## ALLOWED PATTERNS:
+- ✅ "Click-to-start" onboarding with no additional web3/payments prompts
+- ✅ Social login integration (Google, Twitter, Facebook)
+- ✅ Passkey authentication for seamless access
+- ✅ Email-based authentication with optional verification
+- ✅ Clear progress indicators and step-by-step guidance
+- ✅ Mobile-first responsive design
+- ✅ Graceful error handling with retry mechanisms
+
+## EXAMPLES:
+
+### ❌ BAD - Too many confirmations
+```tsx
+// Multiple confirmation dialogs
+const OnboardingFlow = () => {
+  const [step, setStep] = useState(0);
+  // Step 1: Email confirmation
+  // Step 2: Phone verification  
+  // Step 3: Terms acceptance
+  // Step 4: Wallet creation confirmation
+  // Step 5: Backup confirmation
+  // Step 6: Final setup confirmation
+};
+```
+
+### ✅ GOOD - Streamlined flow
+```tsx
+// Single-click social login
+const OnboardingFlow = () => {
+  return (
+    <div className="onboarding-container">
+      <h1>Welcome to Hyperkit</h1>
+      <SocialLoginButton provider="google" />
+      <SocialLoginButton provider="twitter" />
+      <PasskeyButton />
+    </div>
+  );
+};
+```
+
+## USAGE:
+- Triggered automatically on PRs affecting onboarding components
+- Invokable via `/onboarding-ux-check [file1.tsx] [file2.tsx]`
+- Integrates with CI/CD pipeline for continuous UX validation

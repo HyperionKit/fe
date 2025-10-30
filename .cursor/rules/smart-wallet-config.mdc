@@ -1,0 +1,76 @@
+---
+description: Smart Wallet Configuration Validation
+globs: ["**/*config*.{js,ts,json}", "**/*wallet*.{js,ts,json}", "**/*aa*.{js,ts,json}"]
+severity: error
+category: configuration
+feature: smart-wallet
+---
+
+# Smart Wallet Configuration Linter
+
+Validates smart wallet configurations, AA (Account Abstraction) settings, and wallet deployment scripts.
+Ensures proper configuration for gasless transactions and optimal user experience.
+
+## FORBIDDEN PATTERNS:
+- ❌ Missing paymaster configuration for gasless transactions
+- ❌ Invalid AA configuration parameters
+- ❌ Missing fallback mechanisms for failed transactions
+- ❌ Incorrect network configurations
+- ❌ Missing error handling in wallet deployment
+- ❌ Hardcoded private keys or sensitive data
+- ❌ Missing validation for required fields
+
+## ALLOWED PATTERNS:
+- ✅ Proper paymaster configuration with fallbacks
+- ✅ Valid AA configuration with all required fields
+- ✅ Network-agnostic configuration
+- ✅ Secure key management
+- ✅ Comprehensive error handling
+- ✅ Environment-based configuration
+- ✅ Validation for all required parameters
+
+## EXAMPLES:
+
+### ❌ BAD - Missing paymaster config
+```json
+{
+  "wallet": {
+    "network": "ethereum",
+    "gasless": true
+    // Missing paymaster configuration
+  }
+}
+```
+
+### ✅ GOOD - Complete configuration
+```json
+{
+  "wallet": {
+    "network": "ethereum",
+    "gasless": true,
+    "paymaster": {
+      "url": "https://paymaster.hyperkit.com",
+      "fallback": "user-paid",
+      "maxGasPrice": "1000000000"
+    },
+    "aa": {
+      "factory": "0x...",
+      "entryPoint": "0x...",
+      "implementation": "0x..."
+    }
+  }
+}
+```
+
+## CONFIGURATION REQUIREMENTS:
+- Paymaster configuration for gasless transactions
+- Valid AA contract addresses
+- Network-specific settings
+- Fallback mechanisms
+- Security best practices
+- Environment variable usage
+
+## USAGE:
+- Runs on all configuration files
+- Validates wallet deployment scripts
+- Ensures proper AA setup

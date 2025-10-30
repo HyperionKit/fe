@@ -1,0 +1,70 @@
+---
+description: Performance Optimization Rule for WebGL and CSS Components
+globs: ["components/libraries/**/*.{js,ts,tsx}", "app/**/*.{js,ts,tsx}", "lib/**/*.{js,ts}"]
+severity: warning
+category: performance
+feature: optimization
+---
+
+# Performance Optimization Linter
+
+Ensures optimal performance for WebGL components, CSS alternatives, and overall application responsiveness.
+Enforces performance best practices and flags potential bottlenecks.
+
+## FORBIDDEN PATTERNS:
+- ❌ WebGL components without performance monitoring
+- ❌ Missing CSS alternatives for WebGL components
+- ❌ Components without memoization when appropriate
+- ❌ Missing lazy loading for heavy components
+- ❌ Inefficient re-renders without useCallback/useMemo
+- ❌ Missing performance-based quality adjustment
+- ❌ Components that don't respect reduced motion preferences
+
+## ALLOWED PATTERNS:
+- ✅ Adaptive quality based on device capabilities
+- ✅ CSS alternatives for all WebGL components
+- ✅ Proper memoization with React.memo, useMemo, useCallback
+- ✅ Lazy loading for non-critical components
+- ✅ Performance monitoring and FPS tracking
+- ✅ Graceful degradation on low-end devices
+- ✅ Respect for user accessibility preferences
+
+## EXAMPLES:
+
+### ❌ BAD - No performance optimization
+```tsx
+const PixelBlast = () => {
+  // No performance monitoring
+  // No quality adjustment
+  // No CSS fallback
+  return <WebGLComponent />;
+};
+```
+
+### ✅ GOOD - Performance optimized
+```tsx
+const PixelBlast = () => {
+  const { config, isLowPower } = usePerformance();
+  
+  if (!config.enableWebGL || isLowPower) {
+    return <PixelBlastCSS />;
+  }
+  
+  return <PixelBlastWebGL 
+    quality={config.quality}
+    enableMonitoring={true}
+  />;
+};
+```
+
+## PERFORMANCE REQUIREMENTS:
+- 60 FPS on mid-level devices
+- <100MB memory usage for WebGL contexts
+- <2s initial load time
+- Graceful fallback to CSS alternatives
+- Mobile-optimized rendering
+
+## USAGE:
+- Runs on all component files
+- Integrates with performance monitoring system
+- Provides suggestions for optimization improvements
