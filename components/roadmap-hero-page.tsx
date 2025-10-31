@@ -1,22 +1,24 @@
+'use client';
+
 import React from 'react'
-import Dither from './libraries/Dither'
+import { LazyVideoBackground } from '@/components/ui/lazy-video-background'
 
 const RoadmapHeroPage = () => {
   return (
     <div className="relative w-full min-h-screen bg-black flex items-center justify-center overflow-hidden">
-      {/* Dither Background */}
-      <div style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0 }}>
-        <Dither
-          waveColor={[0.3, 0.2, 0.5]}
-          disableAnimation={false}
-          enableMouseInteraction={true}
-          mouseRadius={0.3}
-          colorNum={4}
-          waveAmplitude={0.3}
-          waveFrequency={3}
-          waveSpeed={0.05}
-        />
-      </div>
+      {/* Video Background */}
+      <LazyVideoBackground
+        src="/videos/milestone-roadmap.mp4"
+        priority={true}
+        className="absolute inset-0"
+        style={{
+          top: '-5%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '120%',
+          height: '120%'
+        }}
+      />
       
       {/* Hero Content */}
       <div className="relative z-10 text-center px-8 max-w-6xl mx-auto">
