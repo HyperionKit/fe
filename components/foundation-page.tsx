@@ -3,7 +3,6 @@
 import React from 'react';
 import { OptimizedImage, OptimizedIcon } from '@/components/ui/optimized-image';
 import PixelBlast from './libraries/PixelBlast';
-import ASCIIText from './libraries/ASCIIText';
 
 // Team Section Component
 const TeamSection = () => {
@@ -311,21 +310,10 @@ export default function FoundationPage() {
         </div>
         
         <div className="relative flex flex-col items-center w-full max-w-4xl z-10">
-          {/* ASCII Text Effect for Hyperkit */}
-          <div className="relative w-full h-32 sm:h-40">
-            <ASCIIText
-              text="Hyperkit"
-              enableWaves={false}
-              asciiFontSize={4}
-              textFontSize={200}
-              textColor="#ffffff"
-              planeBaseHeight={15}
-            />
-          </div>
+          <p className="max-w-lg text-center mt-4 text-base sm:text-lg text-white/80 leading-relaxed relative z-10" style={{fontFamily: 'Inter'}}>
+            Empowers developers with modular DeFi tools and sparking innovation and community-driven growth in the Hyperion ecosystem.
+          </p>
         </div>
-        <p className="max-w-lg text-center mt-8 text-lg text-white/80 leading-relaxed relative z-10" style={{fontFamily: 'Inter'}}>
-          Empowers developers with modular DeFi tools and sparking innovation and community-driven growth in the Hyperion ecosystem.
-        </p>
       </section>
 
       {/* Our Story Section */}
