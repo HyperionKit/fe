@@ -1,33 +1,115 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# HyperKit Landing Page
 
-## Getting Started
+A modern, responsive landing page built with Next.js 15, React 19, and TypeScript. Features include interactive components, WebGL animations, and Supabase integration for newsletter subscriptions.
 
-First, run the development server:
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** 18.0 or higher ([Download](https://nodejs.org/))
+- **npm** 9.0+ or **pnpm** 8.0+ (comes with Node.js, or [install pnpm](https://pnpm.io/installation))
+- **Git** for version control
+- **Supabase account** (optional, for newsletter functionality) - [Sign up](https://supabase.com)
+
+### Verify Installation
+
+```bash
+node --version   # Should be v18.0.0 or higher
+npm --version    # Should be 9.0.0 or higher
+# or
+pnpm --version  # Should be 8.0.0 or higher
+```
+
+## Quick Start
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/HyperionKit/fe.git
+cd fe
+```
+
+### 2. Install Dependencies
+
+```bash
+npm install --legacy-peer-deps
+# or
+pnpm install
+```
+
+> **Note:** Use `--legacy-peer-deps` flag if you encounter peer dependency conflicts with React 19.
+
+### 3. Set Up Environment Variables
+
+Create a `.env.local` file in the root directory:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+> **For Newsletter Functionality:** Get your Supabase credentials from [Supabase Dashboard](https://app.supabase.com) → Settings → API. See `supabase/SUPABASE_SETUP.md` for detailed instructions.
+
+### 4. Run the Development Server
 
 ```bash
 npm run dev
 # or
-yarn dev
-# or
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The development server will start with **Turbopack** for faster builds. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 5. Start Developing
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Edit `app/page.tsx` or any component file to see changes reflected instantly with hot reload.
+
+## Getting Started (Detailed)
+
+### Project Structure
+
+```
+fe/
+├── app/                    # Next.js app directory
+│   ├── api/               # API routes
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Home page
+├── components/            # React components
+│   ├── libraries/         # Reusable component libraries
+│   └── ui/                # UI components
+├── lib/                   # Utility functions
+│   └── supabase.ts        # Supabase client
+├── public/                # Static assets
+├── supabase/              # Supabase setup files
+└── package.json           # Dependencies
+```
+
+### Available Scripts
+
+```bash
+npm run dev          # Start development server with Turbopack
+npm run build        # Build for production
+npm run start        # Start production server
+npm run lint         # Run ESLint
+npm run changelog    # Update changelog
+```
+
+## Tech Stack
+
+- **Framework:** [Next.js 15](https://nextjs.org) with App Router
+- **UI Library:** React 19
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS 4
+- **Animations:** Framer Motion, Three.js, WebGL
+- **Database:** Supabase (for newsletter subscriptions)
+- **Build Tool:** Turbopack
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- [Next.js Documentation](https://nextjs.org/docs) - Learn Next.js features and API
+- [React Documentation](https://react.dev) - Learn React fundamentals
+- [Supabase Documentation](https://supabase.com/docs) - Supabase guides and API reference
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs) - Utility-first CSS framework
 
 ## Deploy on Vercel
 
