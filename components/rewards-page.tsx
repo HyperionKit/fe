@@ -1,3 +1,7 @@
+'use client';
+
+import { LazyVideoBackground } from '@/components/ui/lazy-video-background';
+
 export default function RewardPage() {
   return (
     <div className="min-h-auto bg-black px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
@@ -16,13 +20,12 @@ export default function RewardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
           {/* Left - Large rounded card with shadow */}
           <div className="bg-black-400 rounded-2xl sm:rounded-3xl h-64 sm:h-72 lg:h-80 w-auto p-4 sm:p-6 lg:p-8 flex items-start justify-start shadow-2xl shadow-gray-900 relative overflow-hidden">
-            {/* Spline 3D Background - Slime City */}
-            <iframe
-              src="https://my.spline.design/slimecity-uqRTMug2sKdZQpSpa9cJymPz/"
-              className="absolute w-full h-full pointer-events-none"
-              style={{ 
-                border: 'none', 
-                zIndex: 1,
+            {/* Video Background - Recognition Card */}
+            <LazyVideoBackground
+              src="/videos/recognition-rewards.mp4"
+              priority={true}
+              className="absolute inset-0"
+              style={{
                 top: '-5%',
                 left: '-15%',
                 transform: 'translateX(-0%)',
