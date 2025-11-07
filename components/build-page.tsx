@@ -6,9 +6,9 @@ import FaultyTerminal from './libraries/FaultyTerminal';
 
 export default function BuildPage() {
   return (
-    <div className="min-h-screen bg-black text-white flex">
+    <div className="min-h-screen bg-black text-white flex flex-col lg:flex-row">
       {/* Left Sidebar - Black Background with Navigation */}
-      <div className="w-64 bg-black p-6 flex flex-col">
+      <div className="hidden lg:flex w-64 bg-black p-6 flex-col">
         {/* Navigation Links */}
         <div className="space-y-1 flex-1">
           {/* Introduction + */}
@@ -80,12 +80,12 @@ export default function BuildPage() {
         <BuildHeroSection />
         
         {/* Combined Section - Pillar Statement + Challenge */}
-        <div className="bg-black py-16 px-8">
+        <div className="bg-black py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-6xl mx-auto">
             {/* Pillar Statement Card */}
-            <div className="mb-16">
-              <div className="bg-black rounded-2xl p-8 border-l-4 border-purple-500">
-                <p className="text-white text-base leading-relaxed" style={{fontFamily: 'Inter'}}>
+            <div className="mb-8 sm:mb-12 lg:mb-16">
+              <div className="bg-black rounded-xl sm:rounded-2xl p-4 sm:p-6 lg:p-8 border-l-4 border-purple-500">
+                <p className="text-white text-sm sm:text-base leading-relaxed" style={{fontFamily: 'Inter'}}>
                   We focus on three core pillars:{' '}
                   <span className="text-purple-400 font-medium">cross-chain interoperability</span>,{' '}
                   <span className="text-purple-400 font-medium">open DeFi infrastructure</span>, and{' '}
@@ -95,21 +95,21 @@ export default function BuildPage() {
             </div>
 
             {/* The Challenge Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
               {/* Left Column */}
               <div>
                 <div className="text-xs uppercase tracking-wider text-gray-400 mb-4" style={{fontFamily: 'Inter'}}>
                   DECENTRALIZED TECHNOLOGY SOLUTIONS
                 </div>
-                <h2 className="text-6xl lg:text-8xl font-bold text-white mb-8 leading-tight" style={{fontFamily: 'Be Vietnam Pro'}}>
+                <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold text-white mb-6 sm:mb-8 leading-tight" style={{fontFamily: 'Be Vietnam Pro'}}>
                   <div>The</div>
                   <div className="text-purple-500">Challenge.</div>
                 </h2>
               </div>
               
               {/* Right Column */}
-              <div className="space-y-4">
-                <p className="text-gray-300 text-sm leading-relaxed" style={{fontFamily: 'Inter'}}>
+              <div className="space-y-3 sm:space-y-4">
+                <p className="text-gray-300 text-xs sm:text-sm leading-relaxed" style={{fontFamily: 'Inter'}}>
                   Despite massive advancements and growing institutional interest, truly breakthrough blockchain solutions still face barriers on the path to mainstream adoption.
                 </p>
                 <p className="text-gray-300 text-sm leading-relaxed" style={{fontFamily: 'Inter'}}>
