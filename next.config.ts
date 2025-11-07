@@ -17,11 +17,12 @@ const nextConfig: NextConfig = {
   // Redirects for maintenance page
   async redirects() {
     return [
-      {
-        source: '/launch-app',
-        destination: '/maintenance',
-        permanent: false,
-      },
+      // Temporarily disabled for development - Launch App page
+      // {
+      //   source: '/launch-app',
+      //   destination: '/maintenance',
+      //   permanent: false,
+      // },
       {
         source: '/ai',
         destination: '/maintenance',
