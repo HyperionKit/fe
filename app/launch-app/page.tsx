@@ -11,12 +11,12 @@ const page = () => {
         <ErrorBoundary>
           <LaunchAppHeroPage/>
         </ErrorBoundary>
-        <div className="py-16">
+        <div className="py-8 sm:py-12 lg:py-16">
           <ErrorBoundary>
             <LaunchRecentApp/>
           </ErrorBoundary>
         </div>
-        <div className="py-16">
+        <div className="py-8 sm:py-12 lg:py-16">
           <ErrorBoundary>
             <LaunchAppCommunity/>
           </ErrorBoundary>
