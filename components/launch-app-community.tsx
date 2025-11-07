@@ -25,12 +25,12 @@ export default function LaunchAppCommunity() {
     console.log('Sorting by:', sort);
   }, []);
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center p-8">
-      <div className="w-full max-w-7xl bg-white rounded-3xl shadow-2xl p-8">
+    <div className="min-h-screen bg-black flex items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="w-full max-w-7xl bg-white rounded-xl sm:rounded-2xl lg:rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           {/* Top Bar with Logo and Search */}
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0 mb-4 sm:mb-6">
             <div className="flex items-center gap-3">
               <img 
                 src="/icons/launch-app/community/community-build.png" 
@@ -41,18 +41,18 @@ export default function LaunchAppCommunity() {
                 Build by Community
               </h1>
             </div>
-            <div className="flex items-center gap-4">
-              <form onSubmit={handleSearch} className="flex items-center gap-2 border border-gray-300 rounded-lg px-4 py-2 bg-white">
-                <img src="/icons/launch-app/community/search.png" alt="Search" className="w-4 h-4" />
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
+              <form onSubmit={handleSearch} className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 sm:px-4 py-2 bg-white w-full sm:w-auto">
+                <img src="/icons/launch-app/community/search.png" alt="Search" className="w-4 h-4 flex-shrink-0" />
                 <input 
                   type="text" 
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search apps" 
-                  className="outline-none text-sm text-gray-600 w-48"
+                  className="outline-none text-sm text-gray-600 w-full sm:w-40 md:w-48"
                 />
               </form>
-              <button className="flex items-center gap-2 text-gray-700 hover:text-gray-900 transition-colors">
+              <button className="flex items-center justify-center gap-2 text-gray-700 hover:text-gray-900 transition-colors px-3 py-2 sm:px-0 sm:py-0">
                 <span className="text-sm font-medium">View all</span>
                 <img src="/icons/launch-app/community/see-all.png" alt="View all" className="w-4 h-4" />
               </button>
@@ -65,14 +65,14 @@ export default function LaunchAppCommunity() {
           </p>
           
           {/* Navigation Tabs and Controls */}
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-0 mb-4">
             {/* Navigation Tabs */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2 overflow-x-auto pb-2 sm:pb-0 -mx-4 sm:mx-0 px-4 sm:px-0">
               {['Website', 'Game', 'Productivity', 'Prototype', 'App'].map((tab) => (
                 <button
                   key={tab}
                   onClick={() => handleTabChange(tab)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  className={`px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                     activeTab === tab
                       ? 'bg-gray-800 text-white'
                       : 'text-gray-600 hover:text-gray-800 hover:bg-gray-100'
@@ -86,7 +86,7 @@ export default function LaunchAppCommunity() {
             {/* Featured Dropdown */}
             <button 
               onClick={() => handleSortChange(sortBy === 'featured' ? 'newest' : 'featured')}
-              className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2 bg-white hover:bg-gray-50 transition-colors"
+              className="flex items-center justify-center gap-2 border border-gray-300 rounded-lg px-3 py-2 bg-white hover:bg-gray-50 transition-colors w-full sm:w-auto"
               aria-label="Sort by"
             >
               <span className="text-sm text-gray-700">{sortBy}</span>
@@ -98,11 +98,11 @@ export default function LaunchAppCommunity() {
         </div>
         
         {/* App Grid */}
-        <div className="grid grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {[...Array(9)].map((_, i) => (
-            <div key={i} className="bg-purple-50 rounded-2xl p-6 border border-purple-100">
+            <div key={i} className="bg-purple-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-purple-100">
               {/* App Preview Area */}
-              <div className="h-48 bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+              <div className="h-32 sm:h-40 md:h-48 bg-gray-200 rounded-lg mb-3 sm:mb-4 flex items-center justify-center">
                 {i === 0 ? (
                   <div className="flex gap-3">
                     <button className="px-6 py-3 bg-purple-600 text-white rounded-lg text-sm font-medium hover:bg-purple-700 transition-colors">
