@@ -5,20 +5,11 @@ import { usePerformance } from '@/contexts/PerformanceContext';
 
 // Import CSS alternatives
 import PixelBlastCSS from './PixelBlastCSS';
-import DitherCSS from './DitherCSS';
 import FaultyTerminalCSS from './FaultyTerminalCSS';
-import ASCIITextCSS from './ASCIITextCSS';
 import GradientBlindsCSS from './GradientBlindsCSS';
 
-// Import WebGL components (if available)
-import PixelBlast from './PixelBlast';
-import Dither from './Dither';
-import FaultyTerminal from './FaultyTerminal';
-import ASCIIText from './ASCIIText';
-import GradientBlinds from './GradientBlinds';
-
 interface AdaptiveBackgroundProps {
-  type: 'pixelblast' | 'dither' | 'faultyterminal' | 'asciitext' | 'gradientblinds';
+  type: 'pixelblast' | 'faultyterminal' | 'gradientblinds';
   className?: string;
   style?: React.CSSProperties;
   // Common props
@@ -103,27 +94,11 @@ const AdaptiveBackground: React.FC<AdaptiveBackgroundProps> = (props) => {
             props.color || '#B19EEF'
         };
 
-      case 'dither':
-        return {
-          ...baseProps,
-          color: props.waveColor ? 
-            `rgb(${props.waveColor[0] * 255}, ${props.waveColor[1] * 255}, ${props.waveColor[2] * 255})` : 
-            props.color || '#B19EEF',
-          patternSize: props.patternSize || 'medium'
-        };
-
       case 'faultyterminal':
         return {
           ...baseProps,
           color: props.color || '#00FF00',
           glitchIntensity: props.glitchIntensity || 'medium'
-        };
-
-      case 'asciitext':
-        return {
-          ...baseProps,
-          color: props.color || '#FFFFFF',
-          patternSize: props.patternSize || 'medium'
         };
 
       case 'gradientblinds':
@@ -140,39 +115,19 @@ const AdaptiveBackground: React.FC<AdaptiveBackgroundProps> = (props) => {
   }, [props]);
 
   // Render appropriate component
+  // Note: WebGL components disabled due to React 19 compatibility issues
+  // Dither component removed - use MP4 video backgrounds instead
+  // Always use CSS alternatives for now
   const renderComponent = () => {
-    if (!useWebGL || !isWebGLAvailable) {
-      // Use CSS alternatives
-      switch (props.type) {
-        case 'pixelblast':
-          return <PixelBlastCSS {...cssProps} />;
-        case 'dither':
-          return <DitherCSS {...cssProps} />;
-        case 'faultyterminal':
-          return <FaultyTerminalCSS {...cssProps} />;
-        case 'asciitext':
-          return <ASCIITextCSS {...cssProps} />;
-        case 'gradientblinds':
-          return <GradientBlindsCSS {...cssProps} />;
-        default:
-          return <div className={props.className} style={props.style} />;
-      }
-    } else {
-      // Use WebGL components
-      switch (props.type) {
-        case 'pixelblast':
-          return <PixelBlast {...props} />;
-        case 'dither':
-          return <Dither {...props} />;
-        case 'faultyterminal':
-          return <FaultyTerminal {...props} />;
-        case 'asciitext':
-          return <ASCIIText {...props} />;
-        case 'gradientblinds':
-          return <GradientBlinds {...props} />;
-        default:
-          return <div className={props.className} style={props.style} />;
-      }
+    switch (props.type) {
+      case 'pixelblast':
+        return <PixelBlastCSS {...cssProps} />;
+      case 'faultyterminal':
+        return <FaultyTerminalCSS {...cssProps} />;
+      case 'gradientblinds':
+        return <GradientBlindsCSS {...cssProps} />;
+      default:
+        return <div className={props.className} style={props.style} />;
     }
   };
 
@@ -187,7 +142,7 @@ const AdaptiveBackground: React.FC<AdaptiveBackgroundProps> = (props) => {
             position: 'absolute',
             top: '10px',
             right: '10px',
-            background: useWebGL ? 'rgba(0, 255, 0, 0.8)' : 'rgba(255, 165, 0, 0.8)',
+            background: 'rgba(255, 165, 0, 0.8)',
             color: 'white',
             padding: '4px 8px',
             borderRadius: '4px',
@@ -196,7 +151,7 @@ const AdaptiveBackground: React.FC<AdaptiveBackgroundProps> = (props) => {
             fontFamily: 'monospace'
           }}
         >
-          {useWebGL ? 'WebGL' : 'CSS'} | FPS: {fps}
+          CSS | FPS: {fps}
         </div>
       )}
     </div>
