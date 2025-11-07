@@ -302,20 +302,20 @@ export default hyperkit;`;
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-8 py-0">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-0">
       {/* Core Feature Cards Row */}
-      <div className="flex flex-wrap lg:flex-nowrap gap-8 mb-50">
+      <div className="flex flex-wrap lg:flex-nowrap gap-4 sm:gap-6 lg:gap-8 mb-20 sm:mb-30 lg:mb-50">
         {featureCards.map((card, i) => (
           <div
             key={i}
             className="
-              flex-1 min-w-[300px] max-w-xl 
+              flex-1 min-w-full sm:min-w-[280px] lg:min-w-[300px] max-w-xl 
               bg-neutral-900 border border-neutral-700 
-              rounded-[1.4rem]
+              rounded-xl sm:rounded-2xl lg:rounded-[1.4rem]
               shadow-2xl 
               overflow-hidden flex flex-col
               relative"
-            style={{ height: "500px" }}
+            style={{ height: "400px", minHeight: "400px" }}
           >
             {/* Card Top: Placeholder or Orb + OrbInput */}
             <div className="flex-1 flex flex-col items-center justify-center bg-black relative p-6">
@@ -368,21 +368,21 @@ export default hyperkit;`;
       </div>
       
       {/* Builder Wallet Section */}
-      <section className="mb-20 pt-8">
-        <h2 className="text-3xl font-bold text-center mb-2 text-white" style={{fontFamily: 'Be Vietnam Pro'}}>
+      <section className="mb-12 sm:mb-16 lg:mb-20 pt-6 sm:pt-8">
+        <h2 className="text-2xl sm:text-3xl font-bold text-center mb-2 text-white px-4" style={{fontFamily: 'Be Vietnam Pro'}}>
           Build seamless{" "}
           <span className="text-purple-500">
             wallets with clean code
           </span>
         </h2>
-        <p className="text-center mb-7 text-base opacity-75 text-gray-300" style={{fontFamily: 'Inter'}}>
+        <p className="text-center mb-6 sm:mb-7 text-sm sm:text-base opacity-75 text-gray-300 px-4" style={{fontFamily: 'Inter'}}>
           No need to handle complex contract layouts or blockchain boilerplate. 
           Our tools make wallet integration simple and secure.
         </p>
 
-        <div className="flex flex-col lg:flex-row gap-10 items-start min-h-[900px]">
+        <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-10 items-start min-h-[600px] sm:min-h-[700px] lg:min-h-[900px]">
           {/* Left Panel - Configuration Options */}
-          <div className="w-full h-225 lg:w-90 bg-gray-100 rounded-2xl shadow-lg p-6 border border-gray-200">
+          <div className="w-full lg:w-90 bg-gray-100 rounded-xl sm:rounded-2xl shadow-lg p-4 sm:p-6 border border-gray-200">
             <h3 className="text-lg font-semibold text-gray-900 mb-4" style={{fontFamily: 'Inter'}}>
               Authentication
             </h3>
@@ -847,7 +847,7 @@ export default hyperkit;`;
                  </div>
                </div>
              ) : (
-               <div className={`border border-gray-200 rounded-2xl shadow-xl w-[400px] min-h-[400px] max-h-[680px] flex flex-col items-center justify-start text-center px-6 py-6 transition-all duration-300 ${
+               <div className={`border border-gray-200 rounded-xl sm:rounded-2xl shadow-xl w-full max-w-[400px] min-h-[350px] sm:min-h-[400px] max-h-[600px] sm:max-h-[680px] flex flex-col items-center justify-start text-center px-4 sm:px-6 py-4 sm:py-6 transition-all duration-300 ${
                  brandingSettings.theme === 'dark' ? 'bg-gray-900 border-gray-700' : 'bg-white'
                }`} style={{
                  borderRadius: brandingSettings.cornerRadius === 'None' ? '0px' : 
