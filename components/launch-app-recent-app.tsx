@@ -66,13 +66,13 @@ export default function LaunchAppRecentApp() {
     console.log('Opening app:', appId);
   }, []);
   return (
-    <div className="px-4 -mt-8">
+    <div className="px-4 sm:px-6 lg:px-8 -mt-4 sm:-mt-6 lg:-mt-8">
       <div className="w-full max-w-5xl mx-auto">
         {/* Recent Apps Container */}
-        <div className="bg-white rounded-2xl shadow-2xl p-6">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-2xl p-4 sm:p-6">
           {/* Header with Logo and Control Buttons */}
-          <div className="flex justify-between items-center mb-3">
-            <h2 className="text-gray-600 text-xl font-semibold" style={{fontFamily: 'Inter'}}>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0 mb-3 sm:mb-4">
+            <h2 className="text-gray-600 text-lg sm:text-xl font-semibold" style={{fontFamily: 'Inter'}}>
               Recent Apps
             </h2>
             <div className="flex gap-1">
