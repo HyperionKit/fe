@@ -47,22 +47,8 @@ export default function HeroPage() {
         <div className="mb-6 sm:mb-8">
           <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight text-center lg:text-left" style={{fontFamily: 'Inter'}}>
             Build DeFi, Bridge Chains,<br className="hidden sm:block" />
-            Thrive in <span className="text-[#D68CFF]">Hyperion</span>
+            Thrive in <span className="text-[#D68CFF]">Crosschain</span>
           </h1>
-        </div>
-
-        {/* Built on and backed by */}
-        <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-2 sm:gap-3 mb-8 sm:mb-12">
-          <div className="inline-flex items-center gap-2 sm:gap-3 bg-gray-800 px-3 sm:px-4 py-2 rounded-lg">
-            <span className="text-white font-bold text-sm sm:text-base" style={{fontFamily: 'Inter'}}>Built on and backed by</span>
-            <OptimizedImage 
-              src="/logo/brand/metis/metis-blue-white-horizontal.svg" 
-              alt="METIS" 
-              width={120}
-              height={32}
-              className="h-6 sm:h-8 w-auto"
-            />
-          </div>
         </div>
 
         {/* Enhanced Interactive Demo Section */}
@@ -74,24 +60,40 @@ export default function HeroPage() {
         <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-6 lg:gap-8">
           {/* Command line instruction */}
           <div className="flex items-center w-full lg:w-auto">
-            <div className="bg-transparent border border-white px-3 sm:px-4 py-2 sm:py-3 rounded-lg flex items-center gap-2 sm:gap-3 w-full lg:w-auto">
-              <span className="text-white font-mono text-xs sm:text-sm" style={{fontFamily: 'Inter'}}>npm create hyperkit</span>
+            <div className={`relative border px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg flex items-center gap-3 sm:gap-4 w-full lg:w-auto transition-all duration-200 ${
+              isCopied 
+                ? 'border-green-500/50 bg-trasnparent' 
+                : 'border-white/25 bg-white/5 hover:bg-white/10 hover:border-white/40'
+            }`}>
+              
+              <span className={`font-mono text-sm sm:text-base select-all transition-colors duration-200 text `}>
+                npm create hyperkit
+              </span>
+              
               <button 
                 onClick={handleCopyCommand}
-                className="flex items-center justify-center p-1 hover:bg-white/10 rounded transition-colors"
+                className={`flex items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-md transition-all duration-200 ${
+                  isCopied
+                    ? 'bg-green-500 text-white'
+                    : 'bg-white/10 hover:bg-white/20 text-white'
+                }`}
                 title={isCopied ? 'Copied!' : 'Copy command'}
               >
-                <img 
-                  src="/icons/actions/copy.png" 
-                  alt="Copy" 
-                  className={`w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0 transition-all duration-200 ${
-                    isCopied ? 'opacity-50' : 'hover:opacity-80'
-                  }`} 
-                />
-                {isCopied && (
-                  <span className="ml-1 text-green-400 text-xs font-semibold">
-                    ✓
-                  </span>
+                {isCopied ? (
+                  <>
+                    <span className="text-sm font-semibold">✓</span>
+                    <span className="hidden sm:inline text-xs font-medium">Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <img 
+                      src="/icons/actions/copy.png" 
+                      alt="" 
+                      className="w-3.5 h-3.5 sm:w-4 sm:h-4"
+                      aria-hidden="true"
+                    />
+                    <span className="hidden sm:inline text-xs font-medium">Copy</span>
+                  </>
                 )}
               </button>
             </div>

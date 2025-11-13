@@ -80,245 +80,308 @@ const ConnectWallet = ({ width, height, theme, onSuccess }: any) => (
   </div>
 );
 
-const Swap = ({ width, height, scale, theme, supportedTokens, onSuccess }: any) => (
-  <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-100" style={{ width, height, transform: `scale(${scale || 1})` }}>
-    <div className="text-center mb-6">
-      <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
-        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-        </svg>
-      </div>
-      <h3 className="text-2xl font-bold text-gray-900 mb-2" style={{fontFamily: 'Inter'}}>Token Swap</h3>
-      <p className="text-gray-600 text-sm">Exchange tokens instantly</p>
-    </div>
-    <div className="space-y-6">
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-3">From</label>
-        <div className="relative">
-          <select className="w-full py-4 px-4 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none transition-colors text-gray-900 font-medium">
-            {supportedTokens?.map((token: string) => (
-              <option key={token} value={token}>{token}</option>
-            ))}
-          </select>
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-          </svg>
-        </div>
-      </div>
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-3">To</label>
-        <div className="relative">
-          <select className="w-full py-4 px-4 border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none transition-colors text-gray-900 font-medium">
-            {supportedTokens?.map((token: string) => (
-              <option key={token} value={token}>{token}</option>
-            ))}
-          </select>
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </div>
-      </div>
-      <button 
-        onClick={() => onSuccess('0x1234...5678')}
-        className="w-full py-4 px-6 bg-gradient-to-r from-green-600 to-emerald-700 text-white rounded-xl hover:from-green-700 hover:to-emerald-800 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl font-semibold"
-      >
-        <div className="flex items-center justify-center gap-3">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+const Swap = ({ width, height, scale, theme, supportedTokens, onSuccess }: any) => {
+  const [fromToken, setFromToken] = React.useState(supportedTokens?.[0] || '');
+  const [toToken, setToToken] = React.useState(supportedTokens?.[1] || '');
+
+  const handleSwitch = () => {
+    const temp = fromToken;
+    setFromToken(toToken);
+    setToToken(temp);
+  };
+
+  return (
+    <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-200" style={{ width, height, transform: `scale(${scale || 1})` }}>
+      <div className="text-center mb-8">
+        <div className="w-14 h-14 bg-emerald-500 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+          <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
           </svg>
-          Swap Tokens
         </div>
-      </button>
+        <h3 className="text-2xl font-bold text-gray-900 mb-1" style={{fontFamily: 'Inter'}}>Token Swap</h3>
+        <p className="text-gray-500 text-sm font-medium">Exchange tokens instantly</p>
+      </div>
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">From</label>
+          <div className="relative">
+            <select 
+              value={fromToken}
+              onChange={(e) => setFromToken(e.target.value)}
+              className="w-full py-4 px-4 appearance-none border border-gray-300 rounded-2xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 focus:outline-none transition-all text-gray-900 font-semibold bg-gray-50 hover:bg-white"
+            >
+              {supportedTokens?.map((token: string) => (
+                <option key={token} value={token}>{token}</option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div className="flex justify-center -my-2">
+          <button
+            onClick={handleSwitch}
+            className="w-11 h-11 bg-white border-2 border-gray-200 rounded-xl flex items-center justify-center hover:border-emerald-500 hover:bg-emerald-50 transition-all cursor-pointer active:scale-95"
+          >
+            <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+            </svg>
+          </button>
+        </div>
+        <div>
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">To</label>
+          <div className="relative">
+            <select 
+              value={toToken}
+              onChange={(e) => setToToken(e.target.value)}
+              className="w-full py-4 px-4 appearance-none border border-gray-300 rounded-2xl focus:border-emerald-500 focus:ring-2 focus:ring-emerald-100 focus:outline-none transition-all text-gray-900 font-semibold bg-gray-50 hover:bg-white"
+            >
+              {supportedTokens?.map((token: string) => (
+                <option key={token} value={token}>{token}</option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <button 
+          onClick={() => onSuccess('0x1234...5678')}
+          className="w-full py-4 px-6 bg-emerald-500 text-white rounded-2xl hover:bg-emerald-600 active:bg-emerald-700 transition-all duration-200 shadow-sm hover:shadow-md font-bold text-base mt-6"
+        >
+          <div className="flex items-center justify-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Swap Tokens
+          </div>
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
-const Bridge = ({ width, height, scale, theme, supportedTokens, supportedNetworks, onSuccess }: any) => (
-  <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-100" style={{ width, height, transform: `scale(${scale || 1})` }}>
-    <div className="text-center mb-6">
-      <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
-        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
-        </svg>
-      </div>
-      <h3 className="text-2xl font-bold text-gray-900 mb-2" style={{fontFamily: 'Inter'}}>Cross-Chain Bridge</h3>
-      <p className="text-gray-600 text-sm">Move tokens between networks</p>
-    </div>
-    <div className="space-y-6">
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-3">From Network</label>
-        <div className="relative">
-          <select className="w-full py-4 px-4 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors text-gray-900 font-medium">
-            {supportedNetworks?.map((network: string) => (
-              <option key={network} value={network}>{network}</option>
-            ))}
-          </select>
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div className="flex justify-center">
-        <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-          </svg>
-        </div>
-      </div>
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-3">To Network</label>
-        <div className="relative">
-          <select className="w-full py-4 px-4 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none transition-colors text-gray-900 font-medium">
-            {supportedNetworks?.map((network: string) => (
-              <option key={network} value={network}>{network}</option>
-            ))}
-          </select>
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
-        </div>
-      </div>
-      <button 
-        onClick={() => onSuccess('0x5678...9abc')}
-        className="w-full py-4 px-6 bg-gradient-to-r from-purple-600 to-indigo-700 text-white rounded-xl hover:from-purple-700 hover:to-indigo-800 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl font-semibold"
-      >
-        <div className="flex items-center justify-center gap-3">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+const Bridge = ({ width, height, scale, theme, supportedTokens, supportedNetworks, onSuccess }: any) => {
+  const [fromNetwork, setFromNetwork] = React.useState(supportedNetworks?.[0] || '');
+  const [toNetwork, setToNetwork] = React.useState(supportedNetworks?.[1] || '');
+
+  const handleSwitch = () => {
+    const temp = fromNetwork;
+    setFromNetwork(toNetwork);
+    setToNetwork(temp);
+  };
+
+  return (
+    <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-200" style={{ width, height, transform: `scale(${scale || 1})` }}>
+      <div className="text-center mb-8">
+        <div className="w-14 h-14 bg-purple-500 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+          <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
           </svg>
-          Bridge Tokens
         </div>
-      </button>
-    </div>
-  </div>
-);
-
-const Staking = ({ width, height, scale, theme, supportedTokens, onSuccess }: any) => (
-  <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-100" style={{ width, height, transform: `scale(${scale || 1})` }}>
-    <div className="text-center mb-6">
-      <div className="w-16 h-16 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
-        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-        </svg>
+        <h3 className="text-2xl font-bold text-gray-900 mb-1" style={{fontFamily: 'Inter'}}>Cross-Chain Bridge</h3>
+        <p className="text-gray-500 text-sm font-medium">Move tokens between networks</p>
       </div>
-      <h3 className="text-2xl font-bold text-gray-900 mb-2" style={{fontFamily: 'Inter'}}>Staking Pool</h3>
-      <p className="text-gray-600 text-sm">Earn rewards by staking tokens</p>
-    </div>
-    <div className="space-y-6">
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-3">Token</label>
-        <div className="relative">
-          <select className="w-full py-4 px-4 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition-colors text-gray-900 font-medium">
-            {supportedTokens?.map((token: string) => (
-              <option key={token} value={token}>{token}</option>
-            ))}
-          </select>
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-            </svg>
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">From Network</label>
+          <div className="relative">
+            <select 
+              value={fromNetwork}
+              onChange={(e) => setFromNetwork(e.target.value)}
+              className="w-full py-4 px-4 appearance-none border border-gray-300 rounded-2xl focus:border-purple-500 focus:ring-2 focus:ring-purple-100 focus:outline-none transition-all text-gray-900 font-semibold bg-gray-50 hover:bg-white"
+            >
+              {supportedNetworks?.map((network: string) => (
+                <option key={network} value={network}>{network}</option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
           </div>
         </div>
-      </div>
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-3">Amount</label>
-        <input 
-          type="number" 
-          placeholder="0.0" 
-          className="w-full py-4 px-4 border-2 border-gray-200 rounded-xl focus:border-orange-500 focus:outline-none transition-colors text-gray-900 font-medium" 
-        />
-      </div>
-      <div className="bg-orange-50 rounded-xl p-4 border border-orange-200">
-        <div className="flex items-center gap-2 mb-2">
-          <svg className="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-          </svg>
-          <span className="text-sm font-semibold text-orange-800">APY: 12.5%</span>
+        <div className="flex justify-center -my-2">
+          <button
+            onClick={handleSwitch}
+            className="w-11 h-11 bg-white border-2 border-gray-200 rounded-xl flex items-center justify-center hover:border-purple-500 hover:bg-purple-50 transition-all cursor-pointer active:scale-95"
+          >
+            <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+            </svg>
+          </button>
         </div>
-        <p className="text-xs text-orange-700">Estimated annual return</p>
+        <div>
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">To Network</label>
+          <div className="relative">
+            <select 
+              value={toNetwork}
+              onChange={(e) => setToNetwork(e.target.value)}
+              className="w-full py-4 px-4 appearance-none border border-gray-300 rounded-2xl focus:border-purple-500 focus:ring-2 focus:ring-purple-100 focus:outline-none transition-all text-gray-900 font-semibold bg-gray-50 hover:bg-white"
+            >
+              {supportedNetworks?.map((network: string) => (
+                <option key={network} value={network}>{network}</option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <button 
+          onClick={() => onSuccess('0x5678...9abc')}
+          className="w-full py-4 px-6 bg-purple-500 text-white rounded-2xl hover:bg-purple-600 active:bg-purple-700 transition-all duration-200 shadow-sm hover:shadow-md font-bold text-base mt-6"
+        >
+          <div className="flex items-center justify-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+            </svg>
+            Bridge Tokens
+          </div>
+        </button>
       </div>
-      <button 
-        onClick={() => onSuccess('0x9abc...def0')}
-        className="w-full py-4 px-6 bg-gradient-to-r from-orange-600 to-red-700 text-white rounded-xl hover:from-orange-700 hover:to-red-800 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl font-semibold"
-      >
-        <div className="flex items-center justify-center gap-3">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    </div>
+  );
+};
+
+const Staking = ({ width, height, scale, theme, supportedTokens, onSuccess }: any) => {
+  const [selectedToken, setSelectedToken] = React.useState(supportedTokens?.[0] || '');
+  const [amount, setAmount] = React.useState('');
+
+  return (
+    <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-200" style={{ width, height, transform: `scale(${scale || 1})` }}>
+      <div className="text-center mb-8">
+        <div className="w-14 h-14 bg-orange-500 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+          <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
           </svg>
-          Stake Tokens
         </div>
-      </button>
-    </div>
-  </div>
-);
-
-const Faucet = ({ width, height, scale, theme, supportedTokens, onSuccess }: any) => (
-  <div className="bg-white rounded-2xl p-8 shadow-2xl border border-gray-100" style={{ width, height, transform: `scale(${scale || 1})` }}>
-    <div className="text-center mb-6">
-      <div className="w-16 h-16 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-2xl mx-auto mb-4 flex items-center justify-center">
-        <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
-          <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-        </svg>
+        <h3 className="text-2xl font-bold text-gray-900 mb-1" style={{fontFamily: 'Inter'}}>Staking Pool</h3>
+        <p className="text-gray-500 text-sm font-medium">Earn rewards by staking tokens</p>
       </div>
-      <h3 className="text-2xl font-bold text-gray-900 mb-2" style={{fontFamily: 'Inter'}}>Testnet Faucet</h3>
-      <p className="text-gray-600 text-sm">Get free test tokens for development</p>
-    </div>
-    <div className="space-y-6">
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-3">Select Token</label>
-        <div className="relative">
-          <select className="w-full py-4 px-4 border-2 border-gray-200 rounded-xl focus:border-cyan-500 focus:outline-none transition-colors text-gray-900 font-medium">
-            {supportedTokens?.map((token: string) => (
-              <option key={token} value={token}>{token}</option>
-            ))}
-          </select>
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
-            <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Token</label>
+          <div className="relative">
+            <select 
+              value={selectedToken}
+              onChange={(e) => setSelectedToken(e.target.value)}
+              className="w-full py-4 px-4 appearance-none border border-gray-300 rounded-2xl focus:border-orange-500 focus:ring-2 focus:ring-orange-100 focus:outline-none transition-all text-gray-900 font-semibold bg-gray-50 hover:bg-white"
+            >
+              {supportedTokens?.map((token: string) => (
+                <option key={token} value={token}>{token}</option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div>
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Amount</label>
+          <input 
+            type="number" 
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="0.0" 
+            className="w-full py-4 px-4 border border-gray-300 rounded-2xl focus:border-orange-500 focus:ring-2 focus:ring-orange-100 focus:outline-none transition-all text-gray-900 font-semibold bg-gray-50 hover:bg-white placeholder:text-gray-400" 
+          />
+        </div>
+        <div className="bg-orange-50 rounded-2xl p-4 border border-orange-200">
+          <div className="flex items-center gap-2 mb-1">
+            <svg className="w-4 h-4 text-orange-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
             </svg>
+            <span className="text-sm font-bold text-orange-800">APY: 12.5%</span>
           </div>
+          <p className="text-xs text-orange-600 font-medium">Estimated annual return</p>
         </div>
-      </div>
-      <div className="bg-cyan-50 rounded-xl p-4 border border-cyan-200">
-        <div className="flex items-start gap-3">
-          <svg className="w-5 h-5 text-cyan-600 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-          </svg>
-          <div>
-            <p className="text-sm font-semibold text-cyan-800 mb-1">Rate Limit</p>
-            <p className="text-xs text-cyan-700">1 request per hour per wallet</p>
+        <button 
+          onClick={() => onSuccess('0x9abc...def0')}
+          className="w-full py-4 px-6 bg-orange-500 text-white rounded-2xl hover:bg-orange-600 active:bg-orange-700 transition-all duration-200 shadow-sm hover:shadow-md font-bold text-base mt-6"
+        >
+          <div className="flex items-center justify-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Stake Tokens
           </div>
-        </div>
+        </button>
       </div>
-      <button 
-        onClick={() => onSuccess('0xdef0...1234')}
-        className="w-full py-4 px-6 bg-gradient-to-r from-cyan-600 to-blue-700 text-white rounded-xl hover:from-cyan-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl font-semibold"
-      >
-        <div className="flex items-center justify-center gap-3">
-          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+    </div>
+  );
+};
+
+const Faucet = ({ width, height, scale, theme, supportedTokens, onSuccess }: any) => {
+  const [selectedToken, setSelectedToken] = React.useState(supportedTokens?.[0] || '');
+
+  return (
+    <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-200" style={{ width, height, transform: `scale(${scale || 1})` }}>
+      <div className="text-center mb-8">
+        <div className="w-14 h-14 bg-cyan-500 rounded-2xl mx-auto mb-4 flex items-center justify-center">
+          <svg className="w-7 h-7 text-white" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
           </svg>
-          Request Tokens
         </div>
-      </button>
+        <h3 className="text-2xl font-bold text-gray-900 mb-1" style={{fontFamily: 'Inter'}}>Testnet Faucet</h3>
+        <p className="text-gray-500 text-sm font-medium">Get free test tokens for development</p>
+      </div>
+      <div className="space-y-4">
+        <div>
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Select Token</label>
+          <div className="relative">
+            <select 
+              value={selectedToken}
+              onChange={(e) => setSelectedToken(e.target.value)}
+              className="w-full py-4 px-4 appearance-none border border-gray-300 rounded-2xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100 focus:outline-none transition-all text-gray-900 font-semibold bg-gray-50 hover:bg-white"
+            >
+              {supportedTokens?.map((token: string) => (
+                <option key={token} value={token}>{token}</option>
+              ))}
+            </select>
+            <div className="absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div className="bg-cyan-50 rounded-2xl p-4 border border-cyan-200">
+          <div className="flex items-start gap-3">
+            <svg className="w-5 h-5 text-cyan-600 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            </svg>
+            <div>
+              <p className="text-sm font-bold text-cyan-800 mb-0.5">Rate Limit</p>
+              <p className="text-xs text-cyan-600 font-medium">1 request per hour per wallet</p>
+            </div>
+          </div>
+        </div>
+        <button 
+          onClick={() => onSuccess('0xdef0...1234')}
+          className="w-full py-4 px-6 bg-cyan-500 text-white rounded-2xl hover:bg-cyan-600 active:bg-cyan-700 transition-all duration-200 shadow-sm hover:shadow-md font-bold text-base mt-6"
+        >
+          <div className="flex items-center justify-center gap-2">
+            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </svg>
+            Request Tokens
+          </div>
+        </button>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 // AI Playground Component
 const AIPlayground = ({ width, height, theme, onSuccess, isGenerating, setIsGenerating, generationStep, setGenerationStep }: any) => {
@@ -350,9 +413,9 @@ const AIPlayground = ({ width, height, theme, onSuccess, isGenerating, setIsGene
   };
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-2xl border border-gray-100" style={{ width, height }}>
+<div className="bg-white rounded-3xl p-6 shadow-lg border border-gray-200" style={{ width, height }}>
       <div className="text-center mb-4">
-        <div className="w-80 h-16 bg-transparent from-blue-500 to-purple-600 rounded-2xl mx-auto mb-3 flex items-center justify-center">
+        <div className="w-80 h-16 bg-transparent rounded-2xl mx-auto mb-3 flex items-center justify-center">
           <img 
             src="/logo/brand/hyperkit/Hyperkit Header Black.svg" 
             alt="Hyperkit" 
@@ -360,68 +423,68 @@ const AIPlayground = ({ width, height, theme, onSuccess, isGenerating, setIsGene
           />
         </div>
         <h3 className="text-xl font-bold text-gray-900 mb-1" style={{fontFamily: 'Inter'}}>AI-Powered Playground</h3>
-        <p className="text-gray-600 text-xs">Generate, optimize, and deploy DeFi applications automatically</p>
+        <p className="text-gray-500 text-xs font-medium">Generate, optimize, and deploy DeFi applications automatically</p>
       </div>
       
       <div className="space-y-4">
         {/* AI Tools Section */}
         <div className="grid grid-cols-2 gap-3">
-          <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-lg p-3 border border-purple-200">
+          <div className="bg-purple-50 rounded-xl p-3 border border-purple-200 hover:border-purple-300 transition-colors">
             <div className="flex items-center gap-2 mb-1">
-              <div className="w-6 h-6 bg-gradient-to-br from-purple-500 to-blue-600 rounded-md flex items-center justify-center">
+              <div className="w-6 h-6 bg-purple-500 rounded-lg flex items-center justify-center">
                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M12.316 3.051a1 1 0 01.633 1.265l-4 12a1 1 0 11-1.898-.632l4-12a1 1 0 011.265-.633zM5.707 6.293a1 1 0 010 1.414L3.414 10l2.293 2.293a1 1 0 11-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0zm8.586 0a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 11-1.414-1.414L16.586 10l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </div>
-              <span className="text-xs font-semibold text-gray-800">Code Generator</span>
+              <span className="text-xs font-bold text-gray-800">Code Generator</span>
             </div>
-            <p className="text-xs text-gray-600">Auto-generate smart contracts</p>
+            <p className="text-xs text-gray-600 font-medium">Auto-generate smart contracts</p>
           </div>
           
-          <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg p-3 border border-green-200">
+          <div className="bg-emerald-50 rounded-xl p-3 border border-emerald-200 hover:border-emerald-300 transition-colors">
             <div className="flex items-center gap-2 mb-1">
-              <div className="w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-600 rounded-md flex items-center justify-center">
+              <div className="w-6 h-6 bg-emerald-500 rounded-lg flex items-center justify-center">
                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
                 </svg>
               </div>
-              <span className="text-xs font-semibold text-gray-800">Optimizer</span>
+              <span className="text-xs font-bold text-gray-800">Optimizer</span>
             </div>
-            <p className="text-xs text-gray-600">Gas & performance optimization</p>
+            <p className="text-xs text-gray-600 font-medium">Gas & performance optimization</p>
           </div>
           
-          <div className="bg-gradient-to-br from-orange-50 to-red-50 rounded-lg p-3 border border-orange-200">
+          <div className="bg-orange-50 rounded-xl p-3 border border-orange-200 hover:border-orange-300 transition-colors">
             <div className="flex items-center gap-2 mb-1">
-              <div className="w-6 h-6 bg-gradient-to-br from-orange-500 to-red-600 rounded-md flex items-center justify-center">
+              <div className="w-6 h-6 bg-orange-500 rounded-lg flex items-center justify-center">
                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M3 3a1 1 0 000 2v8a2 2 0 002 2h2.586l-1.293 1.293a1 1 0 101.414 1.414L10 15.414l2.293 2.293a1 1 0 001.414-1.414L12.414 15H15a2 2 0 002-2V5a1 1 0 100-2H3zm11.707 4.707a1 1 0 00-1.414-1.414L10 9.586 8.707 8.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                 </svg>
               </div>
-              <span className="text-xs font-semibold text-gray-800">Deployer</span>
+              <span className="text-xs font-bold text-gray-800">Deployer</span>
             </div>
-            <p className="text-xs text-gray-600">One-click deployment</p>
+            <p className="text-xs text-gray-600 font-medium">One-click deployment</p>
           </div>
           
-          <div className="bg-gradient-to-br from-cyan-50 to-blue-50 rounded-lg p-3 border border-cyan-200">
+          <div className="bg-cyan-50 rounded-xl p-3 border border-cyan-200 hover:border-cyan-300 transition-colors">
             <div className="flex items-center gap-2 mb-1">
-              <div className="w-6 h-6 bg-gradient-to-br from-cyan-500 to-blue-600 rounded-md flex items-center justify-center">
+              <div className="w-6 h-6 bg-cyan-500 rounded-lg flex items-center justify-center">
                 <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
               </div>
-              <span className="text-xs font-semibold text-gray-800">Analytics</span>
+              <span className="text-xs font-bold text-gray-800">Analytics</span>
             </div>
-            <p className="text-xs text-gray-600">Real-time monitoring</p>
+            <p className="text-xs text-gray-600 font-medium">Real-time monitoring</p>
           </div>
         </div>
         
         {/* AI Input Section */}
         <div>
-          <label className="block text-xs font-semibold text-gray-700 mb-2">Describe your DeFi application</label>
+          <label className="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Describe your DeFi application</label>
           <div className="relative">
             <textarea 
               value="A yield farming protocol for USDC staking with 10% APY rewards and automated compound interest..."
-              className="w-full py-3 px-3 border-2 border-gray-200 rounded-lg bg-gray-50 text-gray-500 cursor-not-allowed resize-none"
+              className="w-full py-3 px-3 border border-gray-300 rounded-2xl bg-gray-50 text-gray-500 cursor-not-allowed resize-none font-medium"
               rows={2}
               readOnly
             />
@@ -430,11 +493,11 @@ const AIPlayground = ({ width, height, theme, onSuccess, isGenerating, setIsGene
         </div>
         
         {/* AI Status */}
-        <div className="bg-gradient-to-r from-purple-50 to-blue-50 rounded-lg p-3 border border-purple-200">
+        <div className="bg-purple-50 rounded-2xl p-3 border border-purple-200">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
-            <span className="text-xs font-semibold text-purple-800">AI Agent</span>
-            <span className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full">Demo</span>
+            <span className="text-xs font-bold text-purple-800">AI Agent</span>
+            <span className="text-xs px-2 py-1 bg-purple-100 text-purple-700 rounded-full font-semibold">Demo</span>
           </div>
         </div>
         
@@ -444,7 +507,7 @@ const AIPlayground = ({ width, height, theme, onSuccess, isGenerating, setIsGene
             <button 
               onClick={handleActionDeploy}
               disabled={isGenerating}
-              className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-blue-700 text-white rounded-lg hover:from-purple-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full py-3 px-6 bg-purple-500 text-white rounded-2xl hover:bg-purple-600 active:bg-purple-700 transition-all duration-200 shadow-sm hover:shadow-md font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <div className="flex items-center justify-center gap-2">
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -458,7 +521,7 @@ const AIPlayground = ({ width, height, theme, onSuccess, isGenerating, setIsGene
               <button 
                 onClick={handleActionDeploy}
                 disabled={isGenerating}
-                className="flex-1 py-3 px-6 bg-gradient-to-r from-purple-600 to-blue-700 text-white rounded-lg hover:from-purple-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl font-semibold text-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="flex-1 py-3 px-6 bg-purple-500 text-white rounded-2xl hover:bg-purple-600 active:bg-purple-700 transition-all duration-200 shadow-sm hover:shadow-md font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <div className="flex items-center justify-center gap-2">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -472,7 +535,7 @@ const AIPlayground = ({ width, height, theme, onSuccess, isGenerating, setIsGene
                   setIsGenerating(false);
                   setGenerationStep(0);
                 }}
-                className="px-4 py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors font-semibold text-sm"
+                className="px-4 py-3 bg-gray-100 text-gray-700 rounded-2xl hover:bg-gray-200 active:bg-gray-300 transition-all duration-200 font-bold text-sm"
               >
                 Reset
               </button>
