@@ -1,10 +1,12 @@
-import React from 'react'
-import { ErrorBoundary } from '@/components/utils/error-boundary'
-import LaunchAppHeroPage from '@/components/pages/launch-app-hero-page'
-import LaunchRecentApp from '@/components/pages/launch-app-recent-app'
-import LaunchAppCommunity from '@/components/pages/launch-app-community'
+'use client';
 
-const page = () => {
+import React from 'react';
+import { ErrorBoundary } from '@/components/utils/error-boundary';
+import LaunchAppHeroPage from '@/components/pages/launch-app-hero-page';
+import LaunchRecentApp from '@/components/pages/launch-app-recent-app';
+import LaunchAppCommunity from '@/components/pages/launch-app-community';
+
+export default function LaunchAppPage() {
   return (
     <div className="w-full">
       <div className="pt-16 sm:pt-20 lg:pt-24">
@@ -23,6 +25,5 @@ const page = () => {
         </div>
       </div>
     </div>
-  )
+  );
 }
-export default page
