@@ -1,6 +1,6 @@
 import React from 'react'
-import RoadmapHeroPage from '@/components/roadmap-hero-page'
-import RoadmapTimeline from '@/components/roadmap-timeline'
+import RoadmapHeroPage from '@/components/pages/roadmap-hero-page'
+import RoadmapTimeline from '@/components/pages/roadmap-timeline'
 
 // Disable static generation for this page due to React Three Fiber
 export const dynamic = 'force-dynamic'
