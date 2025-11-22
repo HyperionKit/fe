@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SVG to PNG Converter for Favicon</title>
+</head>
+<body>
+    <h1>Favicon Generator</h1>
+    <p>Open this file in a browser, then use browser DevTools to convert the SVG to PNG at 32x32, 48x48, etc.</p>
+    <p>Or use an online tool like: <a href="https://convertio.co/svg-png/">convertio.co</a></p>
+    <img id="svgImage" src="../public/logo/brand/hyperkit/Hyperkit Abstract.svg" style="display:none;">
+    <canvas id="canvas" width="32" height="32"></canvas>
+    <script>
+        const img = document.getElementById('svgImage');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        img.onload = function() {
+            // Draw at 32x32
+            ctx.drawImage(img, 0, 0, 32, 32);
+            const dataURL = canvas.toDataURL('image/png');
+            console.log('32x32 PNG data:', dataURL);
+            // You can download this or copy the data URL
+        };
+    </script>
+</body>
+</html>
+
