@@ -41,3 +41,5 @@ newsletter-table.sql
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# hardhat artifacts (compiled contracts)
