@@ -3,6 +3,9 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
+// Mock wallet address for demo
+const MOCK_ADDRESS = '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6';
+
 interface WalletInfo {
   address: string;
   type: 'metamask' | 'okx';
@@ -48,18 +51,14 @@ export default function WhitelistPage() {
     setError(null);
     
     try {
-      if (typeof window.ethereum !== 'undefined') {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }) as string[];
-        if (accounts.length > 0) {
-          setWalletInfo({
-            address: accounts[0],
-            type: 'metamask'
-          });
-          setSuccess('Metamask wallet connected successfully!');
-        }
-      } else {
-        setError('Metamask is not installed. Please install Metamask first.');
-      }
+      // DEMO MODE: Mock wallet connection
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setWalletInfo({
+        address: MOCK_ADDRESS,
+        type: 'metamask'
+      });
+      setSuccess('Metamask wallet connected successfully! (Demo Mode)');
     } catch (err) {
       setError('Failed to connect Metamask wallet.');
     } finally {
@@ -72,18 +71,14 @@ export default function WhitelistPage() {
     setError(null);
     
     try {
-      if (typeof (window as any).okxwallet !== 'undefined') {
-        const accounts = await (window as any).okxwallet.request({ method: 'eth_requestAccounts' }) as string[];
-        if (accounts.length > 0) {
-          setWalletInfo({
-            address: accounts[0],
-            type: 'okx'
-          });
-          setSuccess('OKX wallet connected successfully!');
-        }
-      } else {
-        setError('OKX wallet is not installed. Please install OKX wallet first.');
-      }
+      // DEMO MODE: Mock wallet connection
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      setWalletInfo({
+        address: MOCK_ADDRESS,
+        type: 'okx'
+      });
+      setSuccess('OKX wallet connected successfully! (Demo Mode)');
     } catch (err) {
       setError('Failed to connect OKX wallet.');
     } finally {
@@ -148,6 +143,9 @@ export default function WhitelistPage() {
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Connect your wallet to join our exclusive whitelist and get early access to Hyperkit features.
           </p>
+          <p className="text-sm text-gray-500 mt-2">
+            Demo Mode - All wallet connections are simulated
+          </p>
         </motion.div>
 
         {/* Main Content */}
@@ -155,155 +153,119 @@ export default function WhitelistPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-white rounded-2xl border-2 border-gray-200 shadow-lg p-8"
+          className="bg-white rounded-2xl shadow-xl p-8 md:p-12"
         >
           {!walletInfo ? (
-            /* Wallet Connection Section */
-            <div className="text-center">
-              <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Connect Your Wallet
               </h2>
-              <p className="text-gray-600 mb-8">
-                Choose your preferred wallet to continue
-              </p>
               
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                                 {/* Metamask Button */}
-                 <button
-                   onClick={connectMetamask}
-                   disabled={isConnecting}
-                   className="flex items-center justify-center gap-3 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-                 >
-                   <img 
-                     src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" 
-                     alt="Metamask" 
-                     className="w-6 h-6"
-                   />
-                   {isConnecting ? 'Connecting...' : 'Connect Metamask'}
-                 </button>
-
-                 {/* OKX Wallet Button */}
-                 <button
-                   onClick={connectOKX}
-                   disabled={isConnecting}
-                   className="flex items-center justify-center gap-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-8 py-4 rounded-2xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl"
-                 >
-                   <img 
-                     src="https://altcoinsbox.com/wp-content/uploads/2023/03/okx-logo-black-and-white-300x300.webp" 
-                     alt="OKX Wallet" 
-                     className="w-6 h-6 rounded-full"
-                   />
-                   {isConnecting ? 'Connecting...' : 'Connect OKX Wallet'}
-                 </button>
-              </div>
-            </div>
-          ) : (
-            /* Wallet Connected Section */
-            <div className="text-center">
-              <div className="bg-green-50 border border-green-200 rounded-xl p-6 mb-8">
-                <div className="flex items-center justify-center gap-3 mb-4">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-green-800 font-semibold">Wallet Connected</span>
-                </div>
-                <p className="text-green-700 text-sm">
-                  {walletInfo.type === 'metamask' ? 'Metamask' : 'OKX Wallet'} • {walletInfo.address.slice(0, 6)}...{walletInfo.address.slice(-4)}
-                </p>
-              </div>
-
-              {!isJoined ? (
-                <div>
-                  <h2 className="text-2xl font-semibold text-gray-800 mb-6">
-                    Join the Whitelist
-                  </h2>
-                  <p className="text-gray-600 mb-8">
-                    You're all set! Click the button below to join our whitelist.
-                  </p>
-                  
-                  <button
-                    onClick={joinWhitelist}
-                    disabled={isJoining}
-                    className="bg-violet-600 hover:bg-violet-700 disabled:bg-violet-400 text-white px-12 py-4 rounded-xl font-semibold text-xl transition-all duration-300 shadow-lg hover:shadow-xl mb-6"
-                  >
-                    {isJoining ? 'Joining...' : 'Join Whitelist'}
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <div className="bg-violet-50 border border-violet-200 rounded-xl p-6 mb-6">
-                    <h2 className="text-2xl font-semibold text-violet-800 mb-2">
-                      🎉 Welcome to the Whitelist!
-                    </h2>
-                    <p className="text-violet-700">
-                      You're now part of our exclusive community. Stay tuned for updates!
-                    </p>
-                  </div>
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <p className="text-red-800">{error}</p>
                 </div>
               )}
 
-              <button
-                onClick={disconnectWallet}
-                className="text-gray-500 hover:text-gray-700 underline text-sm"
-              >
-                Disconnect Wallet
-              </button>
+              {success && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <p className="text-green-800">{success}</p>
+                </div>
+              )}
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <button
+                  onClick={connectMetamask}
+                  disabled={isConnecting}
+                  className="flex items-center justify-center gap-3 p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <img 
+                    src="/logo/brand/wallets/metamask-icon-fox.svg" 
+                    alt="MetaMask" 
+                    className="w-8 h-8"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/icons/wallet.svg';
+                    }}
+                  />
+                  <span className="font-semibold text-gray-900">
+                    {isConnecting ? 'Connecting...' : 'Connect MetaMask'}
+                  </span>
+                </button>
+
+                <button
+                  onClick={connectOKX}
+                  disabled={isConnecting}
+                  className="flex items-center justify-center gap-3 p-6 border-2 border-gray-200 rounded-xl hover:border-blue-500 hover:bg-blue-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <img 
+                    src="/logo/brand/wallets/okx-logo-brandlogo.svg" 
+                    alt="OKX" 
+                    className="w-8 h-8"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/icons/wallet.svg';
+                    }}
+                  />
+                  <span className="font-semibold text-gray-900">
+                    {isConnecting ? 'Connecting...' : 'Connect OKX'}
+                  </span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-900">
+                  Wallet Connected
+                </h2>
+                <button
+                  onClick={disconnectWallet}
+                  className="text-sm text-gray-600 hover:text-gray-900"
+                >
+                  Disconnect
+                </button>
+              </div>
+
+              <div className="bg-gray-50 rounded-lg p-4">
+                <p className="text-sm text-gray-600 mb-1">Wallet Address</p>
+                <p className="font-mono text-gray-900 break-all">{walletInfo.address}</p>
+                <p className="text-xs text-gray-500 mt-1">Type: {walletInfo.type}</p>
+              </div>
+
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <p className="text-red-800">{error}</p>
+                </div>
+              )}
+
+              {success && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <p className="text-green-800">{success}</p>
+                </div>
+              )}
+
+              {!isJoined && (
+                <button
+                  onClick={joinWhitelist}
+                  disabled={isJoining}
+                  className="w-full py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {isJoining ? 'Joining...' : 'Join Whitelist'}
+                </button>
+              )}
+
+              {isJoined && (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+                  <div className="text-4xl mb-2">✓</div>
+                  <h3 className="text-xl font-bold text-green-900 mb-2">
+                    You're Whitelisted!
+                  </h3>
+                  <p className="text-green-700">
+                    Thank you for joining. You'll receive updates about early access.
+                  </p>
+                </div>
+              )}
             </div>
           )}
-
-          {/* Status Messages */}
-          {error && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-6 bg-red-50 border border-red-200 rounded-xl p-4"
-            >
-              <p className="text-red-700 text-center">{error}</p>
-            </motion.div>
-          )}
-
-          {success && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-6 bg-green-50 border border-green-200 rounded-xl p-4"
-            >
-              <p className="text-green-700 text-center">{success}</p>
-            </motion.div>
-          )}
-        </motion.div>
-
-        {/* Info Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-12 text-center"
-        >
-          <h3 className="text-xl font-semibold text-gray-800 mb-4">
-            What happens next?
-          </h3>
-          <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
-            <div className="bg-gray-50 rounded-xl p-6">
-              <div className="w-12 h-12 bg-violet-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-violet-600 text-xl font-bold">1</span>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2">Connect Wallet</h4>
-              <p className="text-gray-600 text-sm">Connect your Metamask or OKX wallet securely</p>
-            </div>
-            <div className="bg-gray-50 rounded-xl p-6">
-              <div className="w-12 h-12 bg-violet-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-violet-600 text-xl font-bold">2</span>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2">Join Whitelist</h4>
-              <p className="text-gray-600 text-sm">Submit your wallet address to our whitelist</p>
-            </div>
-            <div className="bg-gray-50 rounded-xl p-6">
-              <div className="w-12 h-12 bg-violet-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-violet-600 text-xl font-bold">3</span>
-              </div>
-              <h4 className="font-semibold text-gray-800 mb-2">Get Access</h4>
-              <p className="text-gray-600 text-sm">Receive early access to exclusive features</p>
-            </div>
-          </div>
         </motion.div>
       </div>
     </div>
