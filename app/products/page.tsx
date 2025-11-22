@@ -1,6 +1,6 @@
 import React from 'react';
-import ProductsHeroPage from "@/components/products-hero-page";
-import ProductsOverviewPage from "@/components/products-overview-page";
+import ProductsHeroPage from "@/components/pages/products-hero-page";
+import ProductsOverviewPage from "@/components/pages/products-overview-page";
 
 export default function Home() {
   return (
