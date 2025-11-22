@@ -362,7 +362,7 @@ const RoadmapTimeline = () => {
             <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700">
               <div className="relative z-10 flex items-center justify-center h-full">
                 <img 
-                  src="/UI/Design/HyperAgent-Visual-Overview.png" 
+                  src="/UI/Design/CLI-Visual-Overview.png" 
                   alt="Backend Integration" 
                   className="w-full h-full object-cover rounded-lg"
                 />
@@ -415,7 +415,7 @@ const RoadmapTimeline = () => {
             <div className="bg-gray-800 rounded-lg p-4 relative overflow-hidden aspect-square border border-gray-700">
               <div className="relative z-10 flex items-center justify-center h-full">
                 <img 
-                  src="/UI/Design/HyperAgent-Visual-Overview.png" 
+                  src="/UI/Design/CLI-Visual-Overview.png" 
                   alt="CLI Tool Expansion" 
                   className="w-full h-full object-cover rounded-lg"
                 />
