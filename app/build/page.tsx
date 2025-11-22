@@ -1,5 +1,5 @@
 import React from 'react'
-import BuildPage from '@/components/build-page'
+import BuildPage from '@/components/pages/build-page'
 
 const page = () => {
   return (
