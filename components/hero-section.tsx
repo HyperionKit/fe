@@ -29,11 +29,11 @@ const HeroSection: React.FC = () => {
       
       <div className="px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 pb-6 sm:pb-8 md:pb-12 lg:pb-16 xl:pb-20 text-center">
         <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl 2xl:text-7xl font-bold mb-4 sm:mb-6 md:mb-8 leading-tight max-w-5xl mx-auto">
-          Build DeFi, Bridge Chains,{' '}
+        Build Smarter. Deploy Faster.{' '}
           <br className="hidden sm:inline" />
           Thrive in{' '}
           <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-            Hyperion
+            Hyperkit
           </span>
         </h1>
        
