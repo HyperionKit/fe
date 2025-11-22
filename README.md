@@ -2,6 +2,10 @@
 
 A modern, responsive landing page built with Next.js 15, React 19, and TypeScript. Features include interactive components, WebGL animations, and Supabase integration for newsletter subscriptions.
 
+## ⚠️ Demo Mode
+
+**This is a showcase/demo application. All blockchain functionality is mocked for demonstration purposes. No real transactions, wallet connections, or smart contract interactions are performed.**
+
 ## Getting Started
 
 ### Prerequisites
@@ -105,6 +109,8 @@ npm run changelog    # Update changelog
 - **Animations:** Framer Motion, Three.js, WebGL
 - **Database:** Supabase (for newsletter subscriptions)
 - **Build Tool:** Turbopack
+
+**Note:** All DeFi components (Swap, Bridge, Staking, Faucet) are in demo mode with mocked functionality. No blockchain libraries (ethers.js) are required.
 
 ## Learn More
 
