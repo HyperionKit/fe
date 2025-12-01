@@ -76,7 +76,7 @@ export default function Footer() {
             <a href="#" className="text-slate-500 text-xs hover:text-brand-400 transition-colors">
               Careers
             </a>
-            <a href="#" className="text-slate-500 text-xs hover:text-brand-400 transition-colors">
+            <a href="/legal" className="text-slate-500 text-xs hover:text-brand-400 transition-colors">
               Legal
             </a>
           </div>

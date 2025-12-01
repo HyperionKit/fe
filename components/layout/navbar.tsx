@@ -52,7 +52,6 @@ export default function Navbar() {
           <a href="/solutions" className="hover:text-white transition-colors">Solutions</a>
           <a href="#" className="hover:text-white transition-colors">Docs</a>
           <a href="/products" className="hover:text-white transition-colors">Products</a>
-          <a href="#" className="hover:text-white transition-colors">Pricing</a>
           <div className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer group">
             About 
             <ChevronDown className="w-3 h-3 opacity-50 group-hover:rotate-180 transition-transform" />
