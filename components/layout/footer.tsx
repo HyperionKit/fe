@@ -70,10 +70,10 @@ export default function Footer() {
           {/* Company Links */}
           <div className="flex flex-col gap-3">
             <h4 className="text-white font-medium text-xs mb-1">Company</h4>
-            <a href="#" className="text-slate-500 text-xs hover:text-brand-400 transition-colors">
+            <a href="/foundation" className="text-slate-500 text-xs hover:text-brand-400 transition-colors">
               About
             </a>
-            <a href="#" className="text-slate-500 text-xs hover:text-brand-400 transition-colors">
+            <a href="/legal" className="text-slate-500 text-xs hover:text-brand-400 transition-colors">
               Careers
             </a>
             <a href="/legal" className="text-slate-500 text-xs hover:text-brand-400 transition-colors">
