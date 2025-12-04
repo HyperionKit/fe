@@ -1,236 +1,172 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { ArrowRight, Check, Copy, Zap, Clock, Rocket, CheckCircle2 } from 'lucide-react';
-import { OptimizedImage, OptimizedIcon } from '@/components/ui/optimized-image';
-import EnhancedHeroDemo from '../demo/EnhancedHeroDemo';
+import React from 'react';
+import { ChevronRight, Sparkles, Sun, MoreVertical, Link, FileCode, Search, MessageSquare, Check } from 'lucide-react';
 
-export default function HeroPage() {
-  const [isCopied, setIsCopied] = useState(false);
-
-  const handleCopyCommand = async () => {
-    try {
-      await navigator.clipboard.writeText('npm create hyperkit');
-      setIsCopied(true);
-      
-      // Reset the copied state after 2 seconds
-      setTimeout(() => {
-        setIsCopied(false);
-      }, 2000);
-    } catch (err) {
-      console.error('Failed to copy command:', err);
-      // Fallback for older browsers
-      const textArea = document.createElement('textarea');
-      textArea.value = 'npm create hyperkit';
-      document.body.appendChild(textArea);
-      textArea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textArea);
-      setIsCopied(true);
-      
-      setTimeout(() => {
-        setIsCopied(false);
-      }, 2000);
-    }
-  };
-
-  const handleInnovateNow = () => {
-    // Here you can add logic to navigate to a specific page or open a modal
-    console.log('Innovate now clicked');
-    // For example, you could scroll to a specific section or open a contact form
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
+const HeroSection = () => {
   return (
-    <div className="min-h-screen p-4 sm:p-6 lg:p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Main Title */}
-        <div className="mb-4 sm:mb-6">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold text-white leading-tight text-center lg:text-left" style={{fontFamily: 'Inter'}}>
-            Build Smarter. Deploy Faster.<br className="hidden sm:block" />
-            Thrive in <span className="text-[#D68CFF]">Hyperkit</span>
-          </h1>
-        </div>
+    <section className="max-w-5xl mx-auto px-4 flex flex-col items-center text-center">
+      {/* Badge */}
+      <div className="mb-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm">
+        <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400">
+          Hyperkit v1.0
+        </span>
+      </div>
 
-        {/* Value Proposition Subheadline */}
-        <div className="mb-6 sm:mb-8">
-          <p className="text-xl sm:text-2xl md:text-3xl text-white/90 text-center lg:text-left mb-4 max-w-4xl" style={{fontFamily: 'Inter'}}>
-            Ship DeFi apps in <span className="text-[#D68CFF] font-bold">minutes</span>, not weeks.
-            <span className="block mt-2 text-lg sm:text-xl md:text-2xl text-white/70">
-              Join developers building the future of Web3
-            </span>
-          </p>
+      {/* Headline */}
+      <h1 className="text-5xl md:text-7xl font-semibold text-white tracking-tight mb-6 leading-[1.1] text-glow">
+        Ship Web3 Apps<br />
+        <span className="text-transparent bg-clip-text bg-gradient-to-b from-white via-white to-white/50">
+          10x Faster with AI
+        </span>
+      </h1>
+
+      {/* Subheadline */}
+      <p className="text-lg text-slate-400 font-light max-w-2xl mb-10 leading-relaxed">
+        Combine AI-powered contract generation, built-in security auditing, and modular infrastructure to launch production-ready dApps in clicks.
+      </p>
+
+      {/* Buttons */}
+      <div className="flex flex-col sm:flex-row items-center gap-4 mb-20">
+        <button className="px-8 py-3 rounded-full bg-gradient-to-b from-brand-500 to-brand-600 text-white text-sm font-medium shadow-[0_0_20px_-5px_rgba(124,58,237,0.5)] hover:shadow-[0_0_30px_-5px_rgba(124,58,237,0.6)] hover:-translate-y-0.5 transition-all">
+          Get Started
+        </button>
+        <button className="px-8 py-3 rounded-full border border-white/10 bg-transparent text-slate-300 text-sm font-medium hover:bg-white/5 hover:text-white transition-all flex items-center gap-1 group">
+          Explore SDK <ChevronRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+        </button>
+      </div>
+
+      {/* App Visual / Terminal Wrapper */}
+      <div className="w-full relative group">
+        {/* Glow behind app */}
+        <div className="absolute -inset-0.5 bg-gradient-to-r from-brand-500/30 to-purple-600/30 rounded-2xl blur-2xl opacity-50 group-hover:opacity-75 transition duration-1000"></div>
+        
+        {/* Main Window */}
+        <div className="relative rounded-xl border border-white/10 bg-[#0A0910] shadow-2xl overflow-hidden backdrop-blur-sm">
+          {/* Top Glow Line */}
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-brand-500 to-transparent opacity-50"></div>
           
-          {/* Social Proof Badge */}
-          <div className="flex items-center gap-3 mt-4 text-center lg:text-left">
-            <div className="flex -space-x-2">
-              {/* Avatar stack - Developer profiles */}
-              <img 
-                src="https://avatars.githubusercontent.com/u/126247858?v=4" 
-                alt="Developer 1" 
-                className="w-8 h-8 rounded-full border-2 border-white object-cover"
-              />
-              <img 
-                src="https://avatars.githubusercontent.com/u/118997864?v=4" 
-                alt="Developer 2" 
-                className="w-8 h-8 rounded-full border-2 border-white object-cover"
-              />
-              <img 
-                src="https://avatars.githubusercontent.com/u/180379912?v=4" 
-                alt="Developer 3" 
-                className="w-8 h-8 rounded-full border-2 border-white object-cover"
-              />
-            </div>
-            <span className="text-white/80 text-sm sm:text-base">
-              <span className="font-bold text-white">3</span> developers building with HyperKit
-            </span>
-          </div>
-        </div>
-
-        {/* Trust Indicators */}
-        <div className="mb-6 sm:mb-8 flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 text-white/80 text-sm sm:text-base">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-green-400" />
-            <span>Open Source</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-green-400" />
-            <span>In Development</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-green-400" />
-            <span>Decentralized Network</span>
-          </div>
-        </div>
-
-        {/* Primary CTA - Above the fold */}
-        <div className="mb-8 sm:mb-12">
-          <div className="relative">
-            {/* Glow effect behind CTA - Monochromatic */}
-            <div className="absolute inset-0 bg-[#7C3AED]/20 blur-3xl rounded-full -z-10 animate-pulse"></div>
-            {/* Additional geometric accent */}
-            <div className="absolute -top-4 -left-4 w-24 h-24 bg-[#7C3AED]/10 rounded-full blur-2xl -z-10"></div>
-            <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-[#6D28D9]/10 rounded-full blur-2xl -z-10"></div>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 sm:gap-6">
-              {/* npm create hyperkit Button - Left side */}
-              <button
-                onClick={handleCopyCommand}
-                className="group relative bg-white/5 border border-white/20 text-white px-6 sm:px-8 md:px-10 py-4 sm:py-5 md:py-6 rounded-xl font-semibold text-base sm:text-lg md:text-xl transition-all duration-300 backdrop-blur-sm active:scale-95 transform flex items-center justify-center gap-3 min-w-[240px] sm:min-w-[280px] w-full sm:w-auto font-mono"
-                style={{fontFamily: 'Inter'}}
-              >
-                <span className="relative z-10 flex items-center gap-3">
-                  {isCopied ? (
-                    <>
-                      <Check className="w-5 h-5" />
-                      <span>Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>npm create hyperkit</span>
-                      <Copy className="w-4 h-4" />
-                    </>
-                  )}
+          {/* Header Bar */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-white/5 bg-white/[0.02]">
+            <div className="flex items-center gap-3">
+              <div className="flex gap-1.5">
+                <div className="w-2.5 h-2.5 rounded-full border border-white/10"></div>
+                <span className="text-xs font-medium text-slate-300">Hyperkit Pro</span>
+                <span className="px-1.5 py-0.5 rounded text-[10px] bg-white/5 text-slate-500 border border-white/5">
+                  Beta
                 </span>
-              </button>
-
-              {/* Try AI Button - Right side */}
-              <Link
-                href="/maintenance"
-                className="group relative bg-[#7C3AED] active:bg-[#6D28D9] text-white px-8 sm:px-12 md:px-16 py-4 sm:py-5 md:py-6 rounded-xl font-bold text-lg sm:text-xl md:text-2xl transition-all duration-300 shadow-2xl active:scale-95 transform flex items-center justify-center gap-3 min-w-[280px] sm:min-w-[320px] w-full sm:w-auto border border-white/20 backdrop-blur-sm"
-                style={{fontFamily: 'Inter'}}
-              >
-                <span className="relative z-10 flex items-center gap-3">
-                  <span>Try AI</span>
-                  <ArrowRight className="w-5 h-5" />
-                </span>
-              </Link>
+              </div>
             </div>
-            
-            {/* Benefit text below CTA */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 mt-4 text-white/70 text-sm sm:text-base">
-              <div className="flex items-center gap-2">
-                <Zap className="w-4 h-4 text-[#D68CFF]" />
-                <span>No credit card required</span>
-              </div>
-              <span className="text-white/30 hidden sm:inline">|</span>
-              <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-[#D68CFF]" />
-                <span>Setup in 30 seconds</span>
-              </div>
-              <span className="text-white/30 hidden sm:inline">|</span>
-              <div className="flex items-center gap-2">
-                <Rocket className="w-4 h-4 text-[#D68CFF]" />
-                <span>Start building immediately</span>
-              </div>
+            <div className="flex items-center gap-3 text-slate-500">
+              <span className="text-xs hover:text-white cursor-pointer transition-colors">Docs</span>
+              <span className="text-xs hover:text-white cursor-pointer transition-colors">Feedback</span>
+              <Sun className="w-3.5 h-3.5 hover:text-white cursor-pointer transition-colors" />
+              <MoreVertical className="w-3.5 h-3.5 hover:text-white cursor-pointer transition-colors" />
             </div>
           </div>
-        </div>
 
-        {/* Enhanced Interactive Demo Section */}
-        <div className="mb-8 sm:mb-12">
-          <EnhancedHeroDemo />
-        </div>
-
-        {/* Additional Info Section */}
-        <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start gap-6 lg:gap-8 mb-8">
-          {/* Left side - Description */}
-          <div className="flex flex-col items-center lg:items-start gap-4 sm:gap-6 max-w-md text-center lg:text-left">
-            <p className="text-white text-base sm:text-lg leading-relaxed" style={{fontFamily: 'Inter'}}>
-              Modular tools and cross-chain magic empowering developers to create, connect, and grow in minutes.
-            </p>
-            
-            {/* Additional CTA Links */}
-            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4">
-              <Link
-                href="/maintenance"
-                className="text-white/80 hover:text-white text-sm sm:text-base font-medium transition-colors flex items-center gap-2 group"
-                style={{fontFamily: 'Inter'}}
-              >
-                <span>Launch App</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <span className="text-white/40 hidden sm:inline">|</span>
-              <Link
-                href="/products"
-                className="text-white/80 hover:text-white text-sm sm:text-base font-medium transition-colors flex items-center gap-2 group"
-                style={{fontFamily: 'Inter'}}
-              >
-                <span>View Products</span>
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-          </div>
-          
-          {/* Right side - Quick Stats or Features */}
-          <div className="flex flex-col items-center lg:items-end gap-3 text-center lg:text-right">
-            <div className="grid grid-cols-2 lg:grid-cols-1 gap-4">
+          {/* Inner Layout */}
+          <div className="flex min-h-[400px]">
+            {/* Sidebar */}
+            <div className="hidden md:flex w-64 flex-col border-r border-white/5 bg-white/[0.01] p-4 gap-6">
               <div>
-                <div className="text-[#D68CFF] text-2xl sm:text-3xl font-bold">3</div>
-                <div className="text-white/70 text-sm">Active Developers</div>
+                <h3 className="text-xs font-semibold text-white mb-3 px-2">Hyperkit</h3>
+                <div className="space-y-1">
+                  <div className="flex items-center justify-between px-2 py-1.5 rounded-md bg-white/5 border border-white/5">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-slate-500 uppercase">Connected To</span>
+                      <span className="text-xs text-brand-300">Hyperion Testnet</span>
+                    </div>
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.5)]"></div>
+                  </div>
+                  <div className="flex items-center gap-2 px-2 py-2 rounded-md hover:bg-white/5 cursor-pointer group transition-colors">
+                    <Link className="w-3 h-3 text-slate-500 group-hover:text-white" />
+                    <span className="text-xs text-slate-400 group-hover:text-white truncate">
+                      rpc.hyperion.io
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <div className="text-[#D68CFF] text-2xl sm:text-3xl font-bold">Testing</div>
-                <div className="text-white/70 text-sm">Projects Built</div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        {/* Trusted by the best */}
-        <div className="mt-12 sm:mt-16 text-center">
-          <p className="text-white text-xs sm:text-sm mb-4 sm:mb-6" style={{fontFamily: 'Inter'}}>Trusted by the best</p>
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-8 lg:gap-12">
-            <div className="flex items-center gap-2">
-              <img src="/logo/brand/metis/metis-blue-white-horizontal.svg" alt="METIS" className="h-8 sm:h-10 lg:h-12 w-auto" />
+              <div>
+                <div className="flex items-center gap-2 px-2 py-1.5 text-slate-400 hover:text-white cursor-pointer transition-colors">
+                  <FileCode className="w-3 h-3" />
+                  <span className="text-xs font-medium">Smart Contracts</span>
+                </div>
+                <div className="flex items-center gap-2 px-2 py-1.5 text-slate-400 hover:text-white cursor-pointer transition-colors">
+                  <Search className="w-3 h-3" />
+                  <span className="text-xs font-medium">Search</span>
+                </div>
+                <div className="flex items-center gap-2 px-2 py-1.5 text-slate-400 hover:text-white cursor-pointer transition-colors">
+                  <MessageSquare className="w-3 h-3" />
+                  <span className="text-xs font-medium">AI Chat</span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <img src="/logo/brand/hyperion/hyperion-logo-white.svg" alt="Hyperion" className="h-10 sm:h-12 lg:h-16 w-auto" />
+
+            {/* Main Content Area */}
+            <div className="flex-1 flex flex-col">
+              {/* Breadcrumb/Title */}
+              <div className="flex items-center justify-between p-4 pb-0">
+                <h2 className="text-sm font-medium text-slate-200">Deploying: ERC-721 Collection</h2>
+                <button className="flex items-center gap-1.5 px-2 py-1 rounded bg-white/5 border border-white/5 text-[10px] text-slate-400 hover:text-white hover:border-white/20 transition-all">
+                  Explain Process <Sparkles className="w-2.5 h-2.5" />
+                </button>
+              </div>
+
+              {/* Terminal Content */}
+              <div className="p-6 font-mono text-xs leading-relaxed space-y-4">
+                <p className="text-slate-500 mb-4 text-[10px] uppercase tracking-wide">Terminal Output</p>
+                
+                <div className="group/line flex gap-3 opacity-80 hover:opacity-100 transition-opacity">
+                  <span className="text-brand-400 select-none">➜</span>
+                  <div>
+                    <span className="text-slate-200">npx hyperkit init my-dapp --chain hyperion</span>
+                  </div>
+                </div>
+
+                <div className="pl-5 space-y-2 border-l border-white/5 ml-1">
+                  <div className="flex items-center gap-2">
+                    <Check className="w-3 h-3 text-green-500" />
+                    <span className="text-slate-400">Analyzing requirements with AI...</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="w-3 h-3 text-green-500" />
+                    <span className="text-slate-400">
+                      Generating Smart Contracts <span className="text-slate-600">(ERC-721)</span>
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Check className="w-3 h-3 text-green-500" />
+                    <span className="text-slate-400">
+                      Auditing security <span className="text-green-500/80 bg-green-500/10 px-1 rounded">0 vulnerabilities found</span>
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-4 p-3 rounded bg-brand-500/5 border border-brand-500/20">
+                  <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                      <span className="text-[10px] text-brand-300/70 mb-1">Contract Deployed Successfully</span>
+                      <span className="text-slate-200">0x71C9...9A2F</span> 
+                    </div>
+                    <a href="#" className="text-[10px] text-brand-400 hover:text-brand-300 underline decoration-brand-500/30">
+                      View on Explorer
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex gap-2 items-center">
+                  <span className="text-brand-400 select-none">➜</span>
+                  <span className="w-2 h-4 bg-slate-500 animate-pulse"></span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-}
+};
+
+export default HeroSection;
