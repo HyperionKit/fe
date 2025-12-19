@@ -2,7 +2,7 @@ import React from 'react';
 
 export const Header: React.FC = () => (
   <div className="text-center max-w-3xl mx-auto mb-24">
-    <h1 className="text-5xl md:text-7xl font-semibold tracking-tight text-white mb-6 bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
+    <h1 className="text-6xl md:text-8xl font-semibold tracking-tight text-white mb-6 bg-gradient-to-b from-white to-white/70 bg-clip-text text-transparent">
       Integrate today. <br className="hidden md:block" /> Build smarter.
     </h1>
     <p className="text-lg md:text-xl text-slate-400 font-light leading-relaxed max-w-2xl mx-auto">

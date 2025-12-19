@@ -49,7 +49,7 @@ export default function HyperKitRoadmap() {
             Roadmap 2025-2026
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-medium text-white tracking-tight mb-6">
+          <h1 className="text-6xl md:text-8xl font-medium text-white tracking-tight mb-6">
             Product <span className="bg-gradient-to-r from-blue-300 via-white to-blue-300 bg-clip-text text-transparent animate-pulse">Evolution</span>
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto leading-relaxed font-light">

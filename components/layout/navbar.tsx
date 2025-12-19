@@ -44,10 +44,7 @@ export default function Navbar() {
 
         {/* Links (Centered) */}
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
-          <div className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer group">
-            Build 
-            <ChevronDown className="w-3 h-3 opacity-50 group-hover:rotate-180 transition-transform" />
-          </div>
+          <a href="/build" className="hover:text-white transition-colors">Build</a>
           <a href="/foundation" className="hover:text-white transition-colors">Foundation</a>
           <a href="/solutions" className="hover:text-white transition-colors">Solutions</a>
           <a href="/docs" className="hover:text-white transition-colors">Docs</a>

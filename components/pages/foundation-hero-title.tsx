@@ -3,7 +3,7 @@ import React from 'react';
 export const HeroTitle: React.FC = () => (
   <>
     <h1 
-      className="text-white font-medium text-5xl md:text-8xl tracking-[0.2em] md:tracking-[0.5em] mb-6 uppercase"
+      className="text-white font-medium text-6xl md:text-8xl tracking-[0.2em] md:tracking-[0.5em] mb-6 uppercase"
       style={{ textShadow: '0 0 20px rgba(129, 140, 248, 0.5)' }}
     >
       HyperKit
