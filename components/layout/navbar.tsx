@@ -31,13 +31,13 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo */}
         <a href="/" className="flex items-center gap-2.5 group">
-          <div className="relative h-8 w-auto flex items-center justify-center">
+          <div className="relative h-10 w-auto flex items-center justify-center">
             <Image
               src="/logo/brand/hyperkit/hyperkit-header-white.svg"
               alt="Hyperkit Logo"
-              width={120}
-              height={32}
-              className="object-contain h-8 w-auto"
+              width={140}
+              height={40}
+              className="object-contain h-10 w-auto"
             />
           </div>
         </a>
