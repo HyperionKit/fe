@@ -24,12 +24,12 @@ export const InvestorsSection: React.FC = () => (
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-20">
         <InvestorCard 
-          initials="ES"
+          image="./Profile/Elena Sinelnikova.png"
           name="Elena Sinelnikova"
           role="Co-founder of Metis"
         />
         <InvestorCard 
-          initials="NA"
+          image="./Profile/Natalia Ameline.png"
           name="Natalia Ameline"
           role="Co-founder of Metis"
         />

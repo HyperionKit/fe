@@ -8,22 +8,22 @@ export const TeamSection: React.FC = () => (
         <h2 className="text-3xl md:text-5xl text-white font-medium tracking-tight mb-4">
           Team Behind
         </h2>
-        <p className="text-slate-400 text-lg font-light">Building the future of Hyperion</p>
+        <p className="text-slate-400 text-lg font-light">Building the future of Hyperkit</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <TeamMemberCard 
-          initials="AS"
+          image="./Profile/Aaron jay Sopeña.jpeg"
           name="Aaron Jay Sopeña"
           role="Co-founder & CTO"
         />
         <TeamMemberCard 
-          initials="JL"
+          image="./Profile/Justine Lupasi.jpeg"
           name="Justine Lupasi"
           role="Co-founder & CPOO"
         />
         <TeamMemberCard 
-          initials="TT"
+          image="./Profile/Tristan Triñanes.jpeg"
           name="Tristan Triñanes"
           role="Co-founder & CMFO"
         />

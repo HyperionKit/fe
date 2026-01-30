@@ -47,7 +47,7 @@ export default function Navbar() {
           <a href="/build" className="hover:text-white transition-colors">Build</a>
           <a href="/foundation" className="hover:text-white transition-colors">Foundation</a>
           <a href="/solutions" className="hover:text-white transition-colors">Solutions</a>
-          <a href="/docs" className="hover:text-white transition-colors">Docs</a>
+          <a href="https://docs.hyperionkit.xyz" className="hover:text-white transition-colors">Docs</a>
           <a href="/products" className="hover:text-white transition-colors">Products</a>
           <a href="/roadmap" className="hover:text-white transition-colors">Roadmap</a>
         </div>

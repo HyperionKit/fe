@@ -18,9 +18,14 @@ export const HeroTitle: React.FC = () => (
         <span className="relative z-10">Explore Ecosystem</span>
         <div className="absolute inset-0 bg-slate-200 opacity-0 group-hover:opacity-100 transition-opacity" />
       </button>
-      <button className="group relative inline-flex items-center justify-center px-8 py-3 bg-white/5 border border-white/10 text-white text-sm font-medium rounded-full overflow-hidden transition-all hover:bg-white/10">
+      <a 
+        href="https://docs.hyperionkit.xyz/" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="group relative inline-flex items-center justify-center px-8 py-3 bg-white/5 border border-white/10 text-white text-sm font-medium rounded-full overflow-hidden transition-all hover:bg-white/10"
+      >
         <span className="relative z-10">Read Docs</span>
-      </button>
+      </a>
     </div>
   </>
 );
