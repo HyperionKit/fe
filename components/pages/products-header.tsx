@@ -10,12 +10,22 @@ export const Header: React.FC = () => (
     </p>
     
     <div className="mt-10 flex justify-center gap-4">
-      <button className="px-6 py-3 rounded-full bg-white text-black font-medium text-sm hover:bg-slate-200 transition-colors">
+      <a 
+        href="https://ai.hyperionkit.xyz/" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="px-6 py-3 rounded-full bg-white text-black font-medium text-sm hover:bg-slate-200 transition-colors inline-block"
+      >
         Start Building
-      </button>
-      <button className="px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white font-medium text-sm hover:bg-white/10 transition-colors backdrop-blur-sm">
+      </a>
+      <a 
+        href="https://docs.hyperionkit.xyz/" 
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="px-6 py-3 rounded-full bg-white/5 border border-white/10 text-white font-medium text-sm hover:bg-white/10 transition-colors backdrop-blur-sm inline-block"
+      >
         Documentation
-      </button>
+      </a>
     </div>
   </div>
 );
