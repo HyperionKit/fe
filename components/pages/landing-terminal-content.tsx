@@ -18,7 +18,7 @@ export const TerminalContent: React.FC = () => (
       <div className="group/line flex gap-3 opacity-80 hover:opacity-100 transition-opacity">
         <span className="text-purple-400 select-none">➜</span>
         <div>
-          <span className="text-slate-200">npx hyperkit init my-dapp --chain hyperion</span>
+          <span className="text-slate-200">npx hyperkit init my-dapp --chain hyperion Mantle Avalanche</span>
         </div>
       </div>
 
